@@ -1,12 +1,12 @@
 [general]
 socketTimeout = 10;
 [influxdb]
-influxdbUrl = "http://192.168.5.15:8086/query?db=icinga"
+influxdbUrl = "http://127.0.0.1:8086/query?db=icinga"
 influxFieldseperator = "&"
 
 
 ;default values for all of them above
 [default]
 socketTimeout = 10;
-influxdbUrl = "http://192.168.5.15:8086/query?db=icinga"
+influxdbUrl = "http://127.0.0.1:8086/query?db=icinga"
 influxFieldseperator = "&"
