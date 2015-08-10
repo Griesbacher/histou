@@ -36,22 +36,22 @@ class Rule
 
     public static function compare($first, $second)
     {
-        return static::_compareTwoObjects($first, $second);
+        return static::_compareTwoObjects($first, $second, false);
     }
     
     public function isValid()
     {
         $gen = new Rule(static::$_check['host'], static::$_check['service'], static::$_check['command'], static::$_check['perfLabel']);
         $gen->escapeRule();
-        return static::_compareTwoObjects($this, $gen);
+        return static::_compareTwoObjects($this, $gen, true);
     }
     
-    private static function _compareTwoObjects($first, $second)
+    private static function _compareTwoObjects($first, $second, $valid)
     {
         $checks = array('host','service', 'command','perfLabel');
         $result = 0;
         foreach ($checks as $check) {
-            $result = static::_compareValue($first->_data[$check], $second->_data[$check], static::$_check[$check]);
+            $result = static::_compareValue($first->_data[$check], $second->_data[$check], static::$_check[$check], $valid);
             if ($result != 0) {
                 return $result;
             }
@@ -59,7 +59,7 @@ class Rule
         return $result;
     }
 
-    private static function _compareValue($first, $second, $base)
+    private static function _compareValue($first, $second, $base, $valid)
     {
         if (is_array($first) && is_array($second) && is_array($base)) {
             $baseSize = sizeof($base);
@@ -72,6 +72,9 @@ class Rule
                 if ($hitsSecond == $baseSize) {
                     return 1;
                 }
+				if ($valid) {
+					return 2;
+				}
             }
         } else {
             if ($first != $second) {
