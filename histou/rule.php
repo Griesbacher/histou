@@ -72,9 +72,9 @@ class Rule
                 if ($hitsSecond == $baseSize) {
                     return 1;
                 }
-				if ($valid) {
-					return 2;
-				}
+                if ($valid) {
+                    return 2;
+                }
             }
         } else {
             if ($first != $second) {
