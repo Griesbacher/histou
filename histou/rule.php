@@ -72,9 +72,9 @@ class Rule
                 if ($hitsSecond == $baseSize) {
                     return 1;
                 }
-                if ($valid) {
-                    return 2;
-                }
+				if ($valid) {
+					return 2;
+				}
             }
         } else {
             if ($first != $second) {
@@ -106,6 +106,24 @@ class Rule
         }
         return $hits;
     }
+	
+	public function matchesTablename($tablename)
+	{
+		$tableparts = explode(INFLUX_FIELDSEPERATOR, $tablename);
+		$keys = array_keys($this->_data);
+		for ($i = 0; $i < 3; $i++) {			
+			if (!preg_match($this->_data[$keys[$i]], $tableparts[$i])) {
+				return false;
+			}
+		}
+		foreach($this->_data[$keys[3]] as $perfLable) {
+			if (preg_match($perfLable, $tableparts[3])) {
+				return true;
+			}
+		}
+		return false;
+	}	
+	
     public function __toString()
     {
         return sprintf("\tHost: %s \n\t\tService: %s\n\t\tCommand: %s\n\t\tPerflabel: %s", $this->_data['host'], $this->_data['service'], $this->_data['command'], implode(", ", $this->_data['perfLabel']));

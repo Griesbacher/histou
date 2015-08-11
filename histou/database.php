@@ -14,7 +14,7 @@ class Influxdb
         if ($content === false) {
             returnData('Influxdb not reachable', 1, 'Influxdb not reachable');
         } else {
-            return json_decode($content, true);
+            return json_decode($content, true)['results'];
         }
     }
     
@@ -22,7 +22,7 @@ class Influxdb
     {
         $regex = sprintf("/%s%s%s%s(.*?)%s(.*?)%s(.*)/", $host, $fieldSeperator, $service, $fieldSeperator, $fieldSeperator, $fieldSeperator);
         $data = array('host' => $host, 'service' => $service);		
-		foreach ($request['results'] as $queryResult) {
+		foreach ($request as $queryResult) {
 			if (!empty($queryResult)) {
 				foreach ($queryResult['series'] as $table) {
 					if (preg_match($regex, $table['name'], $result)) {

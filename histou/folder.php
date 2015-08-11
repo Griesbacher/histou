@@ -1,4 +1,5 @@
 <?php
+require_once 'histou/template.php';
 class Folder
 {
 
@@ -30,6 +31,7 @@ class Folder
         include $filename;
         return new Template($filename, $rule, $genTemplate);
     }
+	
     private static function _endsWith($haystack, $needle)
     {
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);

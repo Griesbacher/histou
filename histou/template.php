@@ -1,4 +1,5 @@
 <?php
+require_once 'histou/rule.php';
 trait enableLambdas
 {
     public function __call($name, $args)
@@ -26,9 +27,14 @@ class Template
         return dirname($this->_file);
     }
     
-    public function getFileName()
+	public function getFileName()
     {
         return basename($this->_file);
+    }
+	
+    public function getSimpleFileName()
+    {
+        return strstr($this->getFileName(), '.', true);
     }
     
     public function getTemplate($perfData)
@@ -40,7 +46,11 @@ class Template
     {
         return "File:\t".$this->_file."\nRule: ".$this->_rule;
     }
-    
+	
+	public function matchesTablename($tablename)
+	{
+		return $this->_rule->matchesTablename($tablename);
+	}    
     
     public static function compare($first, $second)
     {

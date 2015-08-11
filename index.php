@@ -8,23 +8,19 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 **/
 
+require_once 'histou/basic.php';
 require_once 'histou/template.php';
-require_once 'histou/rule.php';
 require_once 'histou/folder.php';
 require_once 'histou/database.php';
 require_once 'histou/debug.php';
 require_once 'histou/dashboard.php';
 
-define("DEFAULT_TEMPLATE_FOLDER", "histou/templates/default/");
-define("CUSTOM_TEMPLATE_FOLDER", "histou/templates/custom/");
-
 parsIni('histou.ini');
-
 
 header("access-control-allow-origin: *");
 //Disable warnings
-//error_reporting(E_ALL ^ E_WARNING);
-//error_reporting(0);
+error_reporting(E_ALL ^ E_WARNING);
+error_reporting(0);
 ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 
 
@@ -52,7 +48,6 @@ Rule::setCheck($perfData['host'], $perfData['service'], $perfData['command'], ar
 
 usort($templates, 'Template::compare');
 $valid = $templates[0]->isValid();
-
 foreach ($templates as $template) {
     Debug::add($template);
 }
@@ -119,38 +114,9 @@ function parsArgs()
     } else {
         define("SERVICE", "");
     }
-    if (isset($_GET['debug'])) {
+    if (!isset($_GET['debug'])) {
         Debug::enable();
     }
 }
-/**
-Parses the configuration file.
-@param string $filename Path to the configuration file.
-@return null.
-**/
-function parsIni($filename)
-{
-    if (empty($filename) || !file_exists($filename)) {
-        returnData("", 1, "Configuration not found: ".$filename);
-    }
-    $config = parse_ini_file($filename, true);
-    setConstant("DEFAULT_SOCKET_TIMEOUT", $config['general']['socketTimeout'], $config['default']['socketTimeout']);
-    setConstant("INFLUX_URL", $config['influxdb']['influxdbUrl'], $config['default']['influxdbUrl']);
-    setConstant("INFLUX_FIELDSEPERATOR", $config['influxdb']['influxFieldseperator'], $config['default']['influxFieldseperator']);
-}
-/**
-Creates constatans with the value of $value if it is empty the $alternative is taken.
-@param string $name        Name of the constant.
-@param object $value       Value of the constant.
-@param object $alternative Alternative value of the constant.
-@return null.
-**/
-function setConstant($name, $value, $alternative)
-{
-    if (empty($value)) {
-        define($name, $alternative);
-    } else {
-        define($name, $value);
-    }
-}
+
 ?>

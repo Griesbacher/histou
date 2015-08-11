@@ -23,11 +23,15 @@ $availableTemplates = Folder::loadFolders(array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_
 
 $templatesToCheck = array();
 foreach($availableTemplates as $template) {
-	if ($template->getFileName() == $requestedTemplate){
+	if ($template->getSimpleFileName() == $requestedTemplate || $template->getFileName() == $requestedTemplate){
 		array_push($templatesToCheck, $template);
 	}
 }
 
+if (count($templatesToCheck) == 0) {
+	print_r('No template found with this name: '.$requestedTemplate.$lineEnd);
+	exit(0);
+}
 
 foreach ($templatesToCheck as $template) {
 	$hits = array();
@@ -39,6 +43,7 @@ foreach ($templatesToCheck as $template) {
 	$hits = array_unique($hits);
 	
 	print_r($template->getPath().'/'.$template->getFileName().":".$lineEnd);
+	print_r('----'.$lineEnd);
 	foreach ($hits as $hit) {
 		print_r($hit.$lineEnd);
 	}
