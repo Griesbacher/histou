@@ -7,7 +7,7 @@ class Influxdb
     {
         $this->url = $url."&q=";
     }
-    //TODO: Umbauen aus show series
+
     public function makeRequest($query)
     {
         $content = file_get_contents($this->url.urlencode($query));
