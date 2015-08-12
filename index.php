@@ -25,8 +25,7 @@ ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 
 
 parsArgs();
-define("INFLUX_QUERY", sprintf("select * from /%s%s%s.*/ limit 1", HOST, INFLUX_FIELDSEPERATOR, SERVICE));
-
+define("INFLUX_QUERY", sprintf("select * from /%s%s%s.*/ limit 1", str_replace("/", '\/', HOST), INFLUX_FIELDSEPERATOR, str_replace('/', '\/', SERVICE)));
 
 // database load perfdata
 $influx = new Influxdb(INFLUX_URL);
@@ -118,5 +117,4 @@ function parsArgs()
         Debug::enable();
     }
 }
-
 ?>

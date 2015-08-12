@@ -7,7 +7,7 @@ class Influxdb
     {
         $this->url = $url."&q=";
     }
-    
+    //TODO: Umbauen aus show series
     public function makeRequest($query)
     {
         $content = file_get_contents($this->url.urlencode($query));
@@ -20,12 +20,12 @@ class Influxdb
     
     public function filterPerfdata($request, $host, $service, $fieldSeperator)
     {
-        $regex = sprintf("/%s%s%s%s(.*?)%s(.*?)%s(.*)/", $host, $fieldSeperator, $service, $fieldSeperator, $fieldSeperator, $fieldSeperator);
+        $regex = sprintf("/%s%s%s%s(.*?)%s(.*?)%s(.*)/", preg_quote($host, '/'), $fieldSeperator, preg_quote($service, '/'), $fieldSeperator, $fieldSeperator, $fieldSeperator);
         $data = array('host' => $host, 'service' => $service);		
 		foreach ($request as $queryResult) {
 			if (!empty($queryResult)) {
 				foreach ($queryResult['series'] as $table) {
-					if (preg_match($regex, $table['name'], $result)) {
+					if (preg_match($regex, $table['name'], $result)) {						
 						if (!array_key_exists('perfLabel', $data)) {                    
 							$data['perfLabel'] = array();
 						}
