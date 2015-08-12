@@ -16,7 +16,7 @@ $genTemplate = function ($perfData) {
 		$panel->setLinewidth(10);
         foreach ($perfData['perfLabel'][$perfKeys[$i]] as $type) {
             if ($type != 'crit' && $type != 'warn' && $type != 'min' && $type != 'max') {
-                $panel->addTargetSimple(sprintf('%s%s%s%s%s%s%s%s%s', $perfData['host'], INFLUX_FIELDSEPERATOR, $perfData['service'], INFLUX_FIELDSEPERATOR, $perfData['command'], INFLUX_FIELDSEPERATOR, $perfKeys[$i], INFLUX_FIELDSEPERATOR, $type));
+                $panel->addTargetSimple(sprintf('%s%s%s%s%s%s%s%s%s', $perfData['host'], INFLUX_FIELDSEPERATOR, $perfData['service'], INFLUX_FIELDSEPERATOR, $perfData['command'], INFLUX_FIELDSEPERATOR, $perfKeys[$i], INFLUX_FIELDSEPERATOR, $type), $type);
             }
         }
         $row->addPanel($panel);

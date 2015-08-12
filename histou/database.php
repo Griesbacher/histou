@@ -21,7 +21,7 @@ class Influxdb
     public function filterPerfdata($request, $host, $service, $fieldSeperator)
     {
         $regex = sprintf("/%s%s%s%s(.*?)%s(.*?)%s(.*)/", preg_quote($host, '/'), $fieldSeperator, preg_quote($service, '/'), $fieldSeperator, $fieldSeperator, $fieldSeperator);
-        $data = array('host' => $host, 'service' => $service);		
+        $data = array('host' => $host, 'service' => $service);
 		foreach ($request as $queryResult) {
 			if (!empty($queryResult)) {
 				foreach ($queryResult['series'] as $table) {
@@ -38,7 +38,36 @@ class Influxdb
 				}
 			}
 		}
+		ksort($data['perfLabel'], SORT_NATURAL);
+		foreach($data['perfLabel'] as &$perfLabel){
+			usort($perfLabel, "Influxdb::comparePerfLabel");
+		}
         return $data;
     }
+	
+	private static function getPerfLabelIndex($label) {
+		switch($label) {
+			case 'value':
+				return 1;
+			case 'warn':
+				return 2;
+			case 'crit':
+				return 3;
+			case 'min':
+				return 4;
+			case 'max':
+				return 5;
+		}
+		return 0;
+	}
+	
+	private static function comparePerfLabel($firstLabel, $secondLabel) {
+		$first = Influxdb::getPerfLabelIndex($firstLabel);
+		$second = Influxdb::getPerfLabelIndex($secondLabel);
+		if ($first == $second) {
+			return 0;
+		}
+		return ($first < $second) ? -1 : 1;
+	}
 }
 ?>

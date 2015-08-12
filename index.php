@@ -19,8 +19,8 @@ parsIni('histou.ini');
 
 header("access-control-allow-origin: *");
 //Disable warnings
-error_reporting(E_ALL ^ E_WARNING);
-error_reporting(0);
+//error_reporting(E_ALL ^ E_WARNING);
+//error_reporting(0);
 ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 
 
@@ -35,8 +35,6 @@ $perfData = $influx->filterPerfdata($request, HOST, SERVICE, '\\'.INFLUX_FIELDSE
 if (sizeof($perfData) < 4) {
     returnData(Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'), 1);
 }
-
-// $perfData = array('host' => 'host0', 'service' => 'ping', 'command' => 'ping4', 'perfLabel' => array('rta', 'pl'));
 
 // load templates
 $templates = Folder::loadFolders(array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER));

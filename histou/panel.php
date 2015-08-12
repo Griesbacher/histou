@@ -6,6 +6,13 @@ abstract class Panel
                         'type' => null,
                         'span' => 12,
                         'editable' => false,
+						'legend' => array(
+							'current' => true,
+							'max' => true,
+							'min' => true,
+							'show' => true,
+							'values' => true,
+						)
                     );
     function __construct($titel, $type)
     {
@@ -88,13 +95,8 @@ class GraphPanel extends Panel
     {
         $this->data['tooltip'] = tooltip;
     }
-    
-    public function addTarget(array $target)
-    {
-        array_push($this->data['target'], $target);
-    }
-    
-    public function addTargetSimple($target)
+	
+	public function addTargetSimple($target, $alias = "", array $tags = array())
     {
         array_push(
             $this->data['targets'], array(
@@ -102,9 +104,24 @@ class GraphPanel extends Panel
                                 "column" => "value",
                                 "measurement" => sprintf($target),
                                 "query" => sprintf('select mean(value) from "%s" where $timeFilter group by time($interval) order asc', $target),
+								"alias" => $alias,
+								"tags" => $tags
                                 )
         );
     }
-    
+	
+	public function addAliasColor($alias, $color)
+    {
+		if(!isset($this->data['aliasColors'])){
+			$this->data['aliasColors'] = array();
+		}
+        $this->data['aliasColors'][$alias] = $color;
+	}
+	
+	public function setleftYAxisLabel($label)
+    {
+		$this->data['leftYAxisLabel'] = $label;
+		
+	}
 }
 ?>
