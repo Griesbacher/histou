@@ -30,17 +30,23 @@ class Influxdb
 							$data['perfLabel'] = array();
 						}
 						if (!array_key_exists($result[2], $data['perfLabel'])) {
-							$data['perfLabel'][$result[2]] = array();
+							$data['perfLabel'][$result[2]] = array('identifier' => array());
 						}
-						array_push($data['perfLabel'][$result[2]], $result[3]);
+						array_push($data['perfLabel'][$result[2]]['identifier'], $result[3]);
 						$data['command'] = $result[1];
+						
+						if(isset($table['tags']) && isset($table['tags']['unit'])&& !empty($table['tags']['unit'])){
+							$data['perfLabel'][$result[2]]['unit'] = $table['tags']['unit'];
+						}
 					}
 				}
 			}
 		}
-		ksort($data['perfLabel'], SORT_NATURAL);
-		foreach($data['perfLabel'] as &$perfLabel){
-			usort($perfLabel, "Influxdb::comparePerfLabel");
+		if (isset($data['perfLabel'])){
+			ksort($data['perfLabel'], SORT_NATURAL);
+			foreach($data['perfLabel'] as &$perfLabel){
+				usort($perfLabel['identifier'], "Influxdb::comparePerfLabel");
+			}
 		}
         return $data;
     }

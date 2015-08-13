@@ -1,45 +1,55 @@
 <?php
 $rule = new Rule(
-    $host = '/^$/',
-    $service = '/^$/',
-    $command = '/^$/',
+    $host = ';^$;',
+    $service = ';^$;',
+    $command = ';^$;',
     $perfLable = array()
 );
 
 $genTemplate = function ($perfData) {
     /*$perfData:
-    Array
-    (
-				[host] => Host2
-				[service] => ping4
-				[command] => ping4
-				[perfLabel] => Array
+	Array
+	(
+		[host] => debian
+		[service] => ping4
+		[perfLabel] => Array
+			(
+				[pl] => Array
 					(
-						[pl] => Array
+						[identifier] => Array
 							(
-								[0] => crit
-								[1] => min
-								[2] => value
-								[3] => warn
+								[0] => value
+								[1] => warn
+								[2] => crit
+								[3] => min
 							)
 
-						[rta] => Array
-							(
-								[0] => crit
-								[1] => min
-								[2] => value
-								[3] => warn
-							)
-
+						[unit] => %
 					)
-    )
+
+				[rta] => Array
+					(
+						[identifier] => Array
+							(
+								[0] => value
+								[1] => warn
+								[2] => crit
+								[3] => min
+							)
+
+						[unit] => ms
+					)
+			)
+		[command] => ping4
+	)
     */
+
     $perfKeys = array_keys($perfData['perfLabel']);
     $dashboard = new Dashboard($perfData['host']);
     for ($i = 0; $i < sizeof($perfData['perfLabel']); $i++) {
         $row = new Row($perfData['service'].' '.$perfData['command']);
         $panel = new GraphPanel($perfData['service'].' '.$perfData['command'].' '.$perfKeys[$i]);
-        foreach ($perfData['perfLabel'][$perfKeys[$i]] as $type) {
+        foreach ($perfData['perfLabel'][$perfKeys[$i]]['identifier'] as $type) {
             if ($type != 'min' && $type != 'max') {
 				$target = sprintf('%s%s%s%s%s%s%s%s%s', $perfData['host'], INFLUX_FIELDSEPERATOR, $perfData['service'], INFLUX_FIELDSEPERATOR, $perfData['command'], INFLUX_FIELDSEPERATOR, $perfKeys[$i], INFLUX_FIELDSEPERATOR, $type);
                 $alias = $perfData['host']." ".$perfData['service']." ".$perfKeys[$i]." ".$type;
@@ -50,6 +60,9 @@ $genTemplate = function ($perfData) {
 					$panel->addAliasColor($alias, '#FFFF00');
 				}else if($type == 'value'){
 					$panel->addAliasColor($alias, '#FFFFFF');
+					if(isset($perfData['perfLabel'][$perfKeys[$i]]['unit'])){
+						$panel->setleftYAxisLabel($perfData['perfLabel'][$perfKeys[$i]]['unit']);
+					}
 				}					
             }
         }

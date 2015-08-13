@@ -4,7 +4,7 @@ class Rule
     private $_data = array();
     private static $_check = array();
 
-    public function __construct($host = '/^$/', $service = '/^$/', $command = '/^$/', array $perfLabel) 
+    public function __construct($host = ';^$;', $service = ';^$;', $command = ';^$;', array $perfLabel) 
     {
         $this->_data['host'] = $host;
         $this->_data['service'] = $service;
@@ -14,14 +14,14 @@ class Rule
     
     public function escapeRule()
     {
-        // '/^\/.*\/$/';
+        // ';^\/.*\/$;';
         foreach ($this->_data as &$entry) {
             if (is_array($entry)) {
                 foreach ($entry as &$perfLabel) {
-                    $perfLabel = "/$perfLabel/";
+                    $perfLabel = ";$perfLabel;";
                 }
             } else {
-                $entry = "/$entry/";
+                $entry = ";$entry;";
             }
         }        
     }
@@ -78,6 +78,7 @@ class Rule
             }
         } else {
             if ($first != $second) {
+				//print_r("comp: ".$first." - ".$second." - ".$base."<br>");
                 $firstResult = preg_match($first, $base);
                 $secondResult = preg_match($second, $base);
                 if ($firstResult != $secondResult) {

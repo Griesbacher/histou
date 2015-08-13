@@ -86,7 +86,7 @@ class GraphPanel extends Panel
                                 'avg' =>  false,
                                 'shared' =>  false
                             );
-        $this->data['fill'] = 1;
+        $this->data['fill'] = 0;
         $this->data['linewidth'] = 2;
         $this->data['targets'] = array();
     }
