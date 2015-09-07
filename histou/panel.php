@@ -2,7 +2,7 @@
 abstract class Panel
 {
     protected $data = array(
-                        'titel' => null,
+                        'title' => null,
                         'type' => null,
                         'span' => 12,
                         'editable' => false,
@@ -14,9 +14,9 @@ abstract class Panel
 							'values' => true,
 						)
                     );
-    function __construct($titel, $type)
+    function __construct($title, $type)
     {
-        $this->data['titel'] = $titel;
+        $this->data['title'] = $title;
         $this->data['type'] = $type;
     }
 
@@ -55,9 +55,9 @@ class TextPanel extends Panel
     const TEXT = 'text';
     const HTML = 'html';
 
-    function __construct($titel)
+    function __construct($title)
     {
-        parent::__construct($titel, 'text');
+        parent::__construct($title, 'text');
     }
 
     public function setMode($mode)
@@ -73,9 +73,9 @@ class TextPanel extends Panel
 
 class GraphPanel extends Panel
 {
-    function __construct($titel)
+    function __construct($title)
     {
-        parent::__construct($titel, 'graph');
+        parent::__construct($title, 'graph');
         $this->data['tooltip'] = array(
                                 'show' =>  false,
                                 'values' =>  false,
@@ -121,7 +121,22 @@ class GraphPanel extends Panel
 	public function setleftYAxisLabel($label)
     {
 		$this->data['leftYAxisLabel'] = $label;
-		
+	}
+	
+	public function addWarning($host, $service, $command, $perfLable)
+	{
+        $target = sprintf('%s%s%s%s%s%s%s%swarn', $host, INFLUX_FIELDSEPERATOR, $service, INFLUX_FIELDSEPERATOR, $command, INFLUX_FIELDSEPERATOR, $perfLable, INFLUX_FIELDSEPERATOR);
+        $alias = 'warn';
+        $this->addTargetSimple($target, $alias);
+		$this->addAliasColor($alias, '#FFFF00');
+	}
+
+		public function addCritical($host, $service, $command, $perfLable)
+	{
+        $target = sprintf('%s%s%s%s%s%s%s%scrit', $host, INFLUX_FIELDSEPERATOR, $service, INFLUX_FIELDSEPERATOR, $command, INFLUX_FIELDSEPERATOR, $perfLable, INFLUX_FIELDSEPERATOR);
+        $alias = 'crit';
+        $this->addTargetSimple($target, $alias);
+		$this->addAliasColor($alias, '#FF0000');
 	}
 }
 ?>

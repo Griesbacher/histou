@@ -25,15 +25,19 @@ ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 
 
 parsArgs();
-define("INFLUX_QUERY", sprintf("select * from /%s%s%s.*/ limit 1", str_replace("/", '\/', HOST), INFLUX_FIELDSEPERATOR, str_replace('/', '\/', SERVICE)));
-
+define("INFLUX_QUERY", sprintf("show series from /%s%s%s.*/", str_replace("/", '\/', HOST), INFLUX_FIELDSEPERATOR, str_replace('/', '\/', SERVICE)));
 // database load perfdata
 $influx = new Influxdb(INFLUX_URL);
 $request = $influx->makeRequest(INFLUX_QUERY);
 $perfData = $influx->filterPerfdata($request, HOST, SERVICE, '\\'.INFLUX_FIELDSEPERATOR);
 
-if (sizeof($perfData) < 4) {
-    returnData(Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'), 1);
+$perfDataSize = sizeof($perfData);
+if ($perfDataSize < 4) {
+    if ($perfDataSize == 1){
+        returnData(Debug::errorMarkdownDashboard('#Influxdb Error: '.$perfData[0].' Query: '.INFLUX_QUERY), 1);
+    }else{
+        returnData(Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'), 1);
+    }
 }
 
 // load templates

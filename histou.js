@@ -23,7 +23,7 @@ return function(callback) {
         console.log(result);
         console.log(configUrl);
         if(result.status == 200){
-            callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl+'\n# Porbably the output is not valid json, because the returncode is 200!'));
+            callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl+'\n# Probably the output is not valid json, because the returncode is 200!'));
         }else{
             callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl));
         }
