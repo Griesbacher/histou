@@ -85,7 +85,7 @@ function parseArgs() {
         height = "200px"
     }
 	
-    if(!_.isUndefined(ARGS.debug)) {
+    if(_.isUndefined(ARGS.debug)) {
         debug = '';
     }else{
         debug = "&debug"

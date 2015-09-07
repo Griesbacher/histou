@@ -111,7 +111,7 @@ function parsArgs()
     } else {
         define("SERVICE", "");
     }
-    if (!isset($_GET['debug'])) {
+    if (isset($_GET['debug'])) {
         Debug::enable();
     }
 }
