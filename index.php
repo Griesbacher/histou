@@ -15,6 +15,7 @@ require_once 'histou/database.php';
 require_once 'histou/debug.php';
 require_once 'histou/dashboard.php';
 
+//Set path to config file
 parsIni('histou.ini');
 
 header("access-control-allow-origin: *");

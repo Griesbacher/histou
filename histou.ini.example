@@ -2,7 +2,7 @@
 socketTimeout = 10;
 [folder]
 defaultTemplateFolder = "histou/templates/default/"
-custom_template_folder = "histou/templates/custom/"
+customTemplateFolder = "histou/templates/custom/"
 [influxdb]
 influxdbUrl = "http://127.0.0.1:8086/query?db=icinga"
 influxFieldseperator = "&"

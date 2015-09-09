@@ -14,7 +14,7 @@ function parsIni($filename)
     setConstant("INFLUX_URL", $config['influxdb']['influxdbUrl'], "http://127.0.0.1:8086/query?db=icinga");
     setConstant("INFLUX_FIELDSEPERATOR", $config['influxdb']['influxFieldseperator'], "&");
     setConstant("DEFAULT_TEMPLATE_FOLDER", $config['folder']['defaultTemplateFolder'], "histou/templates/default/");
-    setConstant("CUSTOM_TEMPLATE_FOLDER", $config['folder']['custom_template_folder'], "histou/templates/custom/");
+    setConstant("CUSTOM_TEMPLATE_FOLDER", $config['folder']['customTemplateFolder'], "histou/templates/custom/");
 }
 /**
 Creates constatans with the value of $value if it is empty the $alternative is taken.
