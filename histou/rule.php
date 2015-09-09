@@ -4,26 +4,47 @@ class Rule
     private $_data = array();
     private static $_check = array();
 
-    public function __construct($host = ';^$;', $service = ';^$;', $command = ';^$;', array $perfLabel) 
+    public function __construct($host = '^$', $service = '^$', $command = '^$', array $perfLabel) 
     {
         $this->_data['host'] = $host;
         $this->_data['service'] = $service;
         $this->_data['command'] = $command;
         $this->_data['perfLabel'] = $perfLabel;
+
+        $this->escapeRule(true);
     }
     
-    public function escapeRule()
+    public function escapeRule($replaceSpecialChars = false)
     {
-        // ';^\/.*\/$;';
         foreach ($this->_data as &$entry) {
             if (is_array($entry)) {
                 foreach ($entry as &$perfLabel) {
+                    if($replaceSpecialChars){
+                        $perfLabel = $this->convertSpecialCharsToRegex($perfLabel);
+                    }
                     $perfLabel = ";$perfLabel;";
                 }
             } else {
+                if($replaceSpecialChars){
+                    $entry = $this->convertSpecialCharsToRegex($entry);
+                }
                 $entry = ";$entry;";
             }
         }        
+    }
+    
+    private function convertSpecialCharsToRegex($stringToReplace)
+    {
+        switch ($stringToReplace){
+            case "*":
+                return ".*";
+            case "ALL":
+                return ".*";
+            case "NONE":
+                return "^$";
+            default:
+                return $stringToReplace;
+        }
     }
 
     public static function setCheck($host, $service, $command, array $perfLabel)
@@ -42,7 +63,6 @@ class Rule
     public function isValid()
     {
         $gen = new Rule(static::$_check['host'], static::$_check['service'], static::$_check['command'], static::$_check['perfLabel']);
-        $gen->escapeRule();
         return static::_compareTwoObjects($this, $gen, true);
     }
     
@@ -72,13 +92,13 @@ class Rule
                 if ($hitsSecond == $baseSize) {
                     return 1;
                 }
-				if ($valid) {
-					return 2;
-				}
+                if ($valid) {
+                    return 2;
+                }
             }
         } else {
             if ($first != $second) {
-				//print_r("comp: ".$first." - ".$second." - ".$base."<br>");
+                //print_r("comp: ".$first." - ".$second." - ".$base."<br>");
                 $firstResult = preg_match($first, $base);
                 $secondResult = preg_match($second, $base);
                 if ($firstResult != $secondResult) {
@@ -107,24 +127,24 @@ class Rule
         }
         return $hits;
     }
-	
-	public function matchesTablename($tablename)
-	{
-		$tableparts = explode(INFLUX_FIELDSEPERATOR, $tablename);
-		$keys = array_keys($this->_data);
-		for ($i = 0; $i < 3; $i++) {			
-			if (!preg_match($this->_data[$keys[$i]], $tableparts[$i])) {
-				return false;
-			}
-		}
-		foreach($this->_data[$keys[3]] as $perfLable) {
-			if (preg_match($perfLable, $tableparts[3])) {
-				return true;
-			}
-		}
-		return false;
-	}	
-	
+    
+    public function matchesTablename($tablename)
+    {
+        $tableparts = explode(INFLUX_FIELDSEPERATOR, $tablename);
+        $keys = array_keys($this->_data);
+        for ($i = 0; $i < 3; $i++) {            
+            if (!preg_match($this->_data[$keys[$i]], $tableparts[$i])) {
+                return false;
+            }
+        }
+        foreach($this->_data[$keys[3]] as $perfLable) {
+            if (preg_match($perfLable, $tableparts[3])) {
+                return true;
+            }
+        }
+        return false;
+    }    
+    
     public function __toString()
     {
         return sprintf("\tHost: %s \n\t\tService: %s\n\t\tCommand: %s\n\t\tPerflabel: %s", $this->_data['host'], $this->_data['service'], $this->_data['command'], implode(", ", $this->_data['perfLabel']));

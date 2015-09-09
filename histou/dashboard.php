@@ -7,12 +7,12 @@ class Dashboard
     'style' => 'light',
     'title' => null,
     'originalTitle' => 'CustomDashboard',
-    'tags' => array(),        
+    'tags' => array(),
     'timezone' => 'browser',
     'editable' => true,
-    'hideControls' => false,
+    'hideControls' => true,
     'sharedCrosshair' => false,
-    'nav' => array(
+    'nav' => array(array(
     'type' => 'timepicker',
     'enable' => true,
     'status' => 'Stable',
@@ -21,10 +21,10 @@ class Dashboard
     'now' => true,
     'collapse' => false,
     'notice' => false,
-    ),
+    )),
     'time' => array(
     'from' => 'now-8h',
-    'to' => 'now',    
+    'to' => 'now',
     ),
     'templating' => array(),
     'annotations' => array(),
@@ -34,7 +34,7 @@ class Dashboard
     'rows' => array(),
     );
     private $_rows = array();
-    
+
     function __construct($title)
     {
         $this->_data['title'] = $title;
@@ -47,20 +47,20 @@ class Dashboard
         }
         return $this->_data;
     }
-    
+
     public function setEditable(boolean $editable)
     {
         $this->_data['editable'] = $editable;
     }
-	
-	public function setCustomProperty($name, $value)
+
+    public function setCustomProperty($name, $value)
     {
         $this->_data[$name] = $value;
     }
-	
+
     public function addRow(Row $row)
     {
-        array_push($this->_rows, $row);        
+        array_push($this->_rows, $row);
     }
 }
 ?>
