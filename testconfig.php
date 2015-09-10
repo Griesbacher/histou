@@ -4,14 +4,14 @@ require_once 'histou/database.php';
 require_once 'histou/folder.php';
 $lineEnd = '';
 if(isset($argv[1]) && !empty($argv[1])) {
-	$requestedTemplate = $argv[1];
-	$lineEnd = "\n";
+    $requestedTemplate = $argv[1];
+    $lineEnd = "\n";
 } else if (isset($_GET["filename"]) && !empty($_GET["filename"])) {
-	$requestedTemplate = $_GET["filename"];
-	$lineEnd = '<br>';
+    $requestedTemplate = $_GET["filename"];
+    $lineEnd = '<br>';
 } else {
-	print_r("Arguement is missing! When used by URL pass the Templatefilename by the Postparameter 'filename'. On Commandline pass it as the first argument");
-	exit(1);
+    print_r("Arguement is missing! When used by URL pass the Templatefilename by the Postparameter 'filename'. On Commandline pass it as the first argument");
+    exit(1);
 }
 
 parsIni('histou.ini');
@@ -23,30 +23,30 @@ $availableTemplates = Folder::loadFolders(array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_
 
 $templatesToCheck = array();
 foreach($availableTemplates as $template) {
-	if ($template->getSimpleFileName() == $requestedTemplate || $template->getFileName() == $requestedTemplate){
-		array_push($templatesToCheck, $template);
-	}
+    if ($template->getSimpleFileName() == $requestedTemplate || $template->getFileName() == $requestedTemplate) {
+        array_push($templatesToCheck, $template);
+    }
 }
 
 if (count($templatesToCheck) == 0) {
-	print_r('No template found with this name: '.$requestedTemplate.$lineEnd);
-	exit(0);
+    print_r('No template found with this name: '.$requestedTemplate.$lineEnd);
+    exit(0);
 }
 
 foreach ($templatesToCheck as $template) {
-	$hits = array();
-	foreach ($series as $tablename){
-			if($template->matchesTablename($tablename)){
-				array_push($hits,preg_split('/&(?!.*&).*/', $tablename)[0]);
-			}
-	}
-	$hits = array_unique($hits);
-	
-	print_r($template->getPath().'/'.$template->getFileName().":".$lineEnd);
-	print_r('----'.$lineEnd);
-	foreach ($hits as $hit) {
-		print_r($hit.$lineEnd);
-	}
+    $hits = array();
+    foreach ($series as $tablename){
+        if($template->matchesTablename($tablename)) {
+            array_push($hits, preg_split('/&(?!.*&).*/', $tablename)[0]);
+        }
+    }
+    $hits = array_unique($hits);
+    
+    print_r($template->getPath().'/'.$template->getFileName().":".$lineEnd);
+    print_r('----'.$lineEnd);
+    foreach ($hits as $hit) {
+        print_r($hit.$lineEnd);
+    }
 }
 
 
@@ -58,11 +58,11 @@ Gets all series names from influxdb.
 **/
 function getSeries($database)
 {
-	$list = array();
-	$request = $database->makeRequest("SHOW SERIES");
-	foreach($request[0]['series'] as $tablename){
-		array_push($list,$tablename['name']);
-	}
-	return $list;
+    $list = array();
+    $request = $database->makeRequest("SHOW SERIES");
+    foreach($request[0]['series'] as $tablename){
+        array_push($list, $tablename['name']);
+    }
+    return $list;
 }
 ?>

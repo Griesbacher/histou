@@ -121,7 +121,7 @@ class GraphPanel extends Panel
 
     public function addAliasColor($alias, $color)
     {
-        if(!isset($this->data['aliasColors'])){
+        if(!isset($this->data['aliasColors'])) {
             $this->data['aliasColors'] = array();
         }
         $this->data['aliasColors'][$alias] = $color;
@@ -136,7 +136,7 @@ class GraphPanel extends Panel
     {
         foreach(array('normal', 'min', 'max') as $tag){
             $target = sprintf('%s%s%s%s%s%s%s%s%s', $host, INFLUX_FIELDSEPERATOR, $service, INFLUX_FIELDSEPERATOR, $command, INFLUX_FIELDSEPERATOR, $perfLable, INFLUX_FIELDSEPERATOR, $name);
-            if($tag == 'normal'){
+            if($tag == 'normal') {
                 $alias = $name;
             }else{
                 $alias = $name.'-'.$tag;

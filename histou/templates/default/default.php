@@ -8,8 +8,8 @@ $rule = new Rule(
 
 $genTemplate = function ($perfData) {
     /*$perfData:
-Array
-(
+    Array
+    (
     [host] => debian
     [service] => http
     [perfLabel] => Array
@@ -45,7 +45,7 @@ Array
         )
 
     [command] => http
-)
+    )
     */
 
     $perfKeys = array_keys($perfData['perfLabel']);
@@ -59,7 +59,7 @@ Array
         $panel->addAliasColor($alias, '#FFFFFF');
         $panel->addTargetSimple($target, $alias);
         //Add Lable
-        if(isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])){
+        if(isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])) {
             $panel->setleftYAxisLabel($perfData['perfLabel'][$perfKeys[$i]]['value']['unit']);
         }
         //Add Warning and Critical

@@ -9,43 +9,49 @@ parseArgs()
 
 return function(callback) {
 
-	url = 'http://localhost/histou/index.php';
+    url = 'http://localhost/histou/index.php';
     configUrl = url+'?host='+host+'&service='+service+debug;
 
-    $.ajax({
-        method: 'GET',
-        url: configUrl,
-        dataType: "jsonp",
-    }).done(function(result) {
-        console.log(result);
-        callback(result);
-    }).fail(function(result) {
-        console.log(result);
-        console.log(configUrl);
-        if(result.status == 200){
-            callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl+'\n# Probably the output is not valid json, because the returncode is 200!'));
-        }else{
-            callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl));
+    $.ajax(
+        {
+            method: 'GET',
+            url: configUrl,
+            dataType: "jsonp",
         }
-    });
+    ).done(
+            function(result) {
+                console.log(result);
+                callback(result);
+            }
+    ).fail(
+            function(result) {
+                console.log(result);
+                console.log(configUrl);
+                if(result.status == 200) {
+                    callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl+'\n# Probably the output is not valid json, because the returncode is 200!'));
+                }else{
+                    callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl));
+                }
+            }
+    );
 }
 
 function createErrorDashboard(message) {
     return {
-            rows : [{
-                title: 'Chart',
-                height: '300px',
-                panels : [{
-                    title: 'Error Message below',
-                    type: 'text',
-                    span: 12,
-                    fill: 1,
-                    content: message,
-                  }]
-            }],
-            services : {},
-            title : 'JS Error / HTTP Error'
-        };
+        rows : [{
+            title: 'Chart',
+            height: '300px',
+            panels : [{
+                title: 'Error Message below',
+                type: 'text',
+                span: 12,
+                fill: 1,
+                content: message,
+            }]
+        }],
+        services : {},
+        title : 'JS Error / HTTP Error'
+    };
 }
 
 function parseArgs() {
@@ -84,7 +90,7 @@ function parseArgs() {
     }else{
         height = "200px"
     }
-	
+    
     if(_.isUndefined(ARGS.debug)) {
         debug = '';
     }else{
@@ -94,12 +100,14 @@ function parseArgs() {
 
 function clearUi() {
     //removes white space
-    var checkExist = setInterval(function() {
-         if ($('.panel-content').length) {
-            clearInterval(checkExist);
-            document.getElementsByClassName("panel-content")[0].style.paddingBottom = '0px';
-         }
-    }, 100);
+    var checkExist = setInterval(
+        function() {
+            if ($('.panel-content').length) {
+                clearInterval(checkExist);
+                document.getElementsByClassName("panel-content")[0].style.paddingBottom = '0px';
+            }
+        }, 100
+    );
     /*
         .panel-header removes the headline of the graphs
         .navbar-static-top removes the menubar on the top
@@ -111,11 +119,13 @@ function clearUi() {
         waitForDivAndDeleteIt(divs[index]);
     }
     function waitForDivAndDeleteIt(div){
-        var checkExist = setInterval(function() {
-            if ($(div).length) {
-                clearInterval(checkExist);
-                $(div).remove();
-            }
-        }, 100);
+        var checkExist = setInterval(
+            function() {
+                if ($(div).length) {
+                    clearInterval(checkExist);
+                    $(div).remove();
+                }
+            }, 100
+        );
     }
 }

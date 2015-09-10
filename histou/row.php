@@ -32,9 +32,9 @@ class Row
         //TODO: Aufvererbung testen
         array_push($this->_panels, $panel);        
     }
-	public function setCustomProperty($name, $value)
-    {
+    public function setCustomProperty($name, $value)
+ {
         $this->_data[$name] = $value;
-    }
+ }
 }
 ?>

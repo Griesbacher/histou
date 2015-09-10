@@ -34,7 +34,7 @@ class Influxdb
                         }
                         $data['command'] = $result[1];
                         $data['perfLabel'][$result[2]][$result[3]] = array();
-                        if(array_key_exists('columns', $table)){
+                        if(array_key_exists('columns', $table)) {
                             for($tagId = 1; $tagId < sizeof($table['columns']); $tagId++){
                                 $data['perfLabel'][$result[2]][$result[3]][$table['columns'][$tagId]] = $table['values'][0][$tagId];
                             }
@@ -45,7 +45,7 @@ class Influxdb
                 return array($queryResult['error']);
             }
         }
-        if (isset($data['perfLabel'])){
+        if (isset($data['perfLabel'])) {
             ksort($data['perfLabel'], SORT_NATURAL);
             foreach($data['perfLabel'] as &$perfLabel){
                 uksort($perfLabel, "Influxdb::comparePerfLabel");
@@ -55,23 +55,25 @@ class Influxdb
         return $data;
     }
     
-    private static function getPerfLabelIndex($label) {
+    private static function getPerfLabelIndex($label) 
+    {
         switch($label) {
-            case 'value':
-                return 1;
-            case 'warn':
-                return 2;
-            case 'crit':
-                return 3;
-            case 'min':
-                return 4;
-            case 'max':
-                return 5;
+        case 'value':
+            return 1;
+        case 'warn':
+            return 2;
+        case 'crit':
+            return 3;
+        case 'min':
+            return 4;
+        case 'max':
+            return 5;
         }
         return 0;
     }
     
-    private static function comparePerfLabel($firstLabel, $secondLabel) {
+    private static function comparePerfLabel($firstLabel, $secondLabel) 
+    {
         $first = Influxdb::getPerfLabelIndex($firstLabel);
         $second = Influxdb::getPerfLabelIndex($secondLabel);
         if ($first == $second) {

@@ -20,7 +20,7 @@ $genTemplate = function ($perfData) {
         $panel->addAliasColor($alias, '#FFFFFF');
         $panel->addTargetSimple($target, $alias);
         //Add Lable
-        if(isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])){
+        if(isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])) {
             $panel->setleftYAxisLabel($perfData['perfLabel'][$perfKeys[$i]]['value']['unit']);
         }
         //Add Warning and Critical

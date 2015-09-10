@@ -1,5 +1,6 @@
 <?php
 require_once 'histou/rule.php';
+require_once 'histou/templateParser.php';
 trait enableLambdas
 {
     public function __call($name, $args)
@@ -27,11 +28,11 @@ class Template
         return dirname($this->_file);
     }
     
-	public function getFileName()
+    public function getFileName()
     {
         return basename($this->_file);
     }
-	
+    
     public function getSimpleFileName()
     {
         return strstr($this->getFileName(), '.', true);
@@ -46,11 +47,11 @@ class Template
     {
         return "File:\t".$this->_file."\nRule: ".$this->_rule;
     }
-	
-	public function matchesTablename($tablename)
-	{
-		return $this->_rule->matchesTablename($tablename);
-	}    
+    
+    public function matchesTablename($tablename)
+    {
+        return $this->_rule->matchesTablename($tablename);
+    }    
     
     public static function compare($first, $second)
     {
@@ -69,6 +70,15 @@ class Template
                 return $template;
             }
         }
+    }
+}
+
+class SimpleTemplate extends Template
+{
+    function __construct($file)
+    {
+        $result = TemplateParser::parseSimpleTemplate($file);
+        parent::__construct($file, $result[0], $result[1]);
     }
 }
 ?>

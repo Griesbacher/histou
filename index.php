@@ -6,6 +6,7 @@ PHP version 5
 @package Default
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
+@link https://github.com/Griesbacher/histou
 **/
 
 require_once 'histou/basic.php';
@@ -34,17 +35,22 @@ $perfData = $influx->filterPerfdata($request, HOST, SERVICE, '\\'.INFLUX_FIELDSE
 
 $perfDataSize = sizeof($perfData);
 if ($perfDataSize < 4) {
-    if ($perfDataSize == 1){
+    if ($perfDataSize == 1) {
         returnData(Debug::errorMarkdownDashboard('#Influxdb Error: '.$perfData[0].' Query: '.INFLUX_QUERY), 1);
-    }else{
+    } else {
         returnData(Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'), 1);
     }
 }
 
 // load templates
 $templates = Folder::loadFolders(array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER));
-
-
+/*$text = "hallo-template";
+$close = function ($perfData) use ($text) {
+    return $text;
+};
+$tmp = new Template("testfile", new Rule("a","b","c",array()), $close);
+array_push($templates, $tmp);
+*/
 Rule::setCheck($perfData['host'], $perfData['service'], $perfData['command'], array_keys($perfData['perfLabel']));
 
 
@@ -54,6 +60,7 @@ foreach ($templates as $template) {
     Debug::add($template);
 }
 Debug::add("Is the first template valid: ".Debug::printBoolean($valid));
+//echo "<pre>".Debug::printBoolean($valid);print_r($templates);echo("</pre>");
 
 if ($valid) {
     $template = $templates[0];
@@ -81,9 +88,11 @@ function returnData($data, $returnCode = 0)
             $data->addRow(Debug::genMarkdownRow(Debug::getLogAsMarkdown(), 'Debug'));
         }
         $data = $data->toArray();
+        $json = json_encode($data);
+    } else {
+        $json = $data;
     }
 
-    $json = json_encode($data);
 
     if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
         header('content-type: application/json; charset=utf-8');

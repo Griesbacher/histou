@@ -17,21 +17,31 @@ class Folder
     {
         if ($handle = opendir($foldername)) {
             while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != ".." && !in_array($file, $alreadyRead) && static::_endsWith($file, '.php')) {
-                    array_push($templates, static::_loadTemplates($foldername.$file));
-                    array_push($alreadyRead, $file);
+                if ($file != "." && $file != ".." && !in_array($file, $alreadyRead)) {
+                    if (static::_endsWith($file, '.php')) {
+                        array_push($templates, static::_loadPHPTemplates($foldername.$file));
+                        array_push($alreadyRead, $file);
+                    }elseif (static::_endsWith($file, '.simple')) {
+                        array_push($templates, static::_loadSimpleTemplates($foldername.$file));
+                        array_push($alreadyRead, $file);
+                    }
                 }
             }
             closedir($handle);
-        }    
+        }
     }
-    
-    private static function _loadTemplates($filename)
+
+    private static function _loadPHPTemplates($filename)
     {
         include $filename;
         return new Template($filename, $rule, $genTemplate);
     }
-	
+
+    private static function _loadSimpleTemplates($filename)
+    {
+        return new SimpleTemplate($filename);
+    }
+
     private static function _endsWith($haystack, $needle)
     {
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
