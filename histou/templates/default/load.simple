@@ -84,8 +84,8 @@ perfLabel = load1, load5, load15
                   "func": "mean"
                 }
               ],
-              "measurement": "debian&load&load&load1&value",
-              "query": "SELECT mean(value) FROM \"debian&load&load&load1&value\" WHERE $timeFilter GROUP BY time($interval)",
+              "measurement": "hostName&serviceName&command&load1&value",
+              "query": "SELECT mean(value) FROM \"hostName&serviceName&command&load1&value\" WHERE $timeFilter GROUP BY time($interval)",
               "alias": "load1"
             },
             {
@@ -97,8 +97,8 @@ perfLabel = load1, load5, load15
                   "func": "mean"
                 }
               ],
-              "measurement": "debian&load&load&load5&value",
-              "query": "SELECT mean(value) FROM \"debian&load&load&load5&value\" WHERE $timeFilter GROUP BY time($interval)",
+              "measurement": "hostName&serviceName&command&load5&value",
+              "query": "SELECT mean(value) FROM \"hostName&serviceName&command&load5&value\" WHERE $timeFilter GROUP BY time($interval)",
               "alias": "load5"
             },
             {
@@ -110,8 +110,8 @@ perfLabel = load1, load5, load15
                   "func": "mean"
                 }
               ],
-              "measurement": "debian&load&load&load15&value",
-              "query": "SELECT mean(value) FROM \"debian&load&load&load15&value\" WHERE $timeFilter GROUP BY time($interval)",
+              "measurement": "hostName&serviceName&command&load15&value",
+              "query": "SELECT mean(value) FROM \"hostName&serviceName&command&load15&value\" WHERE $timeFilter GROUP BY time($interval)",
               "alias": "load15"
             }
           ],
