@@ -22,7 +22,7 @@ class Row
 {
     private $_data = array(
                         'titel' => null,
-                        'editable' => false,
+                        'editable' => true,
                         'height' => null,
                         'panels' => array()
                     );

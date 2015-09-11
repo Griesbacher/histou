@@ -23,7 +23,7 @@ abstract class Panel
                         'title' => null,
                         'type' => null,
                         'span' => 12,
-                        'editable' => false,
+                        'editable' => true,
                         'legend' => array(
                         'current' => true,
                         'max' => true,
