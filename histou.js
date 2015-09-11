@@ -7,7 +7,7 @@ var window, document, ARGS, $, jQuery, moment, kbn;
 parseArgs()
 
 
-return function(callback) {
+return function (callback) {
 
     url = 'http://localhost/histou/index.php';
     configUrl = url+'?host='+host+'&service='+service+debug;
@@ -19,24 +19,25 @@ return function(callback) {
             dataType: "jsonp",
         }
     ).done(
-            function(result) {
+        function (result) {
                 console.log(result);
                 callback(result);
-            }
+        }
     ).fail(
-            function(result) {
+        function (result) {
                 console.log(result);
                 console.log(configUrl);
-                if(result.status == 200) {
-                    callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl+'\n# Probably the output is not valid json, because the returncode is 200!'));
-                }else{
-                    callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl));
-                }
+            if (result.status == 200) {
+                callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl+'\n# Probably the output is not valid json, because the returncode is 200!'));
+            } else {
+                callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl));
             }
+        }
     );
 }
 
-function createErrorDashboard(message) {
+function createErrorDashboard(message)
+{
     return {
         rows : [{
             title: 'Chart',
@@ -54,59 +55,62 @@ function createErrorDashboard(message) {
     };
 }
 
-function parseArgs() {
-    if(!_.isUndefined(ARGS.reduce)) {
+function parseArgs()
+{
+    if (!_.isUndefined(ARGS.reduce)) {
         $('head').append('<style>.panel-fullscreen {top:0}</style>');
 
         //change ui to our needs
         clearUi()
     }
-    if(!_.isUndefined(ARGS.host)) {
+    if (!_.isUndefined(ARGS.host)) {
         host = ARGS.host;
-    }else{
+    } else {
         host = "Host0"
     }
 
-    if(!_.isUndefined(ARGS.service)) {
+    if (!_.isUndefined(ARGS.service)) {
         service = ARGS.service;
-    }else{
+    } else {
         service = ""
     }
 
-    if(!_.isUndefined(ARGS.command)) {
+    if (!_.isUndefined(ARGS.command)) {
         command = ARGS.command;
-    }else{
+    } else {
         command = ""
     }
 
-    if(!_.isUndefined(ARGS.perf)) {
+    if (!_.isUndefined(ARGS.perf)) {
         perf = ARGS.perf;
-    }else{
+    } else {
         perf = ""
     }
 
-    if(!_.isUndefined(ARGS.height)) {
+    if (!_.isUndefined(ARGS.height)) {
         height = ARGS.height;
-    }else{
+    } else {
         height = "200px"
     }
     
-    if(_.isUndefined(ARGS.debug)) {
+    if (_.isUndefined(ARGS.debug)) {
         debug = '';
-    }else{
+    } else {
         debug = "&debug"
     }
 }
 
-function clearUi() {
+function clearUi()
+{
     //removes white space
     var checkExist = setInterval(
-        function() {
+        function () {
             if ($('.panel-content').length) {
                 clearInterval(checkExist);
                 document.getElementsByClassName("panel-content")[0].style.paddingBottom = '0px';
             }
-        }, 100
+        },
+        100
     );
     /*
         .panel-header removes the headline of the graphs
@@ -118,14 +122,16 @@ function clearUi() {
     for (index = 0; index < divs.length; index++) {
         waitForDivAndDeleteIt(divs[index]);
     }
-    function waitForDivAndDeleteIt(div){
+    function waitForDivAndDeleteIt(div)
+    {
         var checkExist = setInterval(
-            function() {
+            function () {
                 if ($(div).length) {
                     clearInterval(checkExist);
                     $(div).remove();
                 }
-            }, 100
+            },
+            100
         );
     }
 }

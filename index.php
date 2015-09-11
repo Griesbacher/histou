@@ -1,6 +1,7 @@
 <?php
 /**
-This is the main file. It returns an json Object when requested per jsonp or some debug output else.
+This is the main file.
+It returns an json Object when requested per jsonp or some debug output else.
 PHP version 5
 @category Main_File
 @package Default
@@ -27,31 +28,53 @@ ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 
 
 parsArgs();
-define("INFLUX_QUERY", sprintf("show series from /%s%s%s.*/", str_replace("/", '\/', HOST), INFLUX_FIELDSEPERATOR, str_replace('/', '\/', SERVICE)));
+define(
+    "INFLUX_QUERY",
+    sprintf(
+        "show series from /%s%s%s.*/",
+        str_replace("/", '\/', HOST),
+        INFLUX_FIELDSEPERATOR,
+        str_replace('/', '\/', SERVICE)
+    )
+);
 // database load perfdata
 $influx = new Influxdb(INFLUX_URL);
 $request = $influx->makeRequest(INFLUX_QUERY);
-$perfData = $influx->filterPerfdata($request, HOST, SERVICE, '\\'.INFLUX_FIELDSEPERATOR);
+$perfData = $influx->filterPerfdata(
+    $request,
+    HOST,
+    SERVICE,
+    '\\'.INFLUX_FIELDSEPERATOR
+);
 
 $perfDataSize = sizeof($perfData);
 if ($perfDataSize < 4) {
     if ($perfDataSize == 1) {
-        returnData(Debug::errorMarkdownDashboard('#Influxdb Error: '.$perfData[0].' Query: '.INFLUX_QUERY), 1);
+        returnData(
+            Debug::errorMarkdownDashboard(
+                '#Influxdb Error: '.$perfData[0].' Query: '.INFLUX_QUERY
+            ),
+            1
+        );
     } else {
-        returnData(Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'), 1);
+        returnData(
+            Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'),
+            1
+        );
     }
 }
 
 // load templates
-$templates = Folder::loadFolders(array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER));
-/*$text = "hallo-template";
-$close = function ($perfData) use ($text) {
-    return $text;
-};
-$tmp = new Template("testfile", new Rule("a","b","c",array()), $close);
-array_push($templates, $tmp);
-*/
-Rule::setCheck($perfData['host'], $perfData['service'], $perfData['command'], array_keys($perfData['perfLabel']));
+$templates = Folder::loadFolders(
+    array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER)
+);
+
+Rule::setCheck(
+    $perfData['host'],
+    $perfData['service'],
+    $perfData['command'],
+    array_keys($perfData['perfLabel'])
+);
 
 
 usort($templates, 'Template::compare');
@@ -60,7 +83,6 @@ foreach ($templates as $template) {
     Debug::add($template);
 }
 Debug::add("Is the first template valid: ".Debug::printBoolean($valid));
-//echo "<pre>".Debug::printBoolean($valid);print_r($templates);echo("</pre>");
 
 if ($valid) {
     $template = $templates[0];
@@ -129,4 +151,3 @@ function parsArgs()
         Debug::enable();
     }
 }
-?>

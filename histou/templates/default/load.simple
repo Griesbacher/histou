@@ -23,7 +23,7 @@ perfLabel = load1, load5, load15
       "height": "250px",
       "panels": [
         {
-          "title": "debian - load",
+          "title": "hostName - serviceName",
           "error": false,
           "span": 12,
           "editable": true,
