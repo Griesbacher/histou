@@ -30,7 +30,7 @@ class Rule
     @param array  $perfLabel hostname.
     @return null
     **/
-    public function __construct($host = '^$', $service = '^$', $command = '^$', array $perfLabel)
+    public function __construct($host = '^$', $service = '^$', $command = '^$', array $perfLabel = array())
     {
         $this->_data['host'] = $host;
         $this->_data['service'] = $service;
@@ -74,14 +74,13 @@ class Rule
         $stringToReplace = trim($stringToReplace);
         switch ($stringToReplace){
         case "*":
-            return ".*";
         case "ALL":
             return ".*";
         case "NONE":
             return "^$";
         default:
-            return $stringToReplace;
         }
+        return $stringToReplace;
     }
 
     /**
@@ -162,7 +161,6 @@ class Rule
             $baseSize = sizeof($base);
             $hitsFirst = static::_compareArrays($first, $base);
             $hitsSecond = static::_compareArrays($second, $base);
-            //print_r("comp: ".$hitsFirst." - ".$hitsSecond." - ".$baseSize."<br>");
             if ($hitsFirst != $hitsSecond) {
                 if ($hitsFirst == $baseSize) {
                     return -1;
@@ -176,7 +174,6 @@ class Rule
             }
         } else {
             if ($first != $second) {
-                // print_r("comp: ".$first." - ".$second." - ".$base."<br>");
                 $firstResult = preg_match($first, $base);
                 $secondResult = preg_match($second, $base);
                 if ($firstResult != $secondResult) {

@@ -10,7 +10,7 @@ PHP version 5
 **/
 require_once 'histou/rule.php';
 require_once 'histou/templateParser.php';
-trait enableLambdas
+trait EnableLambdas
 {
     /**
     Enables Lambdas.
@@ -34,7 +34,7 @@ PHP version 5
 **/
 class Template
 {
-    use enableLambdas;
+    use EnableLambdas;
     private $_file;
     private $_rule;
     private $_genTemplate;

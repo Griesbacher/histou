@@ -48,16 +48,16 @@ function parsIni($filename)
 }
 /**
 Creates constatans with $value if it is empty the $alternative is taken.
-@param string $name        Name of the constant.
+@param string $NAME        Name of the constant.
 @param object $value       Value of the constant.
 @param object $alternative Alternative value of the constant.
 @return null.
 **/
-function setConstant($name, $value, $alternative)
+function setConstant($NAME, $value, $alternative)
 {
     if (empty($value)) {
-        define($name, $alternative);
+        define($NAME, $alternative);
     } else {
-        define($name, $value);
+        define($NAME, $value);
     }
 }

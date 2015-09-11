@@ -46,6 +46,8 @@ class Influxdb
         }
     }
 
+    const COLUMNS = 'columns';
+    const PERF_LABEL = 'perfLabel';
     /**
     Filters the Performancedata out of an database request.
     @param string $request        database request.
@@ -67,17 +69,17 @@ class Influxdb
             if (!empty($queryResult['series'])) {
                 foreach ($queryResult['series'] as $table) {
                     if (preg_match($regex, $table['name'], $result)) {
-                        if (!array_key_exists('perfLabel', $data)) {
-                            $data['perfLabel'] = array();
+                        if (!array_key_exists(static::PERF_LABEL, $data)) {
+                            $data[static::PERF_LABEL] = array();
                         }
-                        if (!array_key_exists($result[2], $data['perfLabel'])) {
-                            $data['perfLabel'][$result[2]] = array();
+                        if (!array_key_exists($result[2], $data[static::PERF_LABEL])) {
+                            $data[static::PERF_LABEL][$result[2]] = array();
                         }
                         $data['command'] = $result[1];
-                        $data['perfLabel'][$result[2]][$result[3]] = array();
-                        if (array_key_exists('columns', $table)) {
-                            for ($tagId = 1; $tagId < sizeof($table['columns']); $tagId++) {
-                                $data['perfLabel'][$result[2]][$result[3]][$table['columns'][$tagId]] = $table['values'][0][$tagId];
+                        $data[static::PERF_LABEL][$result[2]][$result[3]] = array();
+                        if (array_key_exists(static::COLUMNS, $table)) {
+                            for ($tagId = 1; $tagId < sizeof($table[static::COLUMNS]); $tagId++) {
+                                $data[static::PERF_LABEL][$result[2]][$result[3]][$table[static::COLUMNS][$tagId]] = $table['values'][0][$tagId];
                             }
                         }
                     }
@@ -86,9 +88,9 @@ class Influxdb
                 return array($queryResult['error']);
             }
         }
-        if (isset($data['perfLabel'])) {
-            ksort($data['perfLabel'], SORT_NATURAL);
-            foreach ($data['perfLabel'] as &$perfLabel) {
+        if (isset($data[static::PERF_LABEL])) {
+            ksort($data[static::PERF_LABEL], SORT_NATURAL);
+            foreach ($data[static::PERF_LABEL] as &$perfLabel) {
                 uksort($perfLabel, "Influxdb::_comparePerfLabel");
             }
         }
@@ -113,6 +115,7 @@ class Influxdb
             return 4;
         case 'max':
             return 5;
+        default:
         }
         return 0;
     }
