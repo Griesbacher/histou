@@ -32,7 +32,7 @@ abstract class Panel
                         'values' => true,
                         )
                     );
-
+    protected static $currentId = 2;
     /**
     Constructor.
     @param string $title name of the panel.
@@ -43,6 +43,7 @@ abstract class Panel
     {
         $this->data['title'] = $title;
         $this->data['type'] = $type;
+        $this->data['id'] = self::$currentId++;
     }
 
     /**
@@ -72,16 +73,6 @@ abstract class Panel
     public function setEditable(boolean $editable)
     {
         $this->data['editable'] = $editable;
-    }
-
-    /**
-    Setter for Id
-    @param int $id Id.
-    @return null.
-    **/
-    public function setId($id)
-    {
-        $this->data['id'] = $id;
     }
 
     /**

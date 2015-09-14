@@ -21,7 +21,7 @@ PHP version 5
 class Dashboard
 {
     private $_data = array(
-    'id' => null,
+    'id' => '1',
     'style' => 'light',
     'title' => null,
     'originalTitle' => 'CustomDashboard',
