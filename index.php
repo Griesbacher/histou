@@ -150,4 +150,9 @@ function parsArgs()
     if (isset($_GET['debug'])) {
         Debug::enable();
     }
+    if (isset($_GET['height']) && !empty($_GET['height'])) {
+        define("HEIGHT", $_GET["height"]);
+    } else {
+        define("HEIGHT", "400px");
+    }
 }

@@ -34,7 +34,7 @@ class Row
     @param string $height row height.
     @return object
     **/
-    function __construct($titel, $height = '400px')
+    function __construct($titel, $height = HEIGHT)
     {
         $this->_data['titel'] = $titel;
         $this->_data['height'] = $height;

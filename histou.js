@@ -10,7 +10,7 @@ parseArgs()
 return function (callback) {
 
     url = 'http://localhost/histou/index.php';
-    configUrl = url+'?host='+host+'&service='+service+debug;
+    configUrl = url+'?host='+host+'&service='+service+'&height='+height+debug;
 
     $.ajax(
         {
@@ -90,9 +90,9 @@ function parseArgs()
     if (!_.isUndefined(ARGS.height)) {
         height = ARGS.height;
     } else {
-        height = "200px"
+        height = ""
     }
-    
+
     if (_.isUndefined(ARGS.debug)) {
         debug = '';
     } else {
