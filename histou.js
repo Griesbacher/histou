@@ -10,7 +10,7 @@ parseArgs()
 return function (callback) {
 
     url = 'http://localhost/histou/index.php';
-    configUrl = url+'?host='+host+'&service='+service+'&height='+height+debug;
+    configUrl = url+'?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug;
 
     $.ajax(
         {
@@ -97,6 +97,12 @@ function parseArgs()
         debug = '';
     } else {
         debug = "&debug"
+    }
+
+    if(!_.isUndefined(ARGS.legend)) {
+        legend = ARGS.legend;
+    }else{
+        legend = true
     }
 }
 

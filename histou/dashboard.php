@@ -52,7 +52,6 @@ class Dashboard
     'annotations' => array(),
     'refresh' => '5s',
     'version' => '6',
-    'hideAllLegends' => false,
     'rows' => array(),
     );
     private $_rows = array();

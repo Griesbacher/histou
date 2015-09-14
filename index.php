@@ -155,4 +155,13 @@ function parsArgs()
     } else {
         define("HEIGHT", "400px");
     }
+    if (isset($_GET['legend']) && !empty($_GET['legend'])) {
+        if ($_GET["legend"] == "true") {
+            define("LEGEND_SHOW", true);
+        } else {
+            define("LEGEND_SHOW", false);
+        }
+    } else {
+        define("LEGEND_SHOW", true);
+    }
 }

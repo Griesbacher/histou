@@ -24,13 +24,6 @@ abstract class Panel
                         'type' => null,
                         'span' => 12,
                         'editable' => true,
-                        'legend' => array(
-                        'current' => true,
-                        'max' => true,
-                        'min' => true,
-                        'show' => true,
-                        'values' => true,
-                        )
                     );
     protected static $currentId = 2;
     /**
@@ -149,7 +142,7 @@ class GraphPanel extends Panel
     @param string $title name of the panel.
     @return object.
     **/
-    function __construct($title)
+    function __construct($title, $legendShow = LEGEND_SHOW)
     {
         parent::__construct($title, 'graph');
         $this->data['tooltip'] = array(
@@ -163,7 +156,7 @@ class GraphPanel extends Panel
                                 'shared' =>  true
                             );
         $this->data['legend'] = array(
-                                "show" => true,
+                                "show" => $legendShow,
                                 "values" => false,
                                 "min" => false,
                                 "max" => false,
