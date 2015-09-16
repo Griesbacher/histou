@@ -53,6 +53,7 @@ class Dashboard
     'refresh' => '5s',
     'version' => '6',
     'rows' => array(),
+    'annotations' => array('list' => array()),
     );
     private $_rows = array();
 
@@ -108,4 +109,55 @@ class Dashboard
     {
         array_push($this->_rows, $row);
     }
+
+    /**
+    Adds a Annotation to the dashboard.
+    @param string $name        name to display.
+    @param string $hostname    hostname to search for.
+    @param string $servicename servicename to search for.
+    @param string $iconColor   Color of the arrow.
+    @param string $lineColor   Color of the vertical line.
+    @param int    $iconSize    Size of the arrow.
+    @param string $datasource  name of the grafana datasource.
+    @return return null
+    **/
+    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $iconSize = 13, $datasource = "influxdb")
+    {
+        array_push(
+            $this->_data['annotations']['list'], array(
+            "datasource" => $datasource,
+            "enable" => false,
+            "iconColor" => $iconColor,
+            "iconSize" => 13,
+            "lineColor" => $lineColor,
+            "name" => $name,
+            "query" => "SELECT * FROM \"$hostname&$servicename&messages\" WHERE \"type\" = '$name' AND \$timeFilter",
+            "showLine" => true,
+            "tagsColumn" => "author",
+            "textColumn" => "value",
+            "titleColumn" => "type"
+            )
+        );
+    }
+
+    /**
+    Adds all default Annotations.
+    @param string $hostname    hostname
+    @param string $servicename servicename
+    @return null
+    **/
+    public function addDefaultAnnotations($hostname, $servicename)
+    {
+        $annotations = array(
+        array('host_notification', '#751975'),
+        array('service_notification', '#198c19'),
+        array('comment', '#008080'),
+        array('acknowledgement', '#ff64d0'),
+        array('downtime', '#cb410b'),
+        );
+        foreach ($annotations as $annotation) {
+            $this->addAnnotation($annotation[0], $hostname, $servicename, $annotation[1], $annotation[1]);
+        }
+    }
+
 }
