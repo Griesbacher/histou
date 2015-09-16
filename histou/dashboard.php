@@ -128,7 +128,7 @@ class Dashboard
             "datasource" => $datasource,
             "enable" => false,
             "iconColor" => $iconColor,
-            "iconSize" => 13,
+            "iconSize" => $iconSize,
             "lineColor" => $lineColor,
             "name" => $name,
             "query" => "SELECT * FROM \"$hostname&$servicename&messages\" WHERE \"type\" = '$name' AND \$timeFilter",
