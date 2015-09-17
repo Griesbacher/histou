@@ -22,7 +22,6 @@ class Dashboard
 {
     private $_data = array(
     'id' => '1',
-    'style' => 'light',
     'title' => null,
     'originalTitle' => 'CustomDashboard',
     'tags' => array(),
@@ -121,7 +120,7 @@ class Dashboard
     @param string $datasource  name of the grafana datasource.
     @return return null
     **/
-    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $iconSize = 13, $datasource = "influxdb")
+    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $iconSize = 13, $datasource = "nagflux")
     {
         array_push(
             $this->_data['annotations']['list'], array(

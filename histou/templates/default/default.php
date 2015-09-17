@@ -80,8 +80,9 @@ $genTemplate = function ($perfData) {
             "value"
         );
         $alias = $perfData['host']." ".$perfData['service']." ".$perfKeys[$i]." value";
-        $panel->addAliasColor($alias, '#000000');
+        $panel->addAliasColor($alias, '#085DFF');
         $panel->addTargetSimple($target, $alias);
+        $panel->fillBelowLine($alias, 2);
         //Add Lable
         if (isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])) {
             $panel->setleftYAxisLabel(
@@ -101,10 +102,15 @@ $genTemplate = function ($perfData) {
             $perfData['command'],
             $perfKeys[$i]
         );
-
+        $panel->addDowntime(
+            $perfData['host'],
+            $perfData['service'],
+            $perfData['command'],
+            $perfKeys[$i]
+        );
         $row->addPanel($panel);
         $dashboard->addRow($row);
-        $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     }
+    $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     return $dashboard;
 };

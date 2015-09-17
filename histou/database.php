@@ -85,6 +85,7 @@ class Influxdb
                     }
                 }
             } else {
+                echo "<pre>";print_r($queryResult);echo "</pre>";
                 return array($queryResult['error']);
             }
         }

@@ -139,7 +139,8 @@ class GraphPanel extends Panel
 {
     /**
     Constructor.
-    @param string $title name of the panel.
+    @param string  $title      name of the panel.
+    @param boolean $legendShow hide the legend or not
     @return object.
     **/
     function __construct($title, $legendShow = LEGEND_SHOW)
@@ -170,6 +171,7 @@ class GraphPanel extends Panel
         $this->data['fill'] = 0;
         $this->data['linewidth'] = 2;
         $this->data['targets'] = array();
+        $this->data['seriesOverrides'] = array();
     }
 
     /**
@@ -277,7 +279,7 @@ class GraphPanel extends Panel
     public function addWarning($host, $service, $command, $perfLabel)
     {
         $this->_addThreshold(
-            $host, $service, $command, $perfLabel, 'warn', '#FFFF00'
+            $host, $service, $command, $perfLabel, 'warn', '#FFFC15'
         );
     }
 
@@ -292,7 +294,7 @@ class GraphPanel extends Panel
     public function addCritical($host, $service, $command, $perfLabel)
     {
         $this->_addThreshold(
-            $host, $service, $command, $perfLabel, 'crit', '#FF0000'
+            $host, $service, $command, $perfLabel, 'crit', '#FF3727'
         );
     }
 
@@ -304,5 +306,56 @@ class GraphPanel extends Panel
     public function setLinewidth($width)
     {
         $this->data['linewidth'] = $width;
+    }
+
+    /**
+    Adds dots to the value line if there is a downtime
+    @param string $host      hostname.
+    @param string $service   servicename.
+    @param string $command   commandname.
+    @param array  $perfLabel hostname.
+    @param string $color     Color of the dots
+    @return null.
+    **/
+    public function addDowntime($host, $service, $command, $perfLabel, $color = '#A218E8')
+    {
+        $target = sprintf(
+            '%s%s%s%s%s%s%s%svalue',
+            $host, INFLUX_FIELDSEPERATOR,
+            $service, INFLUX_FIELDSEPERATOR,
+            $command, INFLUX_FIELDSEPERATOR,
+            $perfLabel, INFLUX_FIELDSEPERATOR
+        );
+        $alias = "downtime";
+        $this->addTargetSimple(
+            $target,
+            $alias,
+            array(array('key' => 'downtime', 'operator'  => '=', 'value' => 1))
+        );
+        array_push(
+            $this->data['seriesOverrides'], array(
+            'lines' => false,
+            'alias' => $alias,
+            'points' => true,
+            'pointradius' => 2
+            )
+        );
+        $this->addAliasColor($alias, $color);
+    }
+
+    /**
+    Fills the area below a line.
+    @param string $alias     name of the query.
+    @param int    $intensity intensity of the color.
+    @return null.
+    **/
+    public function fillBelowLine($alias, $intensity)
+    {
+        array_push(
+            $this->data['seriesOverrides'], array(
+            'alias' => $alias,
+            'fill' => $intensity,
+            )
+        );
     }
 }
