@@ -152,7 +152,7 @@ class Dashboard
         array('service_notification', '#198c19'),
         array('comment', '#008080'),
         array('acknowledgement', '#ff64d0'),
-        array('downtime', '#cb410b'),
+        array('downtime', '#A218E8'),
         );
         foreach ($annotations as $annotation) {
             $this->addAnnotation($annotation[0], $hostname, $servicename, $annotation[1], $annotation[1]);
