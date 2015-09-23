@@ -17,28 +17,30 @@ return function (callback) {
                     var datapoints = series.data.length;
                     var avgTimeBetweenPoints = timerangeInMillisec / datapoints;
                     var indices = [];
-                    for (var i = stepSize; i < points.length; i += stepSize){
-                            if ((points[i]-points[i-stepSize]) > avgTimeBetweenPoints*2){
-                                    indices.push(i)
-                            }
+                for (var i = stepSize; i < points.length; i += stepSize){
+                    if ((points[i]-points[i-stepSize]) > avgTimeBetweenPoints*2) {
+                            indices.push(i)
                     }
-                    for (var i = 0; i < indices.length; i++){
-                            var pointIndex = indices[i];
-                            var oldTimestamp = points[pointIndex];
-                            for (var j = 0; i < stepSize; i++){
-                                    points.splice(pointIndex,0,null);
-                            }
+                }
+                for (var i = 0; i < indices.length; i++){
+                        var pointIndex = indices[i];
+                        var oldTimestamp = points[pointIndex];
+                    for (var j = 0; i < stepSize; i++){
+                            points.splice(pointIndex,0,null);
                     }
+                }
             }
             plot.hooks.processDatapoints.push(fixGaps);
         }
 
-        $.plot.plugins.push({
-            init: init,
-            options: {},
-            name: "fixMeasurementGaps",
-            version: "0.1"
-        });
+        $.plot.plugins.push(
+            {
+                init: init,
+                options: {},
+                name: "fixMeasurementGaps",
+                version: "0.1"
+            }
+        );
     })(jQuery);
 
     url = 'http://localhost/histou/index.php';
