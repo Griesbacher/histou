@@ -317,7 +317,7 @@ class GraphPanel extends Panel
     @param string $color     Color of the dots
     @return null.
     **/
-    public function addDowntime($host, $service, $command, $perfLabel, $color = '#A218E8')
+    public function addDowntime($host, $service, $command, $perfLabel, $color = '#EEE')
     {
         $target = sprintf(
             '%s%s%s%s%s%s%s%svalue',
@@ -334,10 +334,10 @@ class GraphPanel extends Panel
         );
         array_push(
             $this->data['seriesOverrides'], array(
-            'lines' => false,
+            'lines' => true,
             'alias' => $alias,
-            'points' => true,
-            'pointradius' => 2
+            'linewidth' => 3,
+            'legend' => false
             )
         );
         $this->addAliasColor($alias, $color);
