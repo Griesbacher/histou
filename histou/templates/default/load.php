@@ -43,6 +43,13 @@ $genTemplate = function ($perfData) {
         $panel->addAliasColor($alias, $colors[$i]);
         $panel->addTargetSimple($target, $alias);
         $panel->fillBelowLine($alias, 2);
+
+        $panel->addDowntime(
+            $perfData['host'],
+            $perfData['service'],
+            $perfData['command'],
+            $perfKeys[$i]
+        );
     }
     $panel->addWarning(
         $perfData['host'],
@@ -56,12 +63,7 @@ $genTemplate = function ($perfData) {
         $perfData['command'],
         $perfKeys['load1']
     );
-    $panel->addDowntime(
-        $perfData['host'],
-        $perfData['service'],
-        $perfData['command'],
-        $perfKeys['load1']
-    );
+
     $row->addPanel($panel);
     $dashboard->addRow($row);
 
