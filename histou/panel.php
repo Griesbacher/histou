@@ -337,7 +337,8 @@ class GraphPanel extends Panel
             'lines' => true,
             'alias' => $alias,
             'linewidth' => 3,
-            'legend' => false
+            'legend' => false,
+            'fill' => 3,
             )
         );
         $this->addAliasColor($alias, $color);
