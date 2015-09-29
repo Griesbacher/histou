@@ -222,8 +222,8 @@ class Rule
                 return false;
             }
         }
-        foreach ($this->_data[$keys[3]] as $perfLable) {
-            if (preg_match($perfLable, $tableparts[3])) {
+        foreach ($this->_data[$keys[3]] as $perfLabel) {
+            if (preg_match($perfLabel, $tableparts[3])) {
                 return true;
             }
         }

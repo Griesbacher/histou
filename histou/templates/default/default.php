@@ -13,7 +13,7 @@ $rule = new Rule(
     $host = '^$',
     $service = '^$',
     $command = '^$',
-    $perfLable = array()
+    $perfLabel = array()
 );
 
 $genTemplate = function ($perfData) {
@@ -83,7 +83,7 @@ $genTemplate = function ($perfData) {
         $panel->addAliasColor($alias, '#085DFF');
         $panel->addTargetSimple($target, $alias);
         $panel->fillBelowLine($alias, 2);
-        //Add Lable
+        //Add Label
         if (isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])) {
             $panel->setleftYAxisLabel(
                 $perfData['perfLabel'][$perfKeys[$i]]['value']['unit']

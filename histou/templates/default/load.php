@@ -13,7 +13,7 @@ $rule = new Rule(
     $host = '*',
     $service = '*',
     $command = '*',
-    $perfLable = array('load1', 'load5', 'load15')
+    $perfLabel = array('load1', 'load5', 'load15')
 );
 
 $genTemplate = function ($perfData) {
