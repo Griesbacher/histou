@@ -155,13 +155,14 @@ function parsArgs()
     } else {
         define("HEIGHT", "400px");
     }
-    if (isset($_GET['legend']) && !empty($_GET['legend'])) {
-        if ($_GET["legend"] == "true") {
-            define("LEGEND_SHOW", true);
-        } else {
-            define("LEGEND_SHOW", false);
-        }
+    if (isset($_GET['legend']) && !empty($_GET['legend']) && $_GET["legend"] == "false") {
+        define("SHOW_LEGEND", false);
     } else {
-        define("LEGEND_SHOW", true);
+        define("SHOW_LEGEND", true);
+    }
+    if (isset($_GET['annotations']) && !empty($_GET['annotations']) && $_GET["annotations"] == "true") {
+        define("SHOW_ANNOTATION", true);
+    } else {
+        define("SHOW_ANNOTATION", false);
     }
 }

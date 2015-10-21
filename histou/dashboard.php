@@ -116,16 +116,17 @@ class Dashboard
     @param string $servicename servicename to search for.
     @param string $iconColor   Color of the arrow.
     @param string $lineColor   Color of the vertical line.
+    @param bool   $enabled     Is Annotation by default enabled.
     @param int    $iconSize    Size of the arrow.
     @param string $datasource  name of the grafana datasource.
     @return return null
     **/
-    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $iconSize = 13, $datasource = "nagflux")
+    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13, $datasource = "nagflux")
     {
         array_push(
             $this->_data['annotations']['list'], array(
             "datasource" => $datasource,
-            "enable" => false,
+            "enable" => $enabled,
             "iconColor" => $iconColor,
             "iconSize" => $iconSize,
             "lineColor" => $lineColor,
