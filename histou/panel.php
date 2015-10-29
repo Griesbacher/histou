@@ -196,8 +196,18 @@ class GraphPanel extends Panel
         array_push(
             $this->data['targets'],
             array(
-            "function" => "mean",
-            "column" => "value",
+            "fields" => array(
+                              array(
+                                    "func" => "mean",
+                                    "name" => "value",
+                                   )
+                             ),
+            "groupBy" => array(
+                               array(
+                                     "interval" => "auto",
+                                     "type" => "time",
+                                    )
+                              ),
             "measurement" => sprintf($target),
             "query" => sprintf(
                 'select mean(value) from "%s" where AND $timeFilter group by time($interval)',
