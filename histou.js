@@ -8,6 +8,10 @@ parseArgs()
 
 
 return function (callback) {
+    if(window.location.href.search('/dashboard-solo/') != -1){
+        document.documentElement.style.background = '#FFF';
+    }
+
     url = 'http://localhost/histou/';
     configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug;
 
