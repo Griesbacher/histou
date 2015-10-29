@@ -55,13 +55,13 @@ $genTemplate = function ($perfData) {
         $perfData['host'],
         $perfData['service'],
         $perfData['command'],
-        $perfKeys['load1']
+        $perfKeys[0]
     );
     $panel->addCritical(
         $perfData['host'],
         $perfData['service'],
         $perfData['command'],
-        $perfKeys['load1']
+        $perfKeys[0]
     );
 
     $row->addPanel($panel);
