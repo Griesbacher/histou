@@ -25,7 +25,7 @@ abstract class Panel
                         'span' => 12,
                         'editable' => true,
                     );
-    protected static $currentId = 2;
+    protected static $currentId = 1;
     /**
     Constructor.
     @param string $title name of the panel.
