@@ -8,14 +8,13 @@
                 var indices = [];
             for (var i = stepSize; i < points.length; i += stepSize){
                 if ((points[i]-points[i-stepSize]) > avgTimeBetweenPoints*2) {
-                        indices.push(i)
+                    indices.push(i)
                 }
             }
-            for (var i = 0; i < indices.length; i++){
-                    var pointIndex = indices[i];
-                    var oldTimestamp = points[pointIndex];
-                for (var j = 0; i < stepSize; i++){
-                        points.splice(pointIndex,0,null);
+            for (var i = indices.length-1; i >= 0; i--) {
+                var pointIndex = indices[i];
+                for (var j = 0; j < stepSize; j++){
+                    points.splice(pointIndex,0,null);
                 }
             }
         }
