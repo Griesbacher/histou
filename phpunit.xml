@@ -5,3 +5,4 @@
     </testsuite>
   </testsuites>
 </phpunit>
+<!-- phpunit --coverage-html cover -c phpunit.xml -->
