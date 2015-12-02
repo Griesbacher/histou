@@ -8,7 +8,7 @@ parseArgs()
 
 
 return function (callback) {
-    if(window.location.href.search('/dashboard-solo/') != -1){
+    if(window.location.href.search('/dashboard-solo/') != -1) {
         document.documentElement.style.background = '#FFF';
     }
 
