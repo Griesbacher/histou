@@ -17,7 +17,6 @@ $rule = new Rule(
 );
 
 $genTemplate = function ($perfData) {
-    $perfKeys = array_keys($perfData['perfLabel']);
     $dashboard = new Dashboard($perfData['host'].'-'.$perfData['service']);
     foreach (array('rta', 'pl') as $perfLabel) {
         $row = new Row($perfData['service'].' '.$perfData['command']);
@@ -54,19 +53,19 @@ $genTemplate = function ($perfData) {
             $perfData['host'],
             $perfData['service'],
             $perfData['command'],
-            $perfKeys[$perfLabel]
+            $perfLabel
         );
         $panel->addCritical(
             $perfData['host'],
             $perfData['service'],
             $perfData['command'],
-            $perfKeys[$perfLabel]
+            $perfLabel
         );
         $panel->addDowntime(
             $perfData['host'],
             $perfData['service'],
             $perfData['command'],
-            $perfKeys[$perfLabel]
+            $perfLabel
         );
         $row->addPanel($panel);
 

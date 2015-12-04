@@ -1,5 +1,8 @@
 [general]
-socketTimeout = 10;
+socketTimeout = 10
+phpCommand = "php"
+;leave tmpFolder empty to use default php folder
+tmpFolder = ""
 [folder]
 defaultTemplateFolder = "histou/templates/default/"
 customTemplateFolder = "histou/templates/custom/"

@@ -8,7 +8,9 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-require_once 'histou/template.php';
+
+require_once 'histou/templateLoader.php';
+
 /**
 Folder Class.
 PHP version 5
@@ -20,86 +22,47 @@ PHP version 5
 **/
 class Folder
 {
-
     /**
     Reads a list of directory and returns a list of Templates.
     @param array $folders list of folder strings.
-    @return array of templates.
+    @return array of templateFiles.
     **/
     public static function loadFolders($folders)
     {
-        $templates = array();
+        $templateFiles = array();
         $alreadyRead = array();
         foreach ($folders as $folder) {
-            static::_pushFolder($templates, $folder, $alreadyRead);
+            static::_pushFolder($templateFiles, $folder, $alreadyRead);
         }
-        return $templates;
+        return $templateFiles;
     }
+
     /**
     Reads each directory and pushes the template to the given list.
-    @param array  $templates   list of templates.
-    @param string $foldername  foldername.
-    @param array  $alreadyRead list of known templates.
+    @param array  $templateFiles list of templateFiles.
+    @param string $foldername    foldername.
+    @param array  $alreadyRead   list of known templateFiles.
     @return null.
     **/
-    private static function _pushFolder(&$templates, $foldername, &$alreadyRead)
+    private static function _pushFolder(&$templateFiles, $foldername, &$alreadyRead)
     {
-        if ($handle = opendir($foldername)) {
-            while (false !== ($file = readdir($handle))) {
-                if ($file != "."
-                    && $file != ".."
-                    && !in_array($file, $alreadyRead)
-                ) {
-                    if (static::_endsWith($file, '.php')) {
-                        array_push(
-                            $templates, static::_loadPHPTemplates($foldername.$file)
-                        );
-                        array_push($alreadyRead, $file);
-                    } elseif (static::_endsWith($file, '.simple')) {
-                        array_push(
-                            $templates, static::_loadSimpleTemplates(
-                                $foldername.$file
-                            )
-                        );
-                        array_push($alreadyRead, $file);
-                    }
-                }
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($foldername));
+        while ($it->valid()) {
+            if (!$it->isDot() && !in_array($it->getSubPathName(), $alreadyRead) && Folder::_isValidFile($it->getSubPathName())) {
+                array_push($templateFiles, $it->key());
+                array_push($alreadyRead, $it->getSubPathName());
             }
-            closedir($handle);
+            $it->next();
         }
     }
 
     /**
-    Creates a Basic Template.
-    @param string $filename foldername.
-    @return object.
+    Returns true if the fileending is a valid one.
+    @param string $filename path or filename.
+    @return bool true if it ends with '.simple' or '.php'.
     **/
-    private static function _loadPHPTemplates($filename)
+    private static function _isValidFile($filename)
     {
-        include $filename;
-        return new Template($filename, $rule, $genTemplate);
-    }
-
-    /**
-    Creates a Simple Template.
-    @param string $filename foldername.
-    @return object.
-    **/
-    private static function _loadSimpleTemplates($filename)
-    {
-        return new SimpleTemplate($filename);
-    }
-    /**
-    Tests if a string ends with a given string
-    @param string $stringToSearch string to search in.
-    @param string $extension      string to search for.
-    @return object.
-    **/
-    private static function _endsWith($stringToSearch, $extension)
-    {
-        return $extension === "" ||
-        (
-        ($temp = strlen($stringToSearch) - strlen($extension)) >= 0
-        && strpos($stringToSearch, $extension, $temp) !== false);
+        return TemplateLoader::endswith($filename, '.simple') || TemplateLoader::endswith($filename, '.php');
     }
 }

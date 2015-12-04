@@ -8,6 +8,7 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
+
 /**
 Rule Class.
 PHP version 5
@@ -23,14 +24,21 @@ class Rule
     private static $_check = array();
 
     /**
+    The file where the rule is from.
+    @var string.
+    **/
+    public $file;
+
+    /**
     Constructs a new Rule.
     @param string $host      hostname.
     @param string $service   servicename.
     @param string $command   commandname.
     @param array  $perfLabel hostname.
+    @param string $file      path to the rule.
     @return null
     **/
-    public function __construct($host = '^$', $service = '^$', $command = '^$', array $perfLabel = array())
+    public function __construct($host = '^$', $service = '^$', $command = '^$', array $perfLabel = array(), $file = "")
     {
         $this->_data['host'] = $host;
         $this->_data['service'] = $service;
@@ -38,6 +46,16 @@ class Rule
         $this->_data['perfLabel'] = $perfLabel;
         $this->escapeRule(true);
         sort($this->_data['perfLabel'], SORT_NATURAL);
+        $this->file = $file;
+    }
+
+    /**
+    Returns the whole filename.
+    @return string.
+    **/
+    public function getFileName()
+    {
+        return $this->file;
     }
 
     /**
@@ -53,15 +71,25 @@ class Rule
                     if ($replaceSpecialChars) {
                         $perfLabel = $this->_convertSpecialCharsToRegex($perfLabel);
                     }
-                    $perfLabel = ";$perfLabel;";
+                    $perfLabel = $this->_createRegex($perfLabel);
                 }
             } else {
                 if ($replaceSpecialChars) {
                     $entry = $this->_convertSpecialCharsToRegex($entry);
                 }
-                $entry = ";$entry;";
+                $entry = $this->_createRegex($entry);
             }
         }
+    }
+
+    /**
+    Appends semicolons.
+    @param string $string string to change.
+    @return string
+    **/
+    private function _createRegex($string)
+    {
+        return ";$string;";
     }
 
     /**
@@ -121,7 +149,7 @@ class Rule
             static::$_check['host'], static::$_check['service'],
             static::$_check['command'], static::$_check['perfLabel']
         );
-        return static::_compareTwoObjects($this, $gen, true);
+        return static::_compareTwoObjects($this, $gen, true)  == 0 ? true : false;
     }
 
     /**
@@ -158,14 +186,22 @@ class Rule
     private static function _compareValue($first, $second, $base, $valid)
     {
         if (is_array($first) && is_array($second) && is_array($base)) {
+            $firstStar = static::_starArray($first);
+            $secondStar = static::_starArray($second);
+            //The array which has the same amount of entries and matching regex will be choosen
             $baseSize = sizeof($base);
             $hitsFirst = static::_compareArrays($first, $base);
             $hitsSecond = static::_compareArrays($second, $base);
-            if ($hitsFirst != $hitsSecond) {
+            if ($hitsFirst != $hitsSecond || $firstStar != $secondStar) {
                 if ($hitsFirst == $baseSize) {
                     return -1;
                 }
                 if ($hitsSecond == $baseSize) {
+                    return 1;
+                }
+                if ($firstStar) {
+                    return -1;
+                } else {
                     return 1;
                 }
                 if ($valid) {
@@ -186,6 +222,16 @@ class Rule
             }
         }
         return 0;
+    }
+
+    /**
+    Tests if the array contains only a star.
+    @param array $array to test.
+    @return boolen.
+    **/
+    private static function _starArray(array $array)
+    {
+        return sizeof($array) == 1 && $array[0] == $this->_createRegex('.*');
     }
 
     /**

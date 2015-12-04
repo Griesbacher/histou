@@ -8,8 +8,10 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
+
 require_once 'histou/rule.php';
 require_once 'histou/templateParser.php';
+
 trait EnableLambdas
 {
     /**
@@ -49,8 +51,18 @@ class Template
     public function __construct($file, Rule $rule, closure $genTemplate)
     {
         $this->_file = $file;
+        $rule->file = $file;
         $this->_rule = $rule;
         $this->_genTemplate = $genTemplate;
+    }
+
+    /**
+    Returns the rule of the template.
+    @return rule.
+    **/
+    public function getRule()
+    {
+        return $this->_rule;
     }
 
     /**
@@ -81,11 +93,11 @@ class Template
     }
 
     /**
-    Calls the template lambda and returns the dashboard.
+    Generates a dashboard from the template and returns the dashboard.
     @param array $perfData array of performance data from influxdb.
     @return object.
     **/
-    public function getTemplate($perfData)
+    public function generateDashboard($perfData)
     {
         return $this->_genTemplate($perfData);
     }
@@ -117,7 +129,24 @@ class Template
     **/
     public static function compare($first, $second)
     {
-        return Rule::compare($first->_rule, $second->_rule);
+        return Rule::compare(static::_getRuleFromX($first), static::_getRuleFromX($second));
+    }
+
+    /**
+    Returns a rule, if the object is a template the rule within will be returned.
+    @param object $maybeRule object to test.
+    @return rule.
+    **/
+    private static function _getRuleFromX($maybeRule)
+    {
+        $className = get_class($maybeRule);
+        if ($className == 'Rule') {
+            return $maybeRule;
+        } elseif ($className == 'Template') {
+            return $maybeRule->_rule;
+        } else {
+            throw Exeption("unkown class $className");
+        }
     }
 
     /**
@@ -126,7 +155,7 @@ class Template
     **/
     public function isValid()
     {
-        return $this->_rule->isValid() == 0 ? true : false;
+        return $this->_rule->isValid();
     }
 
     /**

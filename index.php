@@ -16,6 +16,7 @@ require_once 'histou/folder.php';
 require_once 'histou/database.php';
 require_once 'histou/debug.php';
 require_once 'histou/dashboard.php';
+require_once 'histou/templateCache.php';
 
 //Set path to config file
 parsIni('histou.ini');
@@ -63,11 +64,18 @@ if ($perfDataSize < 4) {
         );
     }
 }
-
 // load templates
-$templates = Folder::loadFolders(
+$templateFiles = Folder::loadFolders(
     array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER)
 );
+
+echo '<pre>';
+$templateCache = new TemplateCache();
+$templates = $templateCache->loadTemplates($templateFiles);
+
+if (sizeof($templates) == 0) {
+    returnData(Debug::errorMarkdownDashboard('#Could not load templates!'), 1);
+}
 
 Rule::setCheck(
     $perfData['host'],
@@ -75,7 +83,6 @@ Rule::setCheck(
     $perfData['command'],
     array_keys($perfData['perfLabel'])
 );
-
 
 usort($templates, 'Template::compare');
 $valid = $templates[0]->isValid();
@@ -89,9 +96,21 @@ if ($valid) {
 } else {
     $template = Template::findDefaultTemplate($templates, 'default.php');
 }
-
 if (isset($template) && !empty($template)) {
-    returnData($template->getTemplate($perfData), 0, 'OK');
+    $className = get_class($template);
+    if ($className == 'Rule') {
+        $dashboard = TemplateLoader::loadTemplate($template->getFileName())->generateDashboard($perfData);
+    } elseif ($className == 'Template') {
+        $dashboard = $template->generateDashboard($perfData);
+    } else {
+        throw Exeption("unkown class $className");
+    }
+
+    if ($dashboard == null) {
+        returnData(Debug::errorMarkdownDashboard('#Template did not return a dashboard!'), 1);
+    } else {
+        returnData($dashboard, 0);
+    }
 } else {
     returnData(Debug::errorMarkdownDashboard('#No template found!'), 1);
 }
