@@ -36,7 +36,7 @@ class TemplateCache
     **/
     public function __construct()
     {
-        $this->_cachefile = join(DIRECTORY_SEPARATOR, array(sys_get_temp_dir(), CACHE_FILE));
+        $this->_cachefile = join(DIRECTORY_SEPARATOR, array(TMP_FOLDER, CACHE_FILE));
         if (file_exists($this->_cachefile)) {
             $this->_loadCache();
         } else {
