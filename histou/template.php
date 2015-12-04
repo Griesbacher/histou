@@ -75,10 +75,10 @@ class Template
     }
 
     /**
-    Returns the whole filename.
+    Returns the basename of the file.
     @return string.
     **/
-    public function getFileName()
+    public function getBaseName()
     {
         return basename($this->_file);
     }
@@ -89,7 +89,7 @@ class Template
     **/
     public function getSimpleFileName()
     {
-        return strstr($this->getFileName(), '.', true);
+        return strstr($this->getBaseName(), '.', true);
     }
 
     /**
@@ -167,7 +167,7 @@ class Template
     public static function findDefaultTemplate($templates, $defaultName)
     {
         foreach (array_reverse($templates) as $template) {
-            if ($template->getFileName() == $defaultName) {
+            if ($template->getBaseName() == $defaultName) {
                 return $template;
             }
         }

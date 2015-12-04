@@ -62,7 +62,7 @@ Checks Config for entries and returns them if found.
 **/
 function getConfigKey(array $config, $level, $key)
 {
-    if (array_key_exists($level, $config) && array_key_exists($key, $config[$level]) {
+    if (array_key_exists($level, $config) && array_key_exists($key, $config[$level])) {
         return $config[$level][$key];
     }
     return null;

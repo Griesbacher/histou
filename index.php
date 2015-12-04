@@ -69,7 +69,6 @@ $templateFiles = Folder::loadFolders(
     array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER)
 );
 
-echo '<pre>';
 $templateCache = new TemplateCache();
 $templates = $templateCache->loadTemplates($templateFiles);
 

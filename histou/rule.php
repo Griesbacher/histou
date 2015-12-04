@@ -50,6 +50,15 @@ class Rule
     }
 
     /**
+    Returns the basename of the file.
+    @return string.
+    **/
+    public function getBaseName()
+    {
+        return basename($this->file);
+    }
+
+    /**
     Returns the whole filename.
     @return string.
     **/
@@ -71,13 +80,13 @@ class Rule
                     if ($replaceSpecialChars) {
                         $perfLabel = $this->_convertSpecialCharsToRegex($perfLabel);
                     }
-                    $perfLabel = $this->_createRegex($perfLabel);
+                    $perfLabel = static::_createRegex($perfLabel);
                 }
             } else {
                 if ($replaceSpecialChars) {
                     $entry = $this->_convertSpecialCharsToRegex($entry);
                 }
-                $entry = $this->_createRegex($entry);
+                $entry = static::_createRegex($entry);
             }
         }
     }
@@ -87,7 +96,7 @@ class Rule
     @param string $string string to change.
     @return string
     **/
-    private function _createRegex($string)
+    private static function _createRegex($string)
     {
         return ";$string;";
     }
@@ -231,7 +240,7 @@ class Rule
     **/
     private static function _starArray(array $array)
     {
-        return sizeof($array) == 1 && $array[0] == $this->_createRegex('.*');
+        return sizeof($array) == 1 && $array[0] == static::_createRegex('.*');
     }
 
     /**
