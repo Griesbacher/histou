@@ -25,12 +25,13 @@ class TemplateLoader
     /**
     Creates a Template from file.
     @param string $filename foldername.
+    @param bool   $save     if true no syntax check will be done.
     @return object.
     **/
-    public static function loadTemplate($filename)
+    public static function loadTemplate($filename, $save = false)
     {
         if (static::endswith($filename, '.php')) {
-            return TemplateLoader::_loadPHPTemplates($filename);
+            return TemplateLoader::_loadPHPTemplates($filename, $save);
         } elseif (static::endswith($filename, '.simple')) {
             return TemplateLoader::_loadSimpleTemplates($filename);
         }
@@ -39,12 +40,15 @@ class TemplateLoader
     /**
     Creates a Basic Template.
     @param string $filename foldername.
+    @param bool   $save     if true no syntax check will be done.
     @return object.
     **/
-    private static function _loadPHPTemplates($filename)
+    private static function _loadPHPTemplates($filename, $save)
     {
-        if (!static::isFileValidPHP($filename)) {
-            return null;
+        if (!$save) {
+            if (!static::isFileValidPHP($filename)) {
+                return null;
+            }
         }
         include $filename;
         return new Template($filename, $rule, $genTemplate);

@@ -98,7 +98,7 @@ if ($valid) {
 if (isset($template) && !empty($template)) {
     $className = get_class($template);
     if ($className == 'Rule') {
-        $dashboard = TemplateLoader::loadTemplate($template->getFileName())->generateDashboard($perfData);
+        $dashboard = TemplateLoader::loadTemplate($template->getFileName(), true)->generateDashboard($perfData);
     } elseif ($className == 'Template') {
         $dashboard = $template->generateDashboard($perfData);
     } else {
@@ -133,7 +133,6 @@ function returnData($data, $returnCode = 0)
         $json = $data;
     }
 
-    exit(0); //TODO: remove
     if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
         header('content-type: application/json; charset=utf-8');
         echo "{$_GET['callback']}($json)";
