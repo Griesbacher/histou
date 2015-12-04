@@ -31,7 +31,7 @@ function parsIni($filename)
         getConfigKey($config, 'general', 'phpCommand'),
         "php"
     );
-	setConstant(
+    setConstant(
         "TMP_FOLDER",
         getConfigKey($config, 'general', 'tmpFolder'),
         sys_get_temp_dir()

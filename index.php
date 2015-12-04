@@ -133,7 +133,7 @@ function returnData($data, $returnCode = 0)
         $json = $data;
     }
 
-
+    exit(0); //TODO: remove
     if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
         header('content-type: application/json; charset=utf-8');
         echo "{$_GET['callback']}($json)";
@@ -155,13 +155,23 @@ Parses the GET parameter.
 **/
 function parsArgs()
 {
+    $shortopts  = "";
+    $longopts  = array(
+    "host:",
+    "service:",
+    );
+    $args = getopt($shortopts, $longopts);
     if (isset($_GET['host']) && !empty($_GET['host'])) {
         define("HOST", $_GET["host"]);
+    } elseif (isset($args['host']) && !empty($args['host'])) {
+        define("HOST", $args["host"]);
     } else {
         returnData('Hostname is missing!', 1, 'Hostname is missing!');
     }
     if (isset($_GET['service']) && !empty($_GET['service'])) {
         define("SERVICE", $_GET["service"]);
+    } elseif (isset($args['service']) && !empty($args['service'])) {
+        define("SERVICE", $args["service"]);
     } else {
         define("SERVICE", "");
     }
