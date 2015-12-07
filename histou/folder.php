@@ -48,9 +48,10 @@ class Folder
     {
         if ($handle = opendir($foldername)) {
             while (false !== ($file = readdir($handle))) {
-                if ($file != "."
-                    && $file != ".."
+                if (
+					!static::_startsWith($file, '.')
                     && !in_array($file, $alreadyRead)
+					&& static::_isValidFile($file)
                 ) {
                     array_push($templateFiles, join(DIRECTORY_SEPARATOR, array($foldername,$file)));
                     array_push($alreadyRead, $file);
@@ -69,4 +70,14 @@ class Folder
     {
         return TemplateLoader::endswith($filename, '.simple') || TemplateLoader::endswith($filename, '.php');
     }
+
+	/**
+	Returns true if $stringToSearch begins with $prefix.
+	@param string $stringToSearch string to search within.
+	@param string $prefix string to search for.
+	@return bool.
+	**/
+	private static function _startsWith($stringToSearch, $prefix) {
+		return $prefix === "" || strrpos($stringToSearch, $prefix, -strlen($stringToSearch)) !== FALSE;
+	}
 }
