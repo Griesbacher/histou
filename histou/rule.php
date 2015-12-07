@@ -196,21 +196,25 @@ class Rule
     {
         if (is_array($first) && is_array($second) && is_array($base)) {
             $firstStar = static::_starArray($first);
+			if ($valid && $firstStar) {
+				//If it's a valid compare, it's enought when the first entry(the template) contains a start
+				return 0;
+			}
             $secondStar = static::_starArray($second);
             //The array which has the same amount of entries and matching regex will be choosen
             $baseSize = sizeof($base);
             $hitsFirst = static::_compareArrays($first, $base);
             $hitsSecond = static::_compareArrays($second, $base);
             if ($hitsFirst != $hitsSecond || $firstStar != $secondStar) {
+                if ($firstStar) {
+                    return -1;
+                } else {
+                    return 1;
+                }
                 if ($hitsFirst == $baseSize) {
                     return -1;
                 }
                 if ($hitsSecond == $baseSize) {
-                    return 1;
-                }
-                if ($firstStar) {
-                    return -1;
-                } else {
                     return 1;
                 }
                 if ($valid) {
