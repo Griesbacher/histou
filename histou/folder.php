@@ -52,11 +52,11 @@ class Folder
                     && $file != ".."
                     && !in_array($file, $alreadyRead)
                 ) {
-                array_push($templateFiles, join(DIRECTORY_SEPARATOR, array($foldername,$file)));
-                array_push($alreadyRead, $file);
-				}
-			}
-			closedir($handle);
+                    array_push($templateFiles, join(DIRECTORY_SEPARATOR, array($foldername,$file)));
+                    array_push($alreadyRead, $file);
+                }
+            }
+            closedir($handle);
         }
     }
 
