@@ -78,10 +78,14 @@ class TemplateParser
                 $dashboard = preg_replace(
                     $tablenameRegex,
                     sprintf(
-                        "$1%s&%s&%s&$5&$6$7",
+                        "$1%s%s%s%s%s%s$5%s$6$7",
                         $perfData['host'],
+                        INFLUX_FIELDSEPERATOR,
                         $perfData['service'],
-                        $perfData['command']
+                        INFLUX_FIELDSEPERATOR,
+                        $perfData['command'],
+                        INFLUX_FIELDSEPERATOR,
+                        INFLUX_FIELDSEPERATOR
                     ),
                     $dashboard
                 );
@@ -90,10 +94,11 @@ class TemplateParser
                 for ($i = 0; $i < $tempPerfDataSize; $i++) {
                     if ($tempPerfData[$tempPerfDataKeys[$i]] != $tempPerfData[$tempPerfDataKeys[($i+1)%$tempPerfDataSize]]
                         && $tempPerfData[$tempPerfDataKeys[$i]] != $tempPerfData[$tempPerfDataKeys[($i+2)%$tempPerfDataSize]]
+                        && $tempPerfData[$tempPerfDataKeys[$i]] != $perfData[$tempPerfDataKeys[$i]]
                     ) {
-                        $dashboard = str_replace(
-                            $tempPerfData[$tempPerfDataKeys[$i]],
-                            $perfData[$tempPerfDataKeys[$i]],
+                        $dashboard = preg_replace(
+                            sprintf(";([^%s])(%s)([^%s]);", INFLUX_FIELDSEPERATOR, $tempPerfData[$tempPerfDataKeys[$i]], INFLUX_FIELDSEPERATOR),
+                            sprintf("$1%s$3", $perfData[$tempPerfDataKeys[$i]]),
                             $dashboard
                         );
                     }
