@@ -1,9 +1,12 @@
 ## v0.1.1 - upcoming:
 ### Features
-- template cache
+- syntax check on php templates, malformed templates will be ignored but an error appears in the apache error.log
+- template cache, the valid templates will be cached
 
 ### Fixes
 - multiple Grafana gaps
+- simple template: naming problem
+- star regex in perfLabel works, but an exact match wins against star
 
 ## v0.1.0 - 12.11.2015
 ### Features
