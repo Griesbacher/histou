@@ -46,13 +46,17 @@ class Folder
     **/
     private static function _pushFolder(&$templateFiles, $foldername, &$alreadyRead)
     {
-        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($foldername));
-        while ($it->valid()) {
-            if (!$it->isDot() && !in_array($it->getSubPathName(), $alreadyRead) && Folder::_isValidFile($it->getSubPathName())) {
-                array_push($templateFiles, $it->key());
-                array_push($alreadyRead, $it->getSubPathName());
-            }
-            $it->next();
+        if ($handle = opendir($foldername)) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "."
+                    && $file != ".."
+                    && !in_array($file, $alreadyRead)
+                ) {
+                array_push($templateFiles, join(DIRECTORY_SEPARATOR, array($foldername,$file)));
+                array_push($alreadyRead, $file);
+				}
+			}
+			closedir($handle);
         }
     }
 
