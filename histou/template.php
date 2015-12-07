@@ -142,10 +142,10 @@ class Template
         $className = get_class($maybeRule);
         if ($className == 'Rule') {
             return $maybeRule;
-        } elseif ($className == 'Template') {
+        } elseif ($className == 'Template' || $className == 'SimpleTemplate') {
             return $maybeRule->_rule;
         } else {
-            throw Exeption("unkown class $className");
+            throw new Exception("unkown class $className");
         }
     }
 

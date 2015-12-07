@@ -99,10 +99,10 @@ if (isset($template) && !empty($template)) {
     $className = get_class($template);
     if ($className == 'Rule') {
         $dashboard = TemplateLoader::loadTemplate($template->getFileName(), true)->generateDashboard($perfData);
-    } elseif ($className == 'Template') {
+    } elseif ($className == 'Template' || $className == 'SimpleTemplate') {
         $dashboard = $template->generateDashboard($perfData);
     } else {
-        throw Exeption("unkown class $className");
+        throw Exception("unkown class $className");
     }
 
     if ($dashboard == null) {

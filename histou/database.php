@@ -17,6 +17,7 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
+
 class Influxdb
 {
     private $_url;
@@ -38,12 +39,12 @@ class Influxdb
     **/
     public function makeRequest($query)
     {
-        $content = file_get_contents($this->_url.urlencode($query));
-        if ($content === false) {
-            returnData('Influxdb not reachable', 1, 'Influxdb not reachable');
-        } else {
-            return json_decode($content, true)['results'];
-        }
+		try {
+			$content = file_get_contents($this->_url.urlencode($query));
+		} catch (ErrorException $e) {
+            returnData('Influxdb not reachable: '.$e->getMessage(), 1, 'Influxdb not reachable');
+		}
+        return json_decode($content, true)['results'];
     }
 
     const COLUMNS = 'columns';

@@ -18,6 +18,16 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
+
+set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontext) {
+    // error was suppressed with the @-operator
+    if (0 === error_reporting()) {
+        return false;
+    }
+
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
 class Debug
 {
     private static $_enabled = false;
