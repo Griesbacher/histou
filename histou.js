@@ -8,7 +8,7 @@ parseArgs()
 
 
 return function (callback) {
-    if(window.location.href.search('/dashboard-solo/') != -1) {
+    if (window.location.href.search('/dashboard-solo/') != -1) {
         document.documentElement.style.background = '#FFF';
     }
 
@@ -16,7 +16,7 @@ return function (callback) {
     configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug;
 
     flotAddons = url + 'flotAddons.js';
-    $.getScript(flotAddons, function(){});
+    $.getScript(flotAddons, function (){});
 
     $.ajax(
         {
@@ -105,9 +105,9 @@ function parseArgs()
         debug = "&debug"
     }
 
-    if(!_.isUndefined(ARGS.legend)) {
+    if (!_.isUndefined(ARGS.legend)) {
         legend = ARGS.legend;
-    }else{
+    } else {
         legend = true
     }
 }
