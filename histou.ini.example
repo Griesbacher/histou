@@ -4,8 +4,8 @@ phpCommand = "php"
 ;leave tmpFolder empty to use default php folder
 tmpFolder = ""
 [folder]
-defaultTemplateFolder = "histou/templates/default/"
-customTemplateFolder = "histou/templates/custom/"
+defaultTemplateFolder = "templates/default/"
+customTemplateFolder = "templates/custom/"
 [influxdb]
 influxdbUrl = "http://127.0.0.1:8086/query?db=icinga"
 influxFieldseperator = "&"

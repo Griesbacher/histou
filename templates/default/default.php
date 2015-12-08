@@ -9,7 +9,7 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
-$rule = new Rule(
+$rule = new \histou\template\Rule(
     $host = '^$',
     $service = '^$',
     $command = '^$',
@@ -59,10 +59,10 @@ $genTemplate = function ($perfData) {
     */
 
     $perfKeys = array_keys($perfData['perfLabel']);
-    $dashboard = new Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = new histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     for ($i = 0; $i < sizeof($perfData['perfLabel']); $i++) {
-        $row = new Row($perfData['service'].' '.$perfData['command']);
-        $panel = new GraphPanel(
+        $row = new histou\grafana\Row($perfData['service'].' '.$perfData['command']);
+        $panel = new histou\grafana\GraphPanel(
             $perfData['host'].' '.$perfData['service']
             .' '.$perfData['command'].' '.$perfKeys[$i]
         );

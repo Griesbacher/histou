@@ -8,123 +8,7 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-/**
-Base Panel.
-PHP version 5
-@category Panel_Class
-@package Histou
-@author Philip Griesbacher <griesbacher@consol.de>
-@license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
-**/
-abstract class Panel
-{
-    protected $data = array(
-                        'title' => null,
-                        'type' => null,
-                        'span' => 12,
-                        'editable' => true,
-                    );
-    protected static $currentId = 1;
-    /**
-    Constructor.
-    @param string $title name of the panel.
-    @param string $type  type of the panel.
-    @return object.
-    **/
-    function __construct($title, $type)
-    {
-        $this->data['title'] = $title;
-        $this->data['type'] = $type;
-        $this->data['id'] = self::$currentId++;
-    }
-
-    /**
-    Creates an array.
-    @return array
-    **/
-    public function toArray()
-    {
-        return $this->data;
-    }
-
-    /**
-    Setter for Spansize
-    @param int $spanSize Spansize.
-    @return null.
-    **/
-    public function setSpan($spanSize)
-    {
-        $this->data['span'] = $spanSize;
-    }
-
-    /**
-    Setter for editable
-    @param boolean $editable .
-    @return null.
-    **/
-    public function setEditable(boolean $editable)
-    {
-        $this->data['editable'] = $editable;
-    }
-
-    /**
-    Setter for everything
-    @param string $name  key.
-    @param string $value value.
-    @return null.
-    **/
-    public function setCustomProperty($name, $value)
-    {
-        $this->data[$name] = $value;
-    }
-}
-
-/**
-Base Panel.
-PHP version 5
-@category Panel_Class
-@package Histou
-@author Philip Griesbacher <griesbacher@consol.de>
-@license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
-**/
-class TextPanel extends Panel
-{
-    const MARKDOWN = 'markdown';
-    const TEXT = 'text';
-    const HTML = 'html';
-
-    /**
-    Constructor.
-    @param string $title name of the panel.
-    @return object.
-    **/
-    function __construct($title)
-    {
-        parent::__construct($title, 'text');
-    }
-
-    /**
-    Setter for Mode
-    @param int $mode Markdown,text,html.
-    @return null.
-    **/
-    public function setMode($mode)
-    {
-        $this->data['mode'] = $mode;
-    }
-
-    /**
-    Setter for Content
-    @param int $content content.
-    @return null.
-    **/
-    public function setContent($content)
-    {
-        $this->data['content'] = $content;
-    }
-}
+namespace histou\grafana;
 
 /**
 Base Panel.
@@ -143,7 +27,7 @@ class GraphPanel extends Panel
     @param boolean $legendShow hide the legend or not
     @return object.
     **/
-    function __construct($title, $legendShow = SHOW_LEGEND)
+    public function __construct($title, $legendShow = SHOW_LEGEND)
     {
         parent::__construct($title, 'graph');
         $this->data['tooltip'] = array(
@@ -253,15 +137,19 @@ class GraphPanel extends Panel
     @param string $color     hexcolor.
     @return null.
     **/
-    private function _addThreshold($host, $service, $command, $perfLabel, $name, $color)
+    private function addThreshold($host, $service, $command, $perfLabel, $name, $color)
     {
         foreach (array('normal', 'min', 'max') as $tag) {
             $target = sprintf(
                 '%s%s%s%s%s%s%s%s%s',
-                $host, INFLUX_FIELDSEPERATOR,
-                $service, INFLUX_FIELDSEPERATOR,
-                $command, INFLUX_FIELDSEPERATOR,
-                $perfLabel, INFLUX_FIELDSEPERATOR,
+                $host,
+                INFLUX_FIELDSEPERATOR,
+                $service,
+                INFLUX_FIELDSEPERATOR,
+                $command,
+                INFLUX_FIELDSEPERATOR,
+                $perfLabel,
+                INFLUX_FIELDSEPERATOR,
                 $name
             );
             if ($tag == 'normal') {
@@ -288,8 +176,13 @@ class GraphPanel extends Panel
     **/
     public function addWarning($host, $service, $command, $perfLabel)
     {
-        $this->_addThreshold(
-            $host, $service, $command, $perfLabel, 'warn', '#FFFC15'
+        $this->addThreshold(
+            $host,
+            $service,
+            $command,
+            $perfLabel,
+            'warn',
+            '#FFFC15'
         );
     }
 
@@ -303,8 +196,13 @@ class GraphPanel extends Panel
     **/
     public function addCritical($host, $service, $command, $perfLabel)
     {
-        $this->_addThreshold(
-            $host, $service, $command, $perfLabel, 'crit', '#FF3727'
+        $this->addThreshold(
+            $host,
+            $service,
+            $command,
+            $perfLabel,
+            'crit',
+            '#FF3727'
         );
     }
 
@@ -331,10 +229,14 @@ class GraphPanel extends Panel
     {
         $target = sprintf(
             '%s%s%s%s%s%s%s%svalue',
-            $host, INFLUX_FIELDSEPERATOR,
-            $service, INFLUX_FIELDSEPERATOR,
-            $command, INFLUX_FIELDSEPERATOR,
-            $perfLabel, INFLUX_FIELDSEPERATOR
+            $host,
+            INFLUX_FIELDSEPERATOR,
+            $service,
+            INFLUX_FIELDSEPERATOR,
+            $command,
+            INFLUX_FIELDSEPERATOR,
+            $perfLabel,
+            INFLUX_FIELDSEPERATOR
         );
         $alias = "downtime";
         $this->addTargetSimple(
@@ -343,7 +245,8 @@ class GraphPanel extends Panel
             array(array('key' => 'downtime', 'operator'  => '=', 'value' => 1))
         );
         array_push(
-            $this->data['seriesOverrides'], array(
+            $this->data['seriesOverrides'],
+            array(
             'lines' => true,
             'alias' => $alias,
             'linewidth' => 3,
@@ -363,7 +266,8 @@ class GraphPanel extends Panel
     public function fillBelowLine($alias, $intensity)
     {
         array_push(
-            $this->data['seriesOverrides'], array(
+            $this->data['seriesOverrides'],
+            array(
             'alias' => $alias,
             'fill' => $intensity,
             )

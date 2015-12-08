@@ -10,16 +10,23 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
-require_once 'histou/basic.php';
-require_once 'histou/template.php';
-require_once 'histou/folder.php';
-require_once 'histou/database.php';
-require_once 'histou/debug.php';
-require_once 'histou/dashboard.php';
-require_once 'histou/templateCache.php';
+function __autoload($class_name) {
+    require_once $class_name . '.php';
+}
+
+set_error_handler(
+    function ($errno, $errstr, $errfile, $errline, array $errcontext) {
+        // error was suppressed with the @-operator
+        if (0 === error_reporting()) {
+            return false;
+        }
+
+        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+    }
+);
 
 //Set path to config file
-parsIni('histou.ini');
+\histou\Basic::parsIni('histou.ini');
 
 header("access-control-allow-origin: *");
 //Disable warnings
@@ -39,7 +46,7 @@ define(
     )
 );
 // database load perfdata
-$influx = new Influxdb(INFLUX_URL);
+$influx = new \histou\database\Influxdb(INFLUX_URL);
 $request = $influx->makeRequest(INFLUX_QUERY);
 $perfData = $influx->filterPerfdata(
     $request,
@@ -65,53 +72,53 @@ if ($perfDataSize < 4) {
     }
 }
 // load templates
-$templateFiles = Folder::loadFolders(
+$templateFiles = \histou\Folder::loadFolders(
     array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER)
 );
 
-$templateCache = new TemplateCache();
+$templateCache = new \histou\template\cache();
 $templates = $templateCache->loadTemplates($templateFiles);
 
 if (sizeof($templates) == 0) {
     returnData(Debug::errorMarkdownDashboard('#Could not load templates!'), 1);
 }
 
-Rule::setCheck(
+\histou\template\Rule::setCheck(
     $perfData['host'],
     $perfData['service'],
     $perfData['command'],
     array_keys($perfData['perfLabel'])
 );
 
-usort($templates, 'Template::compare');
+usort($templates, '\histou\template\Template::compare');
 $valid = $templates[0]->isValid();
 foreach ($templates as $template) {
-    Debug::add($template);
+    \histou\Debug::add($template);
 }
-Debug::add("Is the first template valid: ".Debug::printBoolean($valid));
+\histou\Debug::add("Is the first template valid: ".\histou\Debug::printBoolean($valid));
 
 if ($valid) {
     $template = $templates[0];
 } else {
-    $template = Template::findDefaultTemplate($templates, 'default.php');
+    $template = \histou\template\Template::findDefaultTemplate($templates, 'default.php');
 }
 if (isset($template) && !empty($template)) {
     $className = get_class($template);
-    if ($className == 'Rule') {
-        $dashboard = TemplateLoader::loadTemplate($template->getFileName(), true)->generateDashboard($perfData);
-    } elseif ($className == 'Template' || $className == 'SimpleTemplate') {
+    if ($className == 'histou\template\Rule') {
+        $dashboard = \histou\template\loader::loadTemplate($template->getFileName(), true)->generateDashboard($perfData);
+    } elseif ($className == 'histou\template\Template' || $className == 'histou\template\SimpleTemplate') {
         $dashboard = $template->generateDashboard($perfData);
     } else {
-        throw Exception("unkown class $className");
+		returnData(\histou\Debug::errorMarkdownDashboard("# unkown class $className"), 1);
     }
 
     if ($dashboard == null) {
-        returnData(Debug::errorMarkdownDashboard('#Template did not return a dashboard!'), 1);
+        returnData(\histou\Debug::errorMarkdownDashboard('# Template did not return a dashboard!'), 1);
     } else {
         returnData($dashboard, 0);
     }
 } else {
-    returnData(Debug::errorMarkdownDashboard('#No template found!'), 1);
+    returnData(\histou\Debug::errorMarkdownDashboard('# No template found!'), 1);
 }
 
 /**
@@ -122,16 +129,20 @@ This function will print its input and exit with the given returncode.
 **/
 function returnData($data, $returnCode = 0)
 {
-
-    if ($data instanceof Dashboard) {
-        if (Debug::isEnable()) {
-            $data->addRow(Debug::genMarkdownRow(Debug::getLogAsMarkdown(), 'Debug'));
+    if (is_object($data) && get_class($data) == 'histou\grafana\Dashboard') {
+        if (\histou\Debug::isEnable()) {
+            $data->addRow(\histou\Debug::genMarkdownRow(\histou\Debug::getLogAsMarkdown(), 'Debug'));
         }
         $data = $data->toArray();
         $json = json_encode($data);
-    } else {
+    } elseif (is_string($data)) {
         $json = $data;
-    }
+    }else{
+		echo '<pre>';
+		print_r("Don't know what to do with this: $data");
+		echo '</pre>';
+		exit -1;
+	}
 
     if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
         header('content-type: application/json; charset=utf-8');

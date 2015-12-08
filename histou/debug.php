@@ -3,38 +3,28 @@
 Contains Debug Class.
 PHP version 5
 @category Folder_Class
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-require_once 'histou/row.php';
+namespace histou;
+
 /**
 Debug Class.
 PHP version 5
 @category Folder_Class
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
 
-set_error_handler(
-    function ($errno, $errstr, $errfile, $errline, array $errcontext) {
-        // error was suppressed with the @-operator
-        if (0 === error_reporting()) {
-            return false;
-        }
-
-        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-    }
-);
-
 class Debug
 {
-    private static $_enabled = false;
-    private static $_log = array();
-    private static $_booleanArray = array(false => 'false', true => 'true');
+    private static $enabled = false;
+    private static $log = array();
+    private static $booleanArray = array(false => 'false', true => 'true');
 
 
     /**
@@ -43,7 +33,7 @@ class Debug
     **/
     public static function isEnable()
     {
-        return static::$_enabled;
+        return static::$enabled;
     }
 
     /**
@@ -52,7 +42,7 @@ class Debug
     **/
     public static function enable()
     {
-        static::$_enabled = true;
+        static::$enabled = true;
     }
 
     /**
@@ -62,7 +52,7 @@ class Debug
     **/
     public static function add($line)
     {
-        array_push(static::$_log, $line."\n");
+        array_push(static::$log, $line."\n");
     }
 
     /**
@@ -72,7 +62,7 @@ class Debug
     public static function getLogAsMarkdown()
     {
         $output = '';
-        foreach (static::$_log as $line) {
+        foreach (static::$log as $line) {
             $output .= sprintf(
                 "####%s",
                 substr(str_replace("\n", "\n####", $line), 0, -4)
@@ -89,10 +79,10 @@ class Debug
     **/
     public static function genMarkdownRow($message, $header = '')
     {
-        $panel = new TextPanel('');
-        $panel->setMode(TextPanel::MARKDOWN);
+        $panel = new \histou\grafana\TextPanel('');
+        $panel->setMode(\histou\grafana\TextPanel::MARKDOWN);
         $panel->setContent($message);
-        $row = new Row($header);
+        $row = new \histou\grafana\Row($header);
         $row->addPanel($panel);
         return $row;
     }
@@ -104,7 +94,7 @@ class Debug
     **/
     public static function errorMarkdownDashboard($message)
     {
-        $dashboard = new Dashboard('Error');
+        $dashboard = new \histou\grafana\Dashboard('Error');
         $dashboard->addRow(
             static::genMarkdownRow($message, 'ERROR')
         );
@@ -118,6 +108,6 @@ class Debug
     **/
     public static function printBoolean($bool)
     {
-        return static::$_booleanArray[$bool];
+        return static::$booleanArray[$bool];
     }
 }

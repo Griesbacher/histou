@@ -3,23 +3,23 @@
 Contains Folder Class.
 PHP version 5
 @category Folder_Class
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-
-require_once 'histou/templateLoader.php';
+namespace histou;
 
 /**
 Folder Class.
 PHP version 5
 @category Folder_Class
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
+
 class Folder
 {
     /**
@@ -32,7 +32,7 @@ class Folder
         $templateFiles = array();
         $alreadyRead = array();
         foreach ($folders as $folder) {
-            static::_pushFolder($templateFiles, $folder, $alreadyRead);
+            static::pushFolder($templateFiles, $folder, $alreadyRead);
         }
         return $templateFiles;
     }
@@ -44,13 +44,13 @@ class Folder
     @param array  $alreadyRead   list of known templateFiles.
     @return null.
     **/
-    private static function _pushFolder(&$templateFiles, $foldername, &$alreadyRead)
+    private static function pushFolder(&$templateFiles, $foldername, &$alreadyRead)
     {
         if ($handle = opendir($foldername)) {
             while (false !== ($file = readdir($handle))) {
-                if (!static::_startsWith($file, '.')
+                if (!static::startsWith($file, '.')
                     && !in_array($file, $alreadyRead)
-                    && static::_isValidFile($file)
+                    && static::isValidFile($file)
                 ) {
                     array_push($templateFiles, join(DIRECTORY_SEPARATOR, array($foldername,$file)));
                     array_push($alreadyRead, $file);
@@ -65,9 +65,9 @@ class Folder
     @param string $filename path or filename.
     @return bool true if it ends with '.simple' or '.php'.
     **/
-    private static function _isValidFile($filename)
+    private static function isValidFile($filename)
     {
-        return TemplateLoader::endswith($filename, '.simple') || TemplateLoader::endswith($filename, '.php');
+        return \histou\template\loader::endswith($filename, '.simple') || \histou\template\loader::endswith($filename, '.php');
     }
 
     /**
@@ -76,7 +76,7 @@ class Folder
     @param string $prefix         string to search for.
     @return bool.
     **/
-    private static function _startsWith($stringToSearch, $prefix) 
+    private static function startsWith($stringToSearch, $prefix)
     {
         return $prefix === "" || strrpos($stringToSearch, $prefix, -strlen($stringToSearch)) !== false;
     }

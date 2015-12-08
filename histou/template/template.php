@@ -3,43 +3,28 @@
 Contains types of Templates.
 PHP version 5
 @category Template_Class
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
+namespace histou\template;
 
-require_once 'histou/rule.php';
-require_once 'histou/templateParser.php';
-
-trait EnableLambdas
-{
-    /**
-    Enables Lambdas.
-    @param string $name name.
-    @param string $args args.
-    @return object.
-    **/
-    public function __call($name, $args)
-    {
-        return call_user_func_array($this->$name, $args);
-    }
-}
 /**
 Base Class Template.
 PHP version 5
 @category Template_Class
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
 class Template
 {
-    use EnableLambdas;
-    private $_file;
-    private $_rule;
-    private $_genTemplate;
+    use Lambda;
+    private $file;
+    private $rule;
+    private $genTemplate;
 
     /**
     Creates a template.
@@ -48,12 +33,12 @@ class Template
     @param closure $genTemplate lambda to create dashboard.
     @return object.
     **/
-    public function __construct($file, Rule $rule, closure $genTemplate)
+    public function __construct($file, Rule $rule, \closure $genTemplate)
     {
-        $this->_file = $file;
+        $this->file = $file;
         $rule->file = $file;
-        $this->_rule = $rule;
-        $this->_genTemplate = $genTemplate;
+        $this->rule = $rule;
+        $this->genTemplate = $genTemplate;
     }
 
     /**
@@ -62,7 +47,7 @@ class Template
     **/
     public function getRule()
     {
-        return $this->_rule;
+        return $this->rule;
     }
 
     /**
@@ -71,7 +56,7 @@ class Template
     **/
     public function getPath()
     {
-        return dirname($this->_file);
+        return dirname($this->file);
     }
 
     /**
@@ -80,7 +65,7 @@ class Template
     **/
     public function getBaseName()
     {
-        return basename($this->_file);
+        return basename($this->file);
     }
 
     /**
@@ -99,7 +84,7 @@ class Template
     **/
     public function generateDashboard($perfData)
     {
-        return $this->_genTemplate($perfData);
+        return $this->genTemplate($perfData);
     }
 
     /**
@@ -108,7 +93,7 @@ class Template
     **/
     public function __toString()
     {
-        return "File:\t".$this->_file."\nRule: ".$this->_rule;
+        return "File:\t".$this->file."\nRule: ".$this->rule;
     }
 
     /**
@@ -118,7 +103,7 @@ class Template
     **/
     public function matchesTablename($tablename)
     {
-        return $this->_rule->matchesTablename($tablename);
+        return $this->rule->matchesTablename($tablename);
     }
 
     /**
@@ -129,7 +114,7 @@ class Template
     **/
     public static function compare($first, $second)
     {
-        return Rule::compare(static::_getRuleFromX($first), static::_getRuleFromX($second));
+        return \histou\template\Rule::compare(static::getRuleFromX($first), static::getRuleFromX($second));
     }
 
     /**
@@ -137,15 +122,15 @@ class Template
     @param object $maybeRule object to test.
     @return rule.
     **/
-    private static function _getRuleFromX($maybeRule)
+    private static function getRuleFromX($maybeRule)
     {
         $className = get_class($maybeRule);
-        if ($className == 'Rule') {
+        if ($className == 'histou\template\Rule') {
             return $maybeRule;
-        } elseif ($className == 'Template' || $className == 'SimpleTemplate') {
-            return $maybeRule->_rule;
+        } elseif ($className == 'histou\template\Template' || $className == 'histou\template\SimpleTemplate') {
+            return $maybeRule->rule;
         } else {
-            throw new Exception("unkown class $className");
+            throw new \Exception("unkown class $className");
         }
     }
 
@@ -155,7 +140,7 @@ class Template
     **/
     public function isValid()
     {
-        return $this->_rule->isValid();
+        return $this->rule->isValid();
     }
 
     /**
@@ -171,28 +156,5 @@ class Template
                 return $template;
             }
         }
-    }
-}
-
-/**
-Inheritate from Template for simple Templatefiles
-PHP version 5
-@category Template_Class
-@package Histou
-@author Philip Griesbacher <griesbacher@consol.de>
-@license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
-**/
-class SimpleTemplate extends Template
-{
-    /**
-    Expects a filename to the simple config.
-    @param string $file Path to file.
-    @return object.
-    **/
-    function __construct($file)
-    {
-        $result = TemplateParser::parseSimpleTemplate($file);
-        parent::__construct($file, $result[0], $result[1]);
     }
 }

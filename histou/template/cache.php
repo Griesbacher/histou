@@ -3,44 +3,43 @@
 Contains a cache for templates.
 PHP version 5
 @category Template_Class
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
 
-require_once 'histou/templateLoader.php';
-require_once 'histou/debug.php';
+namespace histou\template;
 
 define("CACHE_FILE", '.histou_cache');
 define("FILE_AGE_KEY", 'fileAge');
 define("RULE_KEY", 'template');
 
 /**
-TemplateCache Class.
+Cache Class.
 PHP version 5
-@category TemplateCache_Class
-@package Histou
+@category Cache_Class
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
 
-class TemplateCache
+class Cache
 {
-    private $_templates;
-    private $_cachefile;
+    private $templates;
+    private $cachefile;
 
     /**
     Creates an cache.
     **/
     public function __construct()
     {
-        $this->_cachefile = join(DIRECTORY_SEPARATOR, array(TMP_FOLDER, CACHE_FILE));
-        if (file_exists($this->_cachefile)) {
-            $this->_loadCache();
+        $this->cachefile = join(DIRECTORY_SEPARATOR, array(TMP_FOLDER, CACHE_FILE));
+        if (file_exists($this->cachefile)) {
+            $this->loadCache();
         } else {
-            $this->_templates = array();
+            $this->templates = array();
         }
     }
 
@@ -55,25 +54,25 @@ class TemplateCache
         $hasChanged = false;
         foreach ($templatepaths as $path) {
             $fileAge = filemtime($path);
-            if ($this->_templates != null
-                && array_key_exists($path, $this->_templates)
-                && $this->_templates[$path][FILE_AGE_KEY] >= $fileAge
+            if ($this->templates != null
+                && array_key_exists($path, $this->templates)
+                && $this->templates[$path][FILE_AGE_KEY] >= $fileAge
             ) {
-                array_push($templates, $this->_templates[$path][RULE_KEY]);
+                array_push($templates, $this->templates[$path][RULE_KEY]);
                 continue;
             }
-            $template = TemplateLoader::loadTemplate($path);
+            $template = \histou\template\loader::loadTemplate($path);
             if ($template == null) {
                 Debug::add("The template: $path is not valid PHP!");
             } else {
                 $hasChanged = true;
-                $this->_templates[$path][FILE_AGE_KEY] = $fileAge;
-                $this->_templates[$path][RULE_KEY] = $template->getRule();
+                $this->templates[$path][FILE_AGE_KEY] = $fileAge;
+                $this->templates[$path][RULE_KEY] = $template->getRule();
                 array_push($templates, $template);
             }
         }
         if ($hasChanged) {
-            $this->_saveCache();
+            $this->saveCache();
         }
         return $templates;
     }
@@ -82,17 +81,17 @@ class TemplateCache
     Loads the rules from the cachefile.
     @return null.
     **/
-    private function _loadCache()
+    private function loadCache()
     {
-        $this->_templates = unserialize(file_get_contents($this->_cachefile));
+        $this->templates = unserialize(file_get_contents($this->cachefile));
     }
 
     /**
     Saves the rules to the cachefile.
     @return null.
     **/
-    private function _saveCache()
+    private function saveCache()
     {
-        file_put_contents($this->_cachefile, serialize($this->_templates));
+        file_put_contents($this->cachefile, serialize($this->templates));
     }
 }

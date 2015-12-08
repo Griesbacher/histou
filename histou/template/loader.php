@@ -3,24 +3,23 @@
 Loads Templates from files.
 PHP version 5
 @category Loader
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-
-require_once 'histou/template.php';
+namespace histou\template;
 
 /**
 Loads Templates from files.
 PHP version 5
 @category Loader
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-class TemplateLoader
+class Loader
 {
     /**
     Creates a Template from file.
@@ -31,9 +30,9 @@ class TemplateLoader
     public static function loadTemplate($filename, $save = false)
     {
         if (static::endswith($filename, '.php')) {
-            return TemplateLoader::_loadPHPTemplates($filename, $save);
+            return static::loadPHPTemplates($filename, $save);
         } elseif (static::endswith($filename, '.simple')) {
-            return TemplateLoader::_loadSimpleTemplates($filename);
+            return static::loadSimpleTemplates($filename);
         }
     }
 
@@ -43,7 +42,7 @@ class TemplateLoader
     @param bool   $save     if true no syntax check will be done.
     @return object.
     **/
-    private static function _loadPHPTemplates($filename, $save)
+    private static function loadPHPTemplates($filename, $save)
     {
         if (!$save) {
             if (!static::isFileValidPHP($filename)) {
@@ -59,7 +58,7 @@ class TemplateLoader
     @param string $filename foldername.
     @return object.
     **/
-    private static function _loadSimpleTemplates($filename)
+    private static function loadSimpleTemplates($filename)
     {
         return new SimpleTemplate($filename);
     }

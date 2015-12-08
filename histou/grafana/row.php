@@ -8,7 +8,8 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-require_once 'panel.php';
+namespace histou\grafana;
+
 /**
 Row Class.
 PHP version 5
@@ -20,13 +21,13 @@ PHP version 5
 **/
 class Row
 {
-    private $_data = array(
+    private $data = array(
                         'titel' => null,
                         'editable' => true,
                         'height' => null,
                         'panels' => array()
                     );
-    private $_panels = array();
+    private $panels = array();
 
     /**
     Constructor.
@@ -34,10 +35,10 @@ class Row
     @param string $height row height.
     @return object
     **/
-    function __construct($titel, $height = HEIGHT)
+    public function __construct($titel, $height = HEIGHT)
     {
-        $this->_data['titel'] = $titel;
-        $this->_data['height'] = $height;
+        $this->data['titel'] = $titel;
+        $this->data['height'] = $height;
     }
 
     /**
@@ -46,10 +47,10 @@ class Row
     **/
     public function toArray()
     {
-        foreach ($this->_panels as $panel) {
-            array_push($this->_data['panels'], $panel->toArray());
+        foreach ($this->panels as $panel) {
+            array_push($this->data['panels'], $panel->toArray());
         }
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -59,7 +60,7 @@ class Row
     **/
     public function setEditable(boolean $editable)
     {
-        $this->_data['editable'] = $editable;
+        $this->data['editable'] = $editable;
     }
 
     /**
@@ -70,7 +71,7 @@ class Row
     public function addPanel($panel)
     {
         //TODO: Aufvererbung testen
-        array_push($this->_panels, $panel);
+        array_push($this->panels, $panel);
     }
 
     /**
@@ -81,6 +82,6 @@ class Row
     **/
     public function setCustomProperty($name, $value)
     {
-        $this->_data[$name] = $value;
+        $this->data[$name] = $value;
     }
 }

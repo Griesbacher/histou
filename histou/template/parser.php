@@ -3,23 +3,25 @@
 Parses Templates files and generates Code.
 PHP version 5
 @category Parser
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-require_once 'histou/rule.php';
+namespace histou\template;
+
 /**
 Parses Templates files and generates Code.
 PHP version 5
 @category Parser
-@package Histou
+@package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-class TemplateParser
+class Parser
 {
+
     /**
     Expects a filename and parses the file, to return a rule and a dashbord lambda.
     @param string $file Path to file.

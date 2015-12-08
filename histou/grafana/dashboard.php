@@ -8,7 +8,8 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
-require_once 'row.php';
+namespace histou\grafana;
+
 /**
 Dashboard Class.
 PHP version 5
@@ -20,7 +21,7 @@ PHP version 5
 **/
 class Dashboard
 {
-    private $_data = array(
+    private $data = array(
     'id' => '1',
     'title' => null,
     'originalTitle' => 'CustomDashboard',
@@ -54,16 +55,16 @@ class Dashboard
     'rows' => array(),
     'annotations' => array('list' => array()),
     );
-    private $_rows = array();
+    private $rows = array();
 
     /**
     Constructs a new Dashboard.
     @param string $title name of the dashboard.
     @return null
     **/
-    function __construct($title)
+    public function __construct($title)
     {
-        $this->_data['title'] = $title;
+        $this->data['title'] = $title;
     }
 
     /**
@@ -72,10 +73,10 @@ class Dashboard
     **/
     public function toArray()
     {
-        foreach ($this->_rows as $row) {
-            array_push($this->_data['rows'], $row->toArray());
+        foreach ($this->rows as $row) {
+            array_push($this->data['rows'], $row->toArray());
         }
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -85,7 +86,7 @@ class Dashboard
     **/
     public function setEditable(boolean $editable)
     {
-        $this->_data['editable'] = $editable;
+        $this->data['editable'] = $editable;
     }
 
     /**
@@ -96,7 +97,7 @@ class Dashboard
     **/
     public function setCustomProperty($name, $value)
     {
-        $this->_data[$name] = $value;
+        $this->data[$name] = $value;
     }
 
     /**
@@ -106,7 +107,7 @@ class Dashboard
     **/
     public function addRow(Row $row)
     {
-        array_push($this->_rows, $row);
+        array_push($this->rows, $row);
     }
 
     /**
@@ -124,7 +125,8 @@ class Dashboard
     public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13, $datasource = "nagflux")
     {
         array_push(
-            $this->_data['annotations']['list'], array(
+            $this->data['annotations']['list'],
+            array(
             "datasource" => $datasource,
             "enable" => $enabled,
             "iconColor" => $iconColor,
@@ -159,5 +161,4 @@ class Dashboard
             $this->addAnnotation($annotation[0], $hostname, $servicename, $annotation[1], $annotation[1]);
         }
     }
-
 }

@@ -8,6 +8,8 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
+namespace histou\database;
+
 /**
 Influxdb Class.
 PHP version 5
@@ -20,7 +22,7 @@ PHP version 5
 
 class Influxdb
 {
-    private $_url;
+    private $url;
 
     /**
     Constructs a new Influxdb client.
@@ -29,7 +31,7 @@ class Influxdb
     **/
     public function __construct($url)
     {
-        $this->_url = $url."&q=";
+        $this->url = $url."&q=";
     }
 
     /**
@@ -40,7 +42,7 @@ class Influxdb
     public function makeRequest($query)
     {
         try {
-            $content = file_get_contents($this->_url.urlencode($query));
+            $content = file_get_contents($this->url.urlencode($query));
         } catch (ErrorException $e) {
             returnData('Influxdb not reachable: '.$e->getMessage(), 1, 'Influxdb not reachable');
         }
@@ -61,9 +63,12 @@ class Influxdb
     {
         $regex = sprintf(
             "/%s%s%s%s(.*?)%s(.*?)%s(.*)/",
-            preg_quote($host, '/'), $fieldSeperator,
-            preg_quote($service, '/'), $fieldSeperator,
-            $fieldSeperator, $fieldSeperator
+            preg_quote($host, '/'),
+            $fieldSeperator,
+            preg_quote($service, '/'),
+            $fieldSeperator,
+            $fieldSeperator,
+            $fieldSeperator
         );
         $data = array('host' => $host, 'service' => $service);
         foreach ($request as $queryResult) {
@@ -92,7 +97,7 @@ class Influxdb
         if (isset($data[static::PERF_LABEL])) {
             ksort($data[static::PERF_LABEL], SORT_NATURAL);
             foreach ($data[static::PERF_LABEL] as &$perfLabel) {
-                uksort($perfLabel, "Influxdb::_comparePerfLabel");
+                uksort($perfLabel, get_class($this).'::comparePerfLabel');
             }
         }
         return $data;
@@ -103,20 +108,20 @@ class Influxdb
     @param string $label PerformanceLabel.
     @return int.
     **/
-    private static function _getPerfLabelIndex($label)
+    private static function getPerfLabelIndex($label)
     {
         switch($label) {
-        case 'value':
-            return 1;
-        case 'warn':
-            return 2;
-        case 'crit':
-            return 3;
-        case 'min':
-            return 4;
-        case 'max':
-            return 5;
-        default:
+            case 'value':
+                return 1;
+            case 'warn':
+                return 2;
+            case 'crit':
+                return 3;
+            case 'min':
+                return 4;
+            case 'max':
+                return 5;
+            default:
         }
         return 0;
     }
@@ -127,10 +132,10 @@ class Influxdb
     @param string $secondLabel second.
     @return int
     **/
-    private static function _comparePerfLabel($firstLabel, $secondLabel)
+    private static function comparePerfLabel($firstLabel, $secondLabel)
     {
-        $first = Influxdb::_getPerfLabelIndex($firstLabel);
-        $second = Influxdb::_getPerfLabelIndex($secondLabel);
+        $first = Influxdb::getPerfLabelIndex($firstLabel);
+        $second = Influxdb::getPerfLabelIndex($secondLabel);
         if ($first == $second) {
             return 0;
         }
