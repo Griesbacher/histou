@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="PHP">
+    <description>The coding standard for standard PHP application</description>
+    <rule ref="PSR2"/>
+	<exclude-pattern>*/test/*</exclude-pattern>
+	<exclude-pattern>*/cover/*</exclude-pattern>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="140"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+</ruleset>

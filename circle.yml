@@ -4,10 +4,9 @@ machine:
 
 dependencies:
   override:
-    - composer require satooshi/php-coveralls:~0.6@stable
     - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
     - echo "xdebug.max_nesting_level = 250" >> ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
-
+    - tar -xzf vendor.tar.gz
 
 test:
   override:
