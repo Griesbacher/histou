@@ -2,6 +2,16 @@ machine:
   php:
     version: 5.4.19
 
+dependcies:
+  override:
+    - composer require satooshi/php-coveralls:~0.6@stable
+    - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
+    - echo "xdebug.max_nesting_level = 250" >> ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
+
+
 test:
   override:
     - phpunit -c phpunit.xml
+
+  post:
+    - php vendor/bin/coveralls
