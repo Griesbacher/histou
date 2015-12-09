@@ -2,11 +2,13 @@
 ### Features
 - syntax check on php templates, malformed templates will be ignored but an error appears in the apache error.log
 - template cache, the valid templates will be cached
+- default datasource is the name of the influxdb database from the config
 
 ### Fixes
 - multiple Grafana gaps
 - simple template: naming problem
 - star regex in perfLabel works, but an exact match wins against star
+- downtime query warning within the query editor
 
 ## v0.1.0 - 12.11.2015
 ### Features
