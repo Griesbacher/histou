@@ -98,7 +98,8 @@ class GraphPanel extends Panel
                 $target
             ),
             "alias" => $alias,
-            "tags" => $tags
+            "tags" => $tags,
+			"datasource" => INFLUX_DB
             )
         );
     }
@@ -242,7 +243,7 @@ class GraphPanel extends Panel
         $this->addTargetSimple(
             $target,
             $alias,
-            array(array('key' => 'downtime', 'operator'  => '=', 'value' => 1))
+            array(array('key' => 'downtime', 'operator'  => '=', 'value' => '1'))
         );
         array_push(
             $this->data['seriesOverrides'],

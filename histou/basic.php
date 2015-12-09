@@ -51,8 +51,12 @@ class Basic
         Basic::setConstant(
             "INFLUX_URL",
             Basic::getConfigKey($config, 'influxdb', 'influxdbUrl'),
-            "http://127.0.0.1:8086/query?db=icinga"
+            "http://127.0.0.1:8086/query?db=nagflux"
         );
+		if (preg_match(";db=(\\w*);", INFLUX_URL, $matches)) {
+			define('INFLUX_DB', $matches[1]);
+		}
+
         Basic::setConstant(
             "INFLUX_FIELDSEPERATOR",
             Basic::getConfigKey($config, 'influxdb', 'influxFieldseperator'),
