@@ -29,7 +29,7 @@ class Basic
     public static function parsIni($filename)
     {
         if (empty($filename) || !file_exists($filename)) {
-            returnData("", 1, "Configuration not found: ".$filename);
+            return "Configuration not found";
         }
 
         $config = parse_ini_file($filename, true);
