@@ -92,14 +92,14 @@ class GraphPanel extends Panel
                                      "type" => "time",
                                     )
                               ),
-            "measurement" => sprintf($target),
+            "measurement" => $target,
             "query" => sprintf(
                 'select mean(value) from "%s" where AND $timeFilter group by time($interval)',
                 $target
             ),
             "alias" => $alias,
             "tags" => $tags,
-			"datasource" => INFLUX_DB
+            "datasource" => INFLUX_DB
             )
         );
     }
