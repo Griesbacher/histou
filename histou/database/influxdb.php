@@ -20,6 +20,16 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
+define(
+    "INFLUX_QUERY",
+    sprintf(
+        "show series from /%s%s%s.*/",
+        str_replace("/", '\/', HOST),
+        INFLUX_FIELDSEPERATOR,
+        str_replace('/', '\/', SERVICE)
+    )
+);
+
 class Influxdb
 {
     private $url;
@@ -32,6 +42,18 @@ class Influxdb
     public function __construct($url)
     {
         $this->url = $url."&q=";
+    }
+
+    public function fetchPerfData()
+    {
+        return $this->makeRequest(
+            sprintf(
+                "select * from /%s%s%s.*/ ORDER BY time DESC limit 1",
+                str_replace("/", '\/', HOST),
+                INFLUX_FIELDSEPERATOR,
+                str_replace('/', '\/', SERVICE)
+            )
+        );
     }
 
     /**

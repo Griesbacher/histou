@@ -34,20 +34,10 @@ header("access-control-allow-origin: *");
 //error_reporting(0);
 ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 
-
 parsArgs();
-define(
-    "INFLUX_QUERY",
-    sprintf(
-        "show series from /%s%s%s.*/",
-        str_replace("/", '\/', HOST),
-        INFLUX_FIELDSEPERATOR,
-        str_replace('/', '\/', SERVICE)
-    )
-);
 // database load perfdata
 $influx = new \histou\database\Influxdb(INFLUX_URL);
-$request = $influx->makeRequest(INFLUX_QUERY);
+$request = $influx->fetchPerfData();
 $perfData = $influx->filterPerfdata(
     $request,
     HOST,
