@@ -186,7 +186,7 @@ function parsArgs()
         define("SERVICE", "");
     }
     if (isset($_GET['debug'])) {
-        Debug::enable();
+        \histou\Debug::enable();
     }
     if (isset($_GET['height']) && !empty($_GET['height'])) {
         define("HEIGHT", $_GET["height"]);
