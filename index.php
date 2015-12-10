@@ -10,8 +10,11 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
-function __autoload($class_name) {
-    require_once $class_name . '.php';
+function __autoload($className) {
+    $file = strtolower(str_replace('\\', DIRECTORY_SEPARATOR, $className)).'.php';
+    if (file_exists($file)) {
+        require_once $file;
+    }
 }
 
 set_error_handler(
@@ -99,7 +102,7 @@ if (isset($template) && !empty($template)) {
     } elseif ($className == 'histou\template\Template' || $className == 'histou\template\SimpleTemplate') {
         $dashboard = $template->generateDashboard($perfData);
     } else {
-		returnData(\histou\Debug::errorMarkdownDashboard("# unkown class $className"), 1);
+        returnData(\histou\Debug::errorMarkdownDashboard("# unkown class $className"), 1);
     }
 
     if ($dashboard == null) {
@@ -128,11 +131,11 @@ function returnData($data, $returnCode = 0)
     } elseif (is_string($data)) {
         $json = $data;
     }else{
-		echo '<pre>';
-		print_r("Don't know what to do with this: $data");
-		echo '</pre>';
-		exit -1;
-	}
+        echo '<pre>';
+        print_r("Don't know what to do with this: $data");
+        echo '</pre>';
+        exit -1;
+    }
 
     if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
         header('content-type: application/json; charset=utf-8');
