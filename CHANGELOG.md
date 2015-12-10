@@ -9,6 +9,7 @@
 - simple template: naming problem
 - star regex in perfLabel works, but an exact match wins against star
 - downtime query warning within the query editor
+- percentage in queries
 
 ## v0.1.0 - 12.11.2015
 ### Features
