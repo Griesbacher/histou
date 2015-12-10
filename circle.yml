@@ -13,4 +13,4 @@ test:
     - phpunit -c conf/phpunit.xml
 
   post:
-    - php vendor/bin/coveralls
+    - php vendor/bin/coveralls -c conf/coveralls.yml
