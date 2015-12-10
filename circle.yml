@@ -6,11 +6,11 @@ dependencies:
   override:
     - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
     - echo "xdebug.max_nesting_level = 250" >> ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
-    - tar -xzf vendor.tar.gz
+    - tar -xzf conf/vendor.tar.gz
 
 test:
   override:
-    - phpunit -c phpunit.xml
+    - phpunit -c conf/phpunit.xml
 
   post:
     - php vendor/bin/coveralls
