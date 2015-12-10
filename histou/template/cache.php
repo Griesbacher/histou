@@ -63,7 +63,7 @@ class Cache
             }
             $template = \histou\template\loader::loadTemplate($path);
             if ($template == null) {
-                Debug::add("The template: $path is not valid PHP!");
+                \histou\Debug::add("The template: $path is not valid PHP!");
             } else {
                 $hasChanged = true;
                 $this->templates[$path][FILE_AGE_KEY] = $fileAge;

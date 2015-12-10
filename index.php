@@ -49,14 +49,14 @@ $perfDataSize = sizeof($perfData);
 if ($perfDataSize < 4) {
     if ($perfDataSize == 1) {
         returnData(
-            Debug::errorMarkdownDashboard(
-                '#Influxdb Error: '.$perfData[0].' Query: '.INFLUX_QUERY
+            \histou\Debug::errorMarkdownDashboard(
+                '#Influxdb Error: '.$perfData.' Query: '.INFLUX_QUERY
             ),
             1
         );
     } else {
         returnData(
-            Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'),
+            \histou\Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'),
             1
         );
     }
@@ -70,7 +70,7 @@ $templateCache = new \histou\template\cache();
 $templates = $templateCache->loadTemplates($templateFiles);
 
 if (sizeof($templates) == 0) {
-    returnData(Debug::errorMarkdownDashboard('#Could not load templates!'), 1);
+    returnData(\histou\Debug::errorMarkdownDashboard('#Could not load templates!'), 1);
 }
 
 \histou\template\Rule::setCheck(

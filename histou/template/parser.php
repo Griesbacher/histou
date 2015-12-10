@@ -109,8 +109,8 @@ class Parser
                 //regex does not work
             }
             if (!static::isStringValidJson($dashboard)) {
-                Debug::enable();
-                return Debug::errorMarkdownDashboard(
+                \histou\Debug::enable();
+                return \histou\Debug::errorMarkdownDashboard(
                     '#The Template given was not valid json!'
                 );
             } else {

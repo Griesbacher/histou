@@ -113,7 +113,7 @@ class Influxdb
                     }
                 }
             } else {
-                return array($queryResult['error']);
+                return "No datafound";
             }
         }
         if (isset($data[static::PERF_LABEL])) {
