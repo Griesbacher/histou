@@ -34,11 +34,14 @@ abstract class Panel
     @param string $type  type of the panel.
     @return object.
     **/
-    public function __construct($title, $type)
+    public function __construct($title, $type, $id = -1)
     {
         $this->data['title'] = $title;
         $this->data['type'] = $type;
-        $this->data['id'] = self::$currentId++;
+		if ($id == -1) {
+			$id = self::$currentId++;
+		}
+        $this->data['id'] = $id;
     }
 
     /**

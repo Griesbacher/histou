@@ -27,9 +27,9 @@ class GraphPanel extends Panel
     @param boolean $legendShow hide the legend or not
     @return object.
     **/
-    public function __construct($title, $legendShow = SHOW_LEGEND)
+    public function __construct($title, $legendShow = SHOW_LEGEND, $id = -1)
     {
-        parent::__construct($title, 'graph');
+        parent::__construct($title, 'graph', $id);
         $this->data['tooltip'] = array(
                                 'show' =>  false,
                                 'values' =>  false,

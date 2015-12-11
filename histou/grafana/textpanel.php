@@ -30,9 +30,9 @@ class TextPanel extends Panel
     @param string $title name of the panel.
     @return object.
     **/
-    public function __construct($title)
+    public function __construct($title, $id = -1)
     {
-        parent::__construct($title, 'text');
+        parent::__construct($title, 'text', $id);
     }
 
     /**
