@@ -64,8 +64,8 @@ class Debug
         $output = '';
         foreach (static::$log as $line) {
             $output .= sprintf(
-                "####%s",
-                substr(str_replace("\n", "\n####", $line), 0, -4)
+                "#### %s",
+                substr(str_replace("\n", "\n#### ", $line), 0, -5)
             );
         }
         return $output;
