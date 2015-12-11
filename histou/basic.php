@@ -21,6 +21,103 @@ PHP version 5
 **/
 class Basic
 {
+    public static $parsed = false;
+    /**
+    Parses the GET parameter.
+    @return null.
+    **/
+    public static function parsArgs()
+    {
+        if (static::$parsed) {
+            return;
+        }
+        static::$parsed = true;
+
+        $shortopts  = "";
+        $longopts  = array(
+        "host:",
+        "service:",
+        );
+
+        $args = getopt($shortopts, $longopts);
+        if (isset($_GET['host']) && !empty($_GET['host'])) {
+            define("HOST", $_GET["host"]);
+        } elseif (isset($args['host']) && !empty($args['host'])) {
+            define("HOST", $args["host"]);
+        } else {
+            \histou\Basic::returnData('Hostname is missing!', 1, 'Hostname is missing!');
+        }
+
+        if (isset($_GET['service']) && !empty($_GET['service'])) {
+            define("SERVICE", $_GET["service"]);
+        } elseif (isset($args['service']) && !empty($args['service'])) {
+            define("SERVICE", $args["service"]);
+        } else {
+            define("SERVICE", "");
+        }
+
+        if (isset($_GET['debug'])) {
+            \histou\Debug::enable();
+        }
+
+        if (isset($_GET['height']) && !empty($_GET['height'])) {
+            define("HEIGHT", $_GET["height"]);
+        } else {
+            define("HEIGHT", "400px");
+        }
+
+        if (isset($_GET['legend']) && !empty($_GET['legend']) && $_GET["legend"] == "false") {
+            define("SHOW_LEGEND", false);
+        } else {
+            define("SHOW_LEGEND", true);
+        }
+
+        if (isset($_GET['annotations']) && !empty($_GET['annotations']) && $_GET["annotations"] == "true") {
+            define("SHOW_ANNOTATION", true);
+        } else {
+            define("SHOW_ANNOTATION", false);
+        }
+    }
+
+    /**
+    This function will print its input and exit with the given returncode.
+    @param object $data       This object will be converted to json.
+    @param int    $returnCode The returncode the programm will exit.
+    @return null.
+    **/
+    public static function returnData($data, $returnCode = 0)
+    {
+        if (is_object($data) && get_class($data) == 'histou\grafana\Dashboard') {
+            if (\histou\Debug::isEnable()) {
+                $data->addRow(\histou\Debug::genMarkdownRow(\histou\Debug::getLogAsMarkdown(), 'Debug'));
+            }
+            $data = $data->toArray();
+            $json = json_encode($data);
+        } elseif (is_string($data)) {
+            $json = $data;
+        } else {
+            echo '<pre>';
+            print_r("Don't know what to do with this: $data");
+            echo '</pre>';
+            exit -1;
+        }
+
+        if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
+            header('content-type: application/json; charset=utf-8');
+            echo "{$_GET['callback']}($json)";
+        } else {
+            echo "<pre>";
+            print_r($data);
+            echo "<br>";
+            print_r($returnCode);
+            echo "<br>";
+            print_r($json);
+            echo "<br>";
+            echo "</pre>";
+        }
+        exit($returnCode);
+    }
+
     /**
     Parses the configuration file.
     @param string $filename Path to the configuration file.

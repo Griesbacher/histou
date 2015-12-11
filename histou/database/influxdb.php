@@ -66,7 +66,7 @@ class Influxdb
         try {
             $content = file_get_contents($this->url.urlencode($query));
         } catch (ErrorException $e) {
-            returnData('Influxdb not reachable: '.$e->getMessage(), 1, 'Influxdb not reachable');
+            \histou\Basic::returnData('Influxdb not reachable: '.$e->getMessage(), 1, 'Influxdb not reachable');
         }
         return json_decode($content, true)['results'];
     }

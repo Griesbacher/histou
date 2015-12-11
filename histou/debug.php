@@ -95,9 +95,7 @@ class Debug
     public static function errorMarkdownDashboard($message)
     {
         $dashboard = new \histou\grafana\Dashboard('Error');
-        $dashboard->addRow(
-            static::genMarkdownRow($message, 'ERROR')
-        );
+        $dashboard->addRow(static::genMarkdownRow($message, 'ERROR'));
         return $dashboard;
     }
 
