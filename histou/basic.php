@@ -99,7 +99,6 @@ class Basic
             echo '<pre>';
             print_r("Don't know what to do with this: $data");
             echo '</pre>';
-            exit -1;
         }
 
         if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
@@ -115,7 +114,6 @@ class Basic
             echo "<br>";
             echo "</pre>";
         }
-        exit($returnCode);
     }
 
     /**
