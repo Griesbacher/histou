@@ -10,12 +10,7 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
-function __autoload($className) {
-    $file = strtolower(str_replace('\\', DIRECTORY_SEPARATOR, $className)).'.php';
-    if (file_exists($file)) {
-        require_once $file;
-    }
-}
+require_once('histou/bootstrap.php');
 
 set_error_handler(
     function ($errno, $errstr, $errfile, $errline, array $errcontext) {

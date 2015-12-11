@@ -2,7 +2,6 @@
 <ruleset name="PHP">
     <description>The coding standard for standard PHP application</description>
     <rule ref="PSR2"/>
-	<exclude-pattern>*/tests/*</exclude-pattern>
 	<exclude-pattern>*/cover/*</exclude-pattern>
 	<exclude-pattern>index.php</exclude-pattern>
 	<exclude-pattern>testconfig.php</exclude-pattern>

@@ -1,4 +1,5 @@
-<phpunit>
+<phpunit bootstrap="../histou/bootstrap.php"
+         colors="true">
   <testsuites>
     <testsuite name="basic">
       <directory>../tests</directory>
