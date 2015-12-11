@@ -3,6 +3,7 @@
 - syntax check on php templates, malformed templates will be ignored but an error appears in the apache error.log
 - template cache, the valid templates will be cached
 - default datasource is the name of the influxdb database from the config
+- using php namespaces
 
 ### Fixes
 - multiple Grafana gaps
