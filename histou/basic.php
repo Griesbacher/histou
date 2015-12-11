@@ -100,19 +100,20 @@ class Basic
             print_r("Don't know what to do with this: $data");
             echo '</pre>';
         }
-
-        if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
-            header('content-type: application/json; charset=utf-8');
-            echo "{$_GET['callback']}($json)";
-        } else {
-            echo "<pre>";
-            print_r($data);
-            echo "<br>";
-            print_r($returnCode);
-            echo "<br>";
-            print_r($json);
-            echo "<br>";
-            echo "</pre>";
+        if (isset($json)) {
+            if (isset($_GET["callback"]) && !empty($_GET["callback"])) {
+                header('content-type: application/json; charset=utf-8');
+                echo "{$_GET['callback']}($json)";
+            } else {
+                echo "<pre>";
+                print_r($data);
+                echo "<br>";
+                print_r($returnCode);
+                echo "<br>";
+                print_r($json);
+                echo "<br>";
+                echo "</pre>";
+            }
         }
     }
 
