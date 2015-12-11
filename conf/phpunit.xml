@@ -1,8 +1,9 @@
 <phpunit bootstrap="../histou/bootstrap.php"
-         colors="true">
+         colors="true"
+		 processIsolation="true">
   <testsuites>
     <testsuite name="basic">
-      <directory>../tests</directory>
+      <directory suffix=".php">../tests/</directory>
     </testsuite>
   </testsuites>
   <logging>
