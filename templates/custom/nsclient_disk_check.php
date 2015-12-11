@@ -85,6 +85,7 @@ $genTemplate = function ($perfData) {
         );
         $alias = $perfData['host']." ".$perfData['service']." ".$key." value";
         $panel->addAliasColor($alias, '#085DFF');
+		$panel->fillBelowLine($alias, 2);
         $panel->addTargetSimple($target, $alias);
         if (isset($value['value']['unit'])) {
             $panel->setleftYAxisLabel($value['value']['unit']);
