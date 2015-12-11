@@ -213,7 +213,7 @@ class Rule
             if ($hitsFirst != $hitsSecond || $firstStar != $secondStar) {
                 if ($firstStar) {
                     return -1;
-                } else {
+                } elseif ($secondStar) {
                     return 1;
                 }
                 if ($hitsFirst == $baseSize) {
