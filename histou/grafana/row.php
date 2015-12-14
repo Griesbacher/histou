@@ -58,7 +58,7 @@ class Row
     @param boolean $editable true/false.
     @return null
     **/
-    public function setEditable(boolean $editable)
+    public function setEditable($editable)
     {
         $this->data['editable'] = $editable;
     }
