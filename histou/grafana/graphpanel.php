@@ -65,7 +65,7 @@ class GraphPanel extends Panel
     **/
     public function setTooltip(array $tooltip)
     {
-        $this->data['tooltip'] = tooltip;
+        $this->data['tooltip'] = $tooltip;
     }
 
     /**
