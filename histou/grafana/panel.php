@@ -68,7 +68,7 @@ abstract class Panel
     @param boolean $editable .
     @return null.
     **/
-    public function setEditable(boolean $editable)
+    public function setEditable($editable)
     {
         $this->data['editable'] = $editable;
     }
