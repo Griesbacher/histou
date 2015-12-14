@@ -84,7 +84,7 @@ class Dashboard
     @param boolean $editable true7false.
     @return null
     **/
-    public function setEditable(boolean $editable)
+    public function setEditable($editable)
     {
         $this->data['editable'] = $editable;
     }
@@ -122,7 +122,7 @@ class Dashboard
     @param string $datasource  name of the grafana datasource.
     @return return null
     **/
-    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13, $datasource = "nagflux")
+    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13, $datasource = INFLUX_DB)
     {
         array_push(
             $this->data['annotations']['list'],
