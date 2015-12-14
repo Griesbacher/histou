@@ -83,7 +83,7 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
             join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template2.php')),
             join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple')),
         );
-        $this->assertEquals($expected, $templateFiles);
+        $this->assertEquals(sort($expected), sort($templateFiles));
 
         $templates = array();
         foreach ($files as $file => $content) {
@@ -114,7 +114,7 @@ Rule:
     protected function tearDown()
     {
         $path = join(DIRECTORY_SEPARATOR, array(sys_get_temp_dir(), 'histou_test'));
-        if (PHP_OS === 'Windows') {
+        if (PHP_OS === 'Windows' || PHP_OS === 'WINNT') {
             exec("rd /s /q {$path}");
         } else {
             exec("rm -rf {$path}");

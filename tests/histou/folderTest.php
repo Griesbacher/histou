@@ -59,7 +59,7 @@ class FolderTest extends \MyPHPUnitFrameworkTestCase
     protected function tearDown()
     {
         $path = join(DIRECTORY_SEPARATOR, array(sys_get_temp_dir(), 'histou_test'));
-        if (PHP_OS === 'Windows') {
+        if (PHP_OS === 'Windows' || PHP_OS === 'WINNT') {
             exec("rd /s /q {$path}");
         } else {
             exec("rm -rf {$path}");
