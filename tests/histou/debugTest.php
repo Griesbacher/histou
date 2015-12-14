@@ -10,21 +10,15 @@ class DebugTest extends \MyPHPUnitFrameworkTestCase
         \histou\Basic::parsArgs();
     }
 
-    public function testEnable()
+    public function testBasics()
     {
         $this->assertSame(\histou\Debug::isEnable(), false);
         \histou\Debug::enable();
         $this->assertSame(\histou\Debug::isEnable(), true);
-    }
 
-    public function testPrintBoolean()
-    {
         $this->assertSame(\histou\Debug::printBoolean(true), "true");
         $this->assertSame(\histou\Debug::printBoolean(false), "false");
-    }
 
-    public function testGetLogAsMarkdown()
-    {
         \histou\Debug::add("foo");
         $this->assertSame("#### foo\n", \histou\Debug::getLogAsMarkdown());
         \histou\Debug::add("bar");
