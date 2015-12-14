@@ -98,9 +98,9 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(CUSTOM_TEMPLATE_FOLDER, $templates[0]->getPath());
         $this->assertSame('template1.php', $templates[0]->getBaseName());
         $this->assertSame('template1', $templates[0]->getSimpleFileName());
-        $this->assertSame('File:	C:\Users\GRIESB~1\AppData\Local\Temp\histou_test\custom\template1.php:
+        $this->assertSame('File:	'.$expected[0].':
 Rule:
-	File:	C:\Users\GRIESB~1\AppData\Local\Temp\histou_test\custom\template1.php:
+	File:	'.$expected[0].':
 		Host: ;.*;
 		Service: ;.*;
 		Command: ;^$;
