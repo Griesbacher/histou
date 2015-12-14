@@ -2,13 +2,8 @@
 
 namespace tests\grafana;
 
-class DashboardTest extends \PHPUnit_Framework_TestCase
+class DashboardTest extends \MyPHPUnitFrameworkTestCase
 {
-    protected function setUp()
-    {
-        spl_autoload_register('__autoload');
-    }
-
     public function testCreatePanel()
     {
         define("SHOW_ANNOTATION", false);

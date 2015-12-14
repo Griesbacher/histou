@@ -2,13 +2,8 @@
 
 namespace tests\grafana;
 
-class GraphpanelTest extends \PHPUnit_Framework_TestCase
+class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
 {
-    protected function setUp()
-    {
-        spl_autoload_register('__autoload');
-    }
-
     public function init()
     {
         $_GET['host'] = 'host';

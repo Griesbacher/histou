@@ -16,3 +16,11 @@ function __autoload($className)
         require_once $file;
     }
 }
+
+class MyPHPUnitFrameworkTestCase extends \PHPUnit_Framework_TestCase
+{
+    protected function setUp()
+    {
+        spl_autoload_register('__autoload');
+    }
+}

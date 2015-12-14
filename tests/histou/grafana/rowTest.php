@@ -2,13 +2,8 @@
 
 namespace tests\grafana;
 
-class RowTest extends \PHPUnit_Framework_TestCase
+class RowTest extends \MyPHPUnitFrameworkTestCase
 {
-    protected function setUp()
-    {
-        spl_autoload_register('__autoload');
-    }
-
     public function testCreatePanel()
     {
         $row = new \histou\grafana\Row('r1', '100px');
