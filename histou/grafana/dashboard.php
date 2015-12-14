@@ -50,7 +50,7 @@ class Dashboard
     ),
     'templating' => array(),
     'annotations' => array(),
-    'refresh' => '5s',
+    'refresh' => '30s',
     'version' => '6',
     'rows' => array(),
     'annotations' => array('list' => array()),
