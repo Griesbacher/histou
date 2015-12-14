@@ -53,7 +53,7 @@ class FolderTest extends \MyPHPUnitFrameworkTestCase
             join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template4.simple')),
             join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template2.simple')),
         );
-        $this->assertEquals($expected, $templateFiles2);
+        $this->assertEquals(sort($expected), sort($templateFiles2));
     }
 
     protected function tearDown()
