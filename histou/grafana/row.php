@@ -22,7 +22,7 @@ PHP version 5
 class Row
 {
     private $data = array(
-                        'titel' => null,
+                        'title' => null,
                         'editable' => true,
                         'height' => null,
                         'panels' => array()
@@ -31,13 +31,13 @@ class Row
 
     /**
     Constructor.
-    @param string $titel  name of the row.
+    @param string $title  name of the row.
     @param string $height row height.
     @return object
     **/
-    public function __construct($titel, $height = HEIGHT)
+    public function __construct($title, $height = HEIGHT)
     {
-        $this->data['titel'] = $titel;
+        $this->data['title'] = $title;
         $this->data['height'] = $height;
     }
 
