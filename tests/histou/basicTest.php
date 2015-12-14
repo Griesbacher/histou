@@ -4,6 +4,11 @@ namespace tests;
 
 class BasicTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        spl_autoload_register('__autoload');
+    }
+
     public function init()
     {
         $_GET['host'] = 'host';
@@ -77,7 +82,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $out2 = ob_get_contents();
         ob_end_clean();
         $this->assertEquals('1({"foo":"bar"})', $out2);
-        
+
         ob_start();
         \histou\Basic::returnData(1);
         $out3 = ob_get_contents();

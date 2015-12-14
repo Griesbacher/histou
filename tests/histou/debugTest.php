@@ -4,6 +4,11 @@ namespace tests;
 
 class DebugTest extends \PHPUnit_Framework_TestCase
 {
+    protected function setUp()
+    {
+        spl_autoload_register('__autoload');
+    }
+
     public function init()
     {
         $_GET['host'] = 'host';
