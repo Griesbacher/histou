@@ -93,7 +93,7 @@ class Template
     **/
     public function __toString()
     {
-        return "File:\t".$this->file.":\nRule: ".$this->rule;
+        return "File:\t".$this->file.":\nRule:\n".$this->rule;
     }
 
     /**

@@ -301,7 +301,7 @@ class Rule
     public function __toString()
     {
         return sprintf(
-            "\tFile:\t".$this->file.":\n\tHost: %s \n\t\tService: %s\n\t\tCommand: %s\n\t\tPerflabel: %s",
+            "\tFile:\t".$this->file.":\n\t\tHost: %s\n\t\tService: %s\n\t\tCommand: %s\n\t\tPerflabel: %s",
             $this->data['host'],
             $this->data['service'],
             $this->data['command'],
