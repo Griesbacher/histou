@@ -34,17 +34,17 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
     public function testParseArgsCommandline()
     {
-		ob_start();
+        ob_start();
         \histou\Basic::parsArgs();
         $out1 = ob_get_contents();
         ob_end_clean();
         $this->assertEquals("<pre>Hostname is missing!<br>1<br>Hostname is missing!<br></pre>", $out1);
 
-		ob_start();
+        ob_start();
         \histou\Basic::parsArgs();
         $out2 = ob_get_contents();
         ob_end_clean();
-		$this->assertEquals("", $out2);
+        $this->assertEquals("", $out2);
 
     }
 
