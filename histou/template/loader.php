@@ -85,7 +85,7 @@ class Loader
     public static function isFileValidPHP($filePath)
     {
         ob_start();
-        system(PHP_COMMAND." -l $filePath", $returnCode);
+        system(PHP_COMMAND." -l $filePath 2>&1", $returnCode);
         ob_end_clean();
         return $returnCode == 0;
     }
