@@ -59,10 +59,10 @@ $genTemplate = function ($perfData) {
     */
 
     $perfKeys = array_keys($perfData['perfLabel']);
-    $dashboard = new histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     for ($i = 0; $i < sizeof($perfData['perfLabel']); $i++) {
-        $row = new histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-        $panel = new histou\grafana\GraphPanel(
+        $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
+        $panel = new \histou\grafana\GraphPanel(
             $perfData['host'].' '.$perfData['service']
             .' '.$perfData['command'].' '.$perfKeys[$i]
         );

@@ -17,10 +17,10 @@ $rule = new \histou\template\Rule(
 );
 
 $genTemplate = function ($perfData) {
-    $dashboard = new histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     foreach (array('rta', 'pl') as $perfLabel) {
-        $row = new histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-        $panel = new histou\grafana\GraphPanel(
+        $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
+        $panel = new \histou\grafana\GraphPanel(
             $perfData['host'].' '.$perfData['service']
             .' '.$perfData['command'].' '.$perfLabel
         );

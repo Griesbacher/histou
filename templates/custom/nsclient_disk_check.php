@@ -18,7 +18,7 @@ $rule = new \histou\template\Rule(
 );
 
 $genTemplate = function ($perfData) {
-    $dashboard = new histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     $perfLabelWithPercentage = array();
     $perfLabelWithoutPercentage = array();
     $areWarnCritEqual = true;
@@ -35,8 +35,8 @@ $genTemplate = function ($perfData) {
         }
     }
 
-    $row = new histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
-    $panel = new histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' %');
+    $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+    $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' %');
     $colors = array( "#7EB26D", "#EAB839", "#6ED0E0", "#1F78C1", "#BA43A9", "#508642", "#CCA300", "#447EBC", "#C15C17");
     $i = 0;
     $amountOfColors = sizeof($colors);
@@ -69,8 +69,8 @@ $genTemplate = function ($perfData) {
     $dashboard->addRow($row);
 
     foreach ($perfLabelWithoutPercentage as $key => $value) {
-        $row = new histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
-        $panel = new histou\grafana\GraphPanel($perfData['host'].' '.$key);
+        $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+        $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$key);
         $target = sprintf(
             '%s%s%s%s%s%s%s%s%s',
             $perfData['host'],

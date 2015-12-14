@@ -19,9 +19,9 @@ $rule = new \histou\template\Rule(
 $genTemplate = function ($perfData) {
 
     $perfKeys = array_keys($perfData['perfLabel']);
-    $dashboard = new histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
-    $row = new histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-    $panel = new histou\grafana\GraphPanel(
+    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
+    $panel = new \histou\grafana\GraphPanel(
         $perfData['host'].' '.$perfData['service']
         .' '.$perfData['command']
     );
