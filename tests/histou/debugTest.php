@@ -17,23 +17,23 @@ class DebugTest extends \PHPUnit_Framework_TestCase
 
     public function testEnable()
     {
-        $this->assertEquals(\histou\Debug::isEnable(), false);
+        $this->assertSame(\histou\Debug::isEnable(), false);
         \histou\Debug::enable();
-        $this->assertEquals(\histou\Debug::isEnable(), true);
+        $this->assertSame(\histou\Debug::isEnable(), true);
     }
 
     public function testPrintBoolean()
     {
-        $this->assertEquals(\histou\Debug::printBoolean(true), "true");
-        $this->assertEquals(\histou\Debug::printBoolean(false), "false");
+        $this->assertSame(\histou\Debug::printBoolean(true), "true");
+        $this->assertSame(\histou\Debug::printBoolean(false), "false");
     }
 
     public function testGetLogAsMarkdown()
     {
         \histou\Debug::add("foo");
-        $this->assertEquals("#### foo\n", \histou\Debug::getLogAsMarkdown());
+        $this->assertSame("#### foo\n", \histou\Debug::getLogAsMarkdown());
         \histou\Debug::add("bar");
-        $this->assertEquals("#### foo\n#### bar\n", \histou\Debug::getLogAsMarkdown());
+        $this->assertSame("#### foo\n#### bar\n", \histou\Debug::getLogAsMarkdown());
     }
 
     public function testGenMarkdownRow()

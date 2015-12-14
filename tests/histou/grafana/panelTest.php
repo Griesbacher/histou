@@ -18,12 +18,12 @@ class PanelTest extends \PHPUnit_Framework_TestCase
     public function testCreatePanel()
     {
 		$panel1 = new \histou\grafana\GraphPanel('p1', 'test');
-		$this->assertEquals('p1', $panel1->toArray()['title']);
+		$this->assertSame('p1', $panel1->toArray()['title']);
 		$panel1->setSpan(20);
-		$this->assertEquals(20, $panel1->toArray()['span']);
+		$this->assertSame(20, $panel1->toArray()['span']);
 		$panel1->setEditable(false);
-		$this->assertEquals(false, $panel1->toArray()['editable']);
+		$this->assertSame(false, $panel1->toArray()['editable']);
 		$panel1->setCustomProperty('foo','bar');
-		$this->assertEquals('bar', $panel1->toArray()['foo']);
+		$this->assertSame('bar', $panel1->toArray()['foo']);
 	}
 }
