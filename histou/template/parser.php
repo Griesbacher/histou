@@ -34,7 +34,7 @@ class Parser
         $ruleHits = array();
         $dashboard = "";
         foreach ($lines as $line) {
-            if (substr($line, 1) == "#") {
+            if (substr(trim($line),0 , 1) == "#") {
                 //Comment found
                 continue;
             }
