@@ -15,6 +15,7 @@
 	  <directory suffix=".php">../histou/</directory>
 		<exclude>
 			<file>../histou/template/lambda.php</file>
+			<file>../histou/bootstrap.php</file>
 		</exclude>
 	</whitelist>
   </filter>
