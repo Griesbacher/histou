@@ -110,14 +110,4 @@ Rule:
         $this->assertSame('template1.php', $rule->getBaseName());
         $this->assertSame(join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template1.php')), $rule->getFileName());
     }
-
-    protected function tearDown()
-    {
-        $path = join(DIRECTORY_SEPARATOR, array(sys_get_temp_dir(), 'histou_test'));
-        if (PHP_OS === 'Windows' || PHP_OS === 'WINNT') {
-            exec("rd /s /q {$path}");
-        } else {
-            exec("rm -rf {$path}");
-        }
-    }
 }

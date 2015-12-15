@@ -55,14 +55,4 @@ class FolderTest extends \MyPHPUnitFrameworkTestCase
         );
         $this->assertEquals(sort($expected), sort($templateFiles2));
     }
-
-    protected function tearDown()
-    {
-        $path = join(DIRECTORY_SEPARATOR, array(sys_get_temp_dir(), 'histou_test'));
-        if (PHP_OS === 'Windows' || PHP_OS === 'WINNT') {
-            exec("rd /s /q {$path}");
-        } else {
-            exec("rm -rf {$path}");
-        }
-    }
 }
