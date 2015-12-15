@@ -48,26 +48,28 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
 							$genTemplate = function ($perfData) {
 								return "template1";
 							};',
-            join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple')) => '#simple file
-							host = *
-							service = *
-							command = *
-							perfLabel = load1, load5, load15
+            join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple')) => '
+#simple file
+host = *
+service = *
+command = *
+perfLabel = load1, load5, load15
 
-							#Copy the grafana dashboard below:
-							{
-								"hallo":"world",
-							}',
-            join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple123')) => '#simple file
-							host = *
-							service = *
-							command = *
-							perfLabel = load1, load5, load15
+#Copy the grafana dashboard below:
+{
+	"hallo":"world"
+}',
+            join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple123')) => '
+#simple file
+host = *
+service = *
+command = *
+perfLabel = load1, load5, load15
 
-							#Copy the grafana dashboard below:
-							{
-								"hallo":"world",
-							}',
+#Copy the grafana dashboard below:
+{
+	"hallo":"world"
+}',
         );
 
         foreach ($files as $file => $content) {
@@ -109,5 +111,12 @@ Rule:
         $rule = $templates[0]->getRule();
         $this->assertSame('template1.php', $rule->getBaseName());
         $this->assertSame(join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template1.php')), $rule->getFileName());
+
+		$expected = '{
+	"hallo":"world"
+}';
+		$this->assertSame($expected, $templates[2]->generateDashboard('foo'));
+
+
     }
 }
