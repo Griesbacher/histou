@@ -112,10 +112,10 @@ Rule:
         $this->assertSame('template1.php', $rule->getBaseName());
         $this->assertSame(join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template1.php')), $rule->getFileName());
 
-		$expected = '{
+        $expected = '{
 	"hallo":"world"
 }';
-		$this->assertSame($expected, $templates[2]->generateDashboard('foo'));
+        $this->assertSame($expected, $templates[2]->generateDashboard('foo'));
 
 
     }
