@@ -152,7 +152,7 @@ class Template
     public static function findDefaultTemplate($templates, $defaultName)
     {
         foreach (array_reverse($templates) as $template) {
-            if ($template->getBaseName() == $defaultName) {
+            if ($template != null && $template->getBaseName() == $defaultName) {
                 return $template;
             }
         }
