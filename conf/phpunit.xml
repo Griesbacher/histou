@@ -1,4 +1,4 @@
-<phpunit bootstrap="../histou/bootstrap.php"
+<phpunit bootstrap="../tests/bootstrap.php"
          colors="true"
 		 processIsolation="true">
   <testsuites>
