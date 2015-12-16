@@ -67,7 +67,7 @@ class Influxdb
     {
         try {
             $content = file_get_contents($this->url.urlencode($query));
-        } catch (ErrorException $e) {
+        } catch ( \ErrorException $e ) {
             return $e->getMessage();
         }
         return json_decode($content, true)['results'];
