@@ -52,7 +52,7 @@ class Influxdb
                 str_replace("/", '\/', HOST),
                 INFLUX_FIELDSEPERATOR,
                 str_replace('/', '\/', SERVICE),
-				INFLUX_FIELDSEPERATOR
+                INFLUX_FIELDSEPERATOR
             )
         );
     }
@@ -61,13 +61,13 @@ class Influxdb
     Querys the database with the given request.
     @param string $query db query.
     @return string
-	@codeCoverageIgnore
+    @codeCoverageIgnore
     **/
     public function makeRequest($query)
     {
         try {
             $content = file_get_contents($this->url.urlencode($query));
-        } catch ( \ErrorException $e ) {
+        } catch (\ErrorException $e) {
             return $e->getMessage();
         }
         return json_decode($content, true)['results'];
