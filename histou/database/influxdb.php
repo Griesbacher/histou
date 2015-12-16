@@ -48,10 +48,11 @@ class Influxdb
     {
         return $this->makeRequest(
             sprintf(
-                "select * from /%s%s%s.*/ ORDER BY time DESC limit 1",
+                "select * from /%s%s%s%s.*/ ORDER BY time DESC limit 1",
                 str_replace("/", '\/', HOST),
                 INFLUX_FIELDSEPERATOR,
-                str_replace('/', '\/', SERVICE)
+                str_replace('/', '\/', SERVICE),
+				INFLUX_FIELDSEPERATOR
             )
         );
     }
@@ -60,13 +61,14 @@ class Influxdb
     Querys the database with the given request.
     @param string $query db query.
     @return string
+	@codeCoverageIgnore
     **/
     public function makeRequest($query)
     {
         try {
             $content = file_get_contents($this->url.urlencode($query));
         } catch (ErrorException $e) {
-            \histou\Basic::returnData('Influxdb not reachable: '.$e->getMessage(), 1, 'Influxdb not reachable');
+            return $e->getMessage();
         }
         return json_decode($content, true)['results'];
     }
@@ -158,9 +160,6 @@ class Influxdb
     {
         $first = Influxdb::getPerfLabelIndex($firstLabel);
         $second = Influxdb::getPerfLabelIndex($secondLabel);
-        if ($first == $second) {
-            return 0;
-        }
-        return ($first < $second) ? -1 : 1;
+        return ($first < $second) ? -1 : 1; //equals not possible due to key sorting
     }
 }
