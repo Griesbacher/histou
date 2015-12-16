@@ -130,7 +130,7 @@ class Template
         } elseif ($className == 'histou\template\Template' || $className == 'histou\template\SimpleTemplate') {
             return $maybeRule->rule;
         } else {
-            throw new \Exception("unkown class $className");
+            throw new \InvalidArgumentException("unkown class $className");
         }
     }
 
