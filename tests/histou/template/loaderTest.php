@@ -117,9 +117,9 @@ Rule:
 }';
         $this->assertSame($expected, $templates[2]->generateDashboard('foo'));
 
-		$default = \histou\template\template::findDefaultTemplate($templates, "template1.php");
-		$this->assertSame($templates[0], $default);
-		$default2 = \histou\template\template::findDefaultTemplate($templates, "foo.php");
-		$this->assertSame(null, $default2);
+        $default = \histou\template\template::findDefaultTemplate($templates, "template1.php");
+        $this->assertSame($templates[0], $default);
+        $default2 = \histou\template\template::findDefaultTemplate($templates, "foo.php");
+        $this->assertSame(null, $default2);
     }
 }
