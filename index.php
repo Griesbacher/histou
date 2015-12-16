@@ -38,6 +38,11 @@ ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 // database load perfdata
 $influx = new \histou\database\Influxdb(INFLUX_URL);
 $request = $influx->fetchPerfData();
+if (sizeof($request) == 1 && sizeof($request[0]) == 0) {
+	\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Influxdb not reachable or empty result'), 1);
+	exit(0);
+}
+
 $perfData = $influx->filterPerfdata(
     $request,
     HOST,
