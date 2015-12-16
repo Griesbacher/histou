@@ -116,6 +116,15 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
 									new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2', 'p3', 'p4'), ''),
 								)
 			),
+			//too much infos desc
+			array(
+				'expected' => new \histou\template\Rule('.*', '.*', '.*', array('p1', 'p2', 'p3'), ''),
+				'input' => array(
+									new \histou\template\Rule('.*', '.*', '.*', array('p1', 'p2'), ''),
+									new \histou\template\Rule('.*', '.*', '.*', array('p1', 'p2', 'p3'), ''),
+									new \histou\template\Rule('.*', '.*', '.*', array('p1', 'p2', 'p3', 'p4'), ''),
+								)
+			),
 		);
 
 		\histou\template\Rule::setCheck(
