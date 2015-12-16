@@ -211,21 +211,19 @@ class Rule
             $hitsFirst = static::compareArrays($first, $base);
             $hitsSecond = static::compareArrays($second, $base);
             if ($hitsFirst != $hitsSecond || $firstStar != $secondStar) {
-                if ($firstStar) {
-                    return -1;
-                } elseif ($secondStar) {
-                    return 1;
-                }
                 if ($hitsFirst == $baseSize) {
                     return -1;
                 }
                 if ($hitsSecond == $baseSize) {
                     return 1;
                 }
-                if ($valid) {
-                    return 2;
+
+                if ($firstStar) {
+                    return -1;
+                } elseif ($secondStar) {
+                    return 1;
                 }
-            }
+            } // @codeCoverageIgnore
         } else {
             if ($first != $second) {
                 $firstResult = preg_match($first, $base);
@@ -237,7 +235,7 @@ class Rule
                         return 1;
                     }
                 }
-            }
+            } // @codeCoverageIgnore
         }
         return 0;
     }
