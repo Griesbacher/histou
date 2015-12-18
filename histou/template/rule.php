@@ -78,14 +78,14 @@ class Rule
         foreach ($this->data as &$entry) {
             if (is_array($entry)) {
                 foreach ($entry as &$perfLabel) {
-					$this->replaceVariables($perfLabel);
+                    $this->replaceVariables($perfLabel);
                     if ($replaceSpecialChars) {
                         $this->convertSpecialCharsToRegex($perfLabel);
                     }
                     $perfLabel = static::createRegex($perfLabel);
                 }
             } else {
-				$this->replaceVariables($entry);
+                $this->replaceVariables($entry);
                 if ($replaceSpecialChars) {
                     $this->convertSpecialCharsToRegex($entry);
                 }
@@ -94,21 +94,21 @@ class Rule
         }
     }
 
-	/**
+    /**
     Replace variables within rulevalues
     @param string $string string to change.
     @return string
     **/
     private static function replaceVariables(&$string)
     {
-		if (sizeof(static::$check) == 4){
-			foreach(array('host', 'service', 'command') as $key) {
-				$search = INFLUX_FIELDSEPERATOR.$key.INFLUX_FIELDSEPERATOR;
-				if (strpos($string, $search) !== false) {
-					$string = str_replace($search, static::$check[$key], $string);
-				}
-			}
-		}
+        if (sizeof(static::$check) == 4) {
+            foreach (array('host', 'service', 'command') as $key) {
+                $search = INFLUX_FIELDSEPERATOR.$key.INFLUX_FIELDSEPERATOR;
+                if (strpos($string, $search) !== false) {
+                    $string = str_replace($search, static::$check[$key], $string);
+                }
+            }
+        }
     }
 
     /**
@@ -131,10 +131,13 @@ class Rule
         $stringToReplace = trim($stringToReplace);
         switch ($stringToReplace){
             case "*":
+                //fallthough
             case "ALL":
                 $stringToReplace = ".*";
+                break;
             case "NONE":
                 $stringToReplace = "^$";
+                break;
             default:
         }
     }
