@@ -45,7 +45,7 @@ class Rule
         $this->data['service'] = $service;
         $this->data['command'] = $command;
         $this->data['perfLabel'] = $perfLabel;
-        $this->escapeRule(true);
+        $this->prepareRule(true);
         sort($this->data['perfLabel'], SORT_NATURAL);
         $this->file = $file;
     }
@@ -73,23 +73,42 @@ class Rule
     @param boolean $replaceSpecialChars if specialchars should be repaced.
     @return null
     **/
-    public function escapeRule($replaceSpecialChars = false)
+    public function prepareRule($replaceSpecialChars = false)
     {
         foreach ($this->data as &$entry) {
             if (is_array($entry)) {
                 foreach ($entry as &$perfLabel) {
+					$this->replaceVariables($perfLabel);
                     if ($replaceSpecialChars) {
-                        $perfLabel = $this->convertSpecialCharsToRegex($perfLabel);
+                        $this->convertSpecialCharsToRegex($perfLabel);
                     }
                     $perfLabel = static::createRegex($perfLabel);
                 }
             } else {
+				$this->replaceVariables($entry);
                 if ($replaceSpecialChars) {
-                    $entry = $this->convertSpecialCharsToRegex($entry);
+                    $this->convertSpecialCharsToRegex($entry);
                 }
                 $entry = static::createRegex($entry);
             }
         }
+    }
+
+	/**
+    Replace variables within rulevalues
+    @param string $string string to change.
+    @return string
+    **/
+    private static function replaceVariables(&$string)
+    {
+		if (sizeof(static::$check) == 4){
+			foreach(array('host', 'service', 'command') as $key) {
+				$search = INFLUX_FIELDSEPERATOR.$key.INFLUX_FIELDSEPERATOR;
+				if (strpos($string, $search) !== false) {
+					$string = str_replace($search, static::$check[$key], $string);
+				}
+			}
+		}
     }
 
     /**
@@ -107,18 +126,17 @@ class Rule
     @param string $stringToReplace string to replace.
     @return string.
     **/
-    private function convertSpecialCharsToRegex($stringToReplace)
+    private function convertSpecialCharsToRegex(&$stringToReplace)
     {
         $stringToReplace = trim($stringToReplace);
         switch ($stringToReplace){
             case "*":
             case "ALL":
-                return ".*";
+                $stringToReplace = ".*";
             case "NONE":
-                return "^$";
+                $stringToReplace = "^$";
             default:
         }
-        return $stringToReplace;
     }
 
     /**

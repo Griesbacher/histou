@@ -58,6 +58,14 @@ if ($perfDataSize < 4) {
         \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'), 1);
     }
 }
+//save databaseresult to rule
+\histou\template\Rule::setCheck(
+    $perfData['host'],
+    $perfData['service'],
+    $perfData['command'],
+    array_keys($perfData['perfLabel'])
+);
+
 // load templates
 $templateFiles = \histou\Folder::loadFolders(
     array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER)
@@ -70,12 +78,6 @@ if (sizeof($templates) == 0) {
     \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Could not load templates!'), 1);
 }
 
-\histou\template\Rule::setCheck(
-    $perfData['host'],
-    $perfData['service'],
-    $perfData['command'],
-    array_keys($perfData['perfLabel'])
-);
 
 usort($templates, '\histou\template\Template::compare');
 $valid = $templates[0]->isValid();

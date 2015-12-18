@@ -27,6 +27,13 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
 
     public function testValidTemplate()
     {
+        \histou\template\Rule::setCheck(
+            'host',
+            'service',
+            'command',
+            array('p1', 'p2', 'p3')
+        );
+
         $validTests = array(
             array(new \histou\template\Rule('host', 'service', 'command', array(), ''), false),
             array(new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2'), ''), false),
@@ -35,17 +42,32 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
             array(new \histou\template\Rule('host', 'service', 'command', array('.*'), ''), true),
             array(new \histou\template\Rule('host', 'service', 'foo', array('.*'), ''), false),
         );
+
+        foreach ($validTests as $test) {
+            $this->assertSame($test[1], static::createTemplate($test[0])->isValid());
+        }
+    }
+
+	public function testVariablesInRules()
+    {
         \histou\template\Rule::setCheck(
-            'host',
-            'service',
-            'command',
-            array('p1', 'p2', 'p3')
+            'host123',
+            'service456',
+            'service456-command',
+            array('host123_p1', 'p2', 'p3')
+        );
+
+        $validTests = array(
+            array(new \histou\template\Rule('host123', 'service456', 'service456-command', array('&host&_p1', 'p2', 'p3'), ''), true),
+            array(new \histou\template\Rule('host123', 'service456', '&service&-command', array('host123_p1', 'p2', 'p3'), ''), true),
+            array(new \histou\template\Rule('host123', 'service456', '&service&-command', array('&host&_p1', 'p2', 'p3'), ''), true),
         );
 
         foreach ($validTests as $test) {
             $this->assertSame($test[1], static::createTemplate($test[0])->isValid());
         }
     }
+
     public function testCompareTemplate()
     {
         $compareTests = array(

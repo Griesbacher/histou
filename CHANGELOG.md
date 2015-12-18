@@ -4,6 +4,7 @@
 - template cache, the valid templates will be cached
 - default datasource is the name of the influxdb database from the config
 - using php namespaces
+- variables can be uses in rules. Available are: host, service, command. The variables values are from the database, they are written with the influxdbfieldseperator pre and pos e.g. &host&-lines.\* -> Nagiosserver-lines.\*
 
 ### Fixes
 - multiple Grafana gaps
