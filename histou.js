@@ -12,10 +12,10 @@ return function (callback) {
         document.documentElement.style.background = '#FFF';
     }
 
-    url = 'http://localhost/histou/';
-    configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug;
+    var url = 'http://localhost/histou/';
+    var configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug;
 
-    flotAddons = url + 'flotAddons.js';
+    var flotAddons = url + 'flotAddons.js';
     $.getScript(flotAddons, function (){});
 
     $.ajax(
@@ -67,48 +67,55 @@ function parseArgs()
         $('head').append('<style>.panel-fullscreen {top:0}</style>');
 
         //change ui to our needs
-        clearUi()
+        clearUi();
     }
+
+    if (!_.isUndefined(ARGS.dynUnit)) {
+        dynUnit = true;
+    } else {
+        dynUnit = false;
+    }
+
     if (!_.isUndefined(ARGS.host)) {
         host = ARGS.host;
     } else {
-        host = "Host0"
+        host = "";
     }
 
     if (!_.isUndefined(ARGS.service)) {
         service = ARGS.service;
     } else {
-        service = ""
+        service = "";
     }
 
     if (!_.isUndefined(ARGS.command)) {
         command = ARGS.command;
     } else {
-        command = ""
+        command = "";
     }
 
     if (!_.isUndefined(ARGS.perf)) {
         perf = ARGS.perf;
     } else {
-        perf = ""
+        perf = "";
     }
 
     if (!_.isUndefined(ARGS.height)) {
         height = ARGS.height;
     } else {
-        height = ""
+        height = "";
     }
 
     if (_.isUndefined(ARGS.debug)) {
         debug = '';
     } else {
-        debug = "&debug"
+        debug = "&debug";
     }
 
     if (!_.isUndefined(ARGS.legend)) {
         legend = ARGS.legend;
     } else {
-        legend = true
+        legend = true;
     }
 }
 
