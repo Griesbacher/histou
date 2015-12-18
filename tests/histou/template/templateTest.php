@@ -48,7 +48,7 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
         }
     }
 
-	public function testVariablesInRules()
+    public function testVariablesInRules()
     {
         \histou\template\Rule::setCheck(
             'host123',

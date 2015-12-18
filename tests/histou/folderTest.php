@@ -20,9 +20,9 @@ class FolderTest extends \MyPHPUnitFrameworkTestCase
     }
 
     /*
-	tested:
-		- custom wins over default
-		- just valid files are used
+    tested:
+        - custom wins over default
+        - just valid files are used
 	*/
     public function testLoad()
     {
