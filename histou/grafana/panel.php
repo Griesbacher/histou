@@ -39,7 +39,8 @@ abstract class Panel
         $this->data['title'] = $title;
         $this->data['type'] = $type;
         if ($id < 1) {
-            $id = self::$currentId++;
+            $id = static::$currentId;
+			static::$currentId++;
         }
         $this->data['id'] = $id;
     }

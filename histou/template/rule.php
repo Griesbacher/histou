@@ -78,14 +78,14 @@ class Rule
         foreach ($this->data as &$entry) {
             if (is_array($entry)) {
                 foreach ($entry as &$perfLabel) {
-                    $this->replaceVariables($perfLabel);
+                    static::replaceVariables($perfLabel);
                     if ($replaceSpecialChars) {
                         $this->convertSpecialCharsToRegex($perfLabel);
                     }
                     $perfLabel = static::createRegex($perfLabel);
                 }
             } else {
-                $this->replaceVariables($entry);
+                static::replaceVariables($entry);
                 if ($replaceSpecialChars) {
                     $this->convertSpecialCharsToRegex($entry);
                 }
@@ -97,7 +97,7 @@ class Rule
     /**
     Replace variables within rulevalues
     @param string $string string to change.
-    @return string
+    @return null
     **/
     private static function replaceVariables(&$string)
     {

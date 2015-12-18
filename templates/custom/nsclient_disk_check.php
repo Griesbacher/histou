@@ -22,6 +22,8 @@ $genTemplate = function ($perfData) {
     $perfLabelWithPercentage = array();
     $perfLabelWithoutPercentage = array();
     $areWarnCritEqual = true;
+	$warnOld = "";
+	$critOld = "";
     foreach ($perfData['perfLabel'] as $key => $value) {
         if ($value['value']['unit'] == '%') {
             $perfLabelWithPercentage[$key] = $value;
