@@ -44,7 +44,7 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
         );
 
         foreach ($validTests as $test) {
-            $this->assertSame($test[1], static::createTemplate($test[0])->isValid());
+            $this->assertSame($test[1], static::createTemplate($test[0])->isValid(), $test[0]);
         }
     }
 
@@ -156,6 +156,7 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
             array('p1', 'p2', 'p3')
         );
 
+        $i = 0;
         foreach ($compareTests as $test) {
             $templates = array();
             foreach ($test['input'] as $rule) {
@@ -163,7 +164,7 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
             }
             usort($templates, '\histou\template\Template::compare');
 
-            $this->assertEquals($test['expected'], $templates[0]->getRule());
+            $this->assertEquals($test['expected'], $templates[0]->getRule(), $i++.": ".$test['expected']."\n != \n".$templates[0]->getRule());
         }
 
         foreach ($compareTests as $test) {
