@@ -14,6 +14,9 @@
 - downtime query warning within the query editor
 - percentage in queries
 
+### Breaks
+- dashboards created before this version have to be updated, du to the namespace system and change of functionnames
+
 ## v0.1.0 - 12.11.2015
 ### Features
 - Change Dashboard to Grafana v.2.5.0
