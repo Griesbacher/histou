@@ -244,13 +244,7 @@ class Rule
                 } elseif ($secondStar) {
                     return 1;
                 }
-
-                // @codeCoverageIgnoreStart
-                if ($valid) {
-                    return 2; //TODO: Could be a bug with the sorting of the perfLabels
-                }
             }
-            // @codeCoverageIgnoreEnd
         } else {
             if ($first != $second) {
                 $firstResult = preg_match($first, $base);
@@ -286,11 +280,13 @@ class Rule
     private static function compareArrays(array $arrayToCompare, array $base)
     {
         $hits = 0;
-        if (sizeof($arrayToCompare) == sizeof($base)) {
-            //TODO: may need a fix, due to the ordering
-            for ($i = 0; $i < sizeof($arrayToCompare); $i++) {
-                if (preg_match($arrayToCompare[$i], $base[$i])) {
-                    $hits++;
+        if (sizeof($arrayToCompare) <= sizeof($base)) {
+            foreach ($arrayToCompare as $comapareLabel) {
+                foreach ($base as $baseLabel) {
+                    if (preg_match($comapareLabel, $baseLabel)) {
+                        $hits++;
+                        break;
+                    }
                 }
             }
         }
