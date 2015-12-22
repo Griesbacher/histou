@@ -40,7 +40,7 @@ $genTemplate = function ($perfData) {
             "value"
         );
         $alias = $perfKeys[$i];
-        $panel->addAliasColor($alias, $colors[$i]);
+        $panel->addAliasColor($alias, $colors[$i%sizeof($colors)]);
         $panel->addTargetSimple($target, $alias);
         $panel->fillBelowLine($alias, 2);
 
