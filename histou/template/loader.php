@@ -85,7 +85,11 @@ class Loader
         //TODO:test if php content. e.g. just foo would work...
         ob_start();
         system(PHP_COMMAND." -l $filePath 2>&1", $returnCode);
+        $syntaxCheck = ob_get_contents();
         ob_end_clean();
+        if (substr($syntaxCheck, 1, 12) == "Parse error:") {
+            \histou\Debug::add("Syntaxcheck: ".$syntaxCheck);
+        }
         return $returnCode == 0;
     }
 }
