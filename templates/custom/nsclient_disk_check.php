@@ -11,8 +11,8 @@ PHP version 5
 
 //TODO: change the rule to your needs
 $rule = new \histou\template\Rule(
-    $host = '^$',
-    $service = '.*',
+    $host = '.*',
+    $service = 'windows_disk',
     $command = '.*',
     $perfLabel = array('.*')
 );
@@ -22,8 +22,8 @@ $genTemplate = function ($perfData) {
     $perfLabelWithPercentage = array();
     $perfLabelWithoutPercentage = array();
     $areWarnCritEqual = true;
-	$warnOld = "";
-	$critOld = "";
+    $warnOld = "";
+    $critOld = "";
     foreach ($perfData['perfLabel'] as $key => $value) {
         if ($value['value']['unit'] == '%') {
             $perfLabelWithPercentage[$key] = $value;
@@ -60,7 +60,7 @@ $genTemplate = function ($perfData) {
         $alias = $perfData['host']." ".$perfData['service']." ".$key." value";
         $panel->addAliasColor($alias, $colors[$i % $amountOfColors]);
         $panel->addTargetSimple($target, $alias);
-        $panel->setleftYAxisLabel('%');
+        $panel->setLeftUnit('%');
     }
     if ($areWarnCritEqual) {
         $first = array_keys($perfLabelWithPercentage)[0];
@@ -90,7 +90,7 @@ $genTemplate = function ($perfData) {
         $panel->fillBelowLine($alias, 2);
         $panel->addTargetSimple($target, $alias);
         if (isset($value['value']['unit'])) {
-            $panel->setleftYAxisLabel($value['value']['unit']);
+            $panel->setLeftUnit($value['value']['unit']);
         }
         $panel->addWarning($perfData['host'], $perfData['service'], $perfData['command'], $key);
         $panel->addCritical($perfData['host'], $perfData['service'], $perfData['command'], $key);

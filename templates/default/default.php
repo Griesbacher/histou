@@ -85,9 +85,7 @@ $genTemplate = function ($perfData) {
         $panel->fillBelowLine($alias, 2);
         //Add Label
         if (isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])) {
-            $panel->setleftYAxisLabel(
-                $perfData['perfLabel'][$perfKeys[$i]]['value']['unit']
-            );
+            $panel->setLeftUnit($perfData['perfLabel'][$perfKeys[$i]]['value']['unit']);
         }
         //Add Warning and Critical
         $panel->addWarning(

@@ -67,6 +67,7 @@ $genTemplate = function ($perfData) {
             $perfData['command'],
             $perfLabel
         );
+        $panel->setLeftUnit($perfData['perfLabel'][$perfLabel]['value']['unit']);
         $row->addPanel($panel);
 
         $dashboard->addRow($row);
