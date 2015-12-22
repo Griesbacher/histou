@@ -48,7 +48,7 @@ class Folder
     {
         if ($handle = opendir($foldername)) {
             while (false !== ($file = readdir($handle))) {
-                if (!static::startsWith($file, '.')
+                if (!\histou\helper\Str::startsWith($file, '.')
                     && !in_array($file, $alreadyRead)
                     && static::isValidFile($file)
                 ) {
@@ -67,17 +67,6 @@ class Folder
     **/
     private static function isValidFile($filename)
     {
-        return \histou\template\loader::endswith($filename, '.simple') || \histou\template\loader::endswith($filename, '.php');
-    }
-
-    /**
-    Returns true if $stringToSearch begins with $prefix.
-    @param string $stringToSearch string to search within.
-    @param string $prefix         string to search for.
-    @return bool.
-    **/
-    private static function startsWith($stringToSearch, $prefix)
-    {
-        return $prefix === "" || strrpos($stringToSearch, $prefix, -strlen($stringToSearch)) !== false;
+        return \histou\helper\Str::endswith($filename, '.simple') || \histou\helper\Str::endswith($filename, '.php');
     }
 }

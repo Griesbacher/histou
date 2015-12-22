@@ -29,9 +29,9 @@ class Loader
     **/
     public static function loadTemplate($filename, $save = false)
     {
-        if (static::endswith($filename, '.php')) {
+        if (\histou\helper\Str::endswith($filename, '.php')) {
             return static::loadPHPTemplates($filename, $save);
-        } elseif (static::endswith($filename, '.simple')) {
+        } elseif (\histou\helper\Str::endswith($filename, '.simple')) {
             return static::loadSimpleTemplates($filename);
         }
     }
@@ -59,20 +59,6 @@ class Loader
     private static function loadSimpleTemplates($filename)
     {
         return new SimpleTemplate($filename);
-    }
-
-    /**
-    Tests if a string ends with a given string
-    @param string $stringToSearch string to search in.
-    @param string $extension      string to search for.
-    @return object.
-    **/
-    public static function endsWith($stringToSearch, $extension)
-    {
-        return $extension === "" ||
-        (
-        ($temp = strlen($stringToSearch) - strlen($extension)) >= 0
-        && strpos($stringToSearch, $extension, $temp) !== false);
     }
 
     /**
