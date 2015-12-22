@@ -81,6 +81,7 @@ if (sizeof($templates) == 0) {
 
 usort($templates, '\histou\template\Template::compare');
 $valid = $templates[0]->isValid();
+\histou\Debug::add("Template order:");
 foreach ($templates as $template) {
     \histou\Debug::add($template);
 }
