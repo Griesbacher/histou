@@ -5,6 +5,7 @@
 	<exclude-pattern>*/cover/*</exclude-pattern>
 	<exclude-pattern>index.php</exclude-pattern>
 	<exclude-pattern>testconfig.php</exclude-pattern>
+	<exclude-pattern>tests/bootstrap.php</exclude-pattern>
     <rule ref="Generic.Files.LineLength">
         <properties>
             <property name="lineLimit" value="160"/>

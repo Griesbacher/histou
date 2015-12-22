@@ -1,4 +1,4 @@
-## v0.2.0 - upcoming:
+## v0.2.0 - 22.12.2015:
 ### Features
 - syntax check on php templates, malformed templates will be ignored but an error appears in the apache error.log
 - template cache, the valid templates will be cached
@@ -15,7 +15,7 @@
 - percentage in queries
 
 ### Breaks
-- dashboards created before this version have to be updated, du to the namespace system and change of functionnames
+- dashboards created before this version have to be updated, due to the namespace system and changes of functionnames
 
 ## v0.1.0 - 12.11.2015
 ### Features
