@@ -22,7 +22,7 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(array(true), $gpanel->toArray()['tooltip']);
 
         $this->assertSame(0, sizeof($gpanel->toArray()['targets']));
-        $gpanel->addTargetSimple("target1", "alias1", array('tag1', 'tag2'));
+        $gpanel->addTargetSimple("target1", "alias1", -1, array('tag1', 'tag2'));
         $this->assertSame(1, sizeof($gpanel->toArray()['targets']));
         $this->assertSame('alias1', $gpanel->toArray()['targets'][0]['alias']);
         $this->assertSame('nagflux', $gpanel->toArray()['targets'][0]['datasource']);
@@ -90,6 +90,15 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(
             array('alias' => 'foo', 'fill' => 1),
             $gpanel->toArray()['seriesOverrides'][1]
+        );
+
+		//Negate Y
+		$this->assertSame(2, sizeof($gpanel->toArray()['seriesOverrides']));
+        $gpanel->negateY('foo');
+        $this->assertSame(3, sizeof($gpanel->toArray()['seriesOverrides']));
+        $this->assertSame(
+            array('alias' => 'foo', 'transform' => 'negative-Y'),
+            $gpanel->toArray()['seriesOverrides'][2]
         );
 
         //Convert Unit

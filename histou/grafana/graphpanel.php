@@ -75,8 +75,13 @@ class GraphPanel extends Panel
     @param array  $tags   tags for the query.
     @return null.
     **/
-    public function addTargetSimple($target, $alias = "", array $tags = array())
+    public function addTargetSimple($target, $alias = "", $factor = 1, array $tags = array())
     {
+        if ($factor == 1) {
+            $influxdbQuery = sprintf('select mean(value) from "%s" where AND $timeFilter group by time($interval)', $target);
+        } else {
+            $influxdbQuery = sprintf('select (mean(value) * $factor) from "%s" where AND $timeFilter group by time($interval)', $target);
+        }
         array_push(
             $this->data['targets'],
             array(
@@ -93,10 +98,7 @@ class GraphPanel extends Panel
                                     )
                               ),
             "measurement" => $target,
-            "query" => sprintf(
-                'select mean(value) from "%s" where AND $timeFilter group by time($interval)',
-                $target
-            ),
+            "query" => $influxdbQuery,
             "alias" => $alias,
             "tags" => $tags,
             "datasource" => INFLUX_DB
@@ -256,6 +258,7 @@ class GraphPanel extends Panel
             $this->addTargetSimple(
                 $target,
                 $alias,
+				1,
                 array(array('key' => 'type', 'operator'  => '=', 'value' => $tag))
             );
             $this->addAliasColor($alias, $color);
@@ -338,6 +341,7 @@ class GraphPanel extends Panel
         $this->addTargetSimple(
             $target,
             $alias,
+			1,
             array(array('key' => 'downtime', 'operator'  => '=', 'value' => '1'))
         );
         array_push(
@@ -366,6 +370,21 @@ class GraphPanel extends Panel
             array(
             'alias' => $alias,
             'fill' => $intensity,
+            )
+        );
+    }
+	/**
+    Negates the Y Axis.
+    @param string $alias     name of the query.
+    @return null.
+    **/
+    public function negateY($alias)
+    {
+        array_push(
+            $this->data['seriesOverrides'],
+            array(
+            'alias' => $alias,
+            'transform' => 'negative-Y'
             )
         );
     }
