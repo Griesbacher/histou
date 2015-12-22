@@ -45,7 +45,7 @@ class Rule
         $this->data['service'] = $service;
         $this->data['command'] = $command;
         $this->data['perfLabel'] = $perfLabel;
-        $this->prepareRule(true);
+        static::prepareRule($this->data, true);
         sort($this->data['perfLabel'], SORT_NATURAL);
         $this->file = $file;
     }
@@ -73,21 +73,21 @@ class Rule
     @param boolean $replaceSpecialChars if specialchars should be repaced.
     @return null
     **/
-    public function prepareRule($replaceSpecialChars = false)
+    private static function prepareRule(array &$data, $replaceSpecialChars = false)
     {
-        foreach ($this->data as &$entry) {
+        foreach ($data as &$entry) {
             if (is_array($entry)) {
                 foreach ($entry as &$perfLabel) {
                     static::replaceVariables($perfLabel);
                     if ($replaceSpecialChars) {
-                        $this->convertSpecialCharsToRegex($perfLabel);
+                        static::convertSpecialCharsToRegex($perfLabel);
                     }
                     $perfLabel = static::createRegex($perfLabel);
                 }
             } else {
                 static::replaceVariables($entry);
                 if ($replaceSpecialChars) {
-                    $this->convertSpecialCharsToRegex($entry);
+                    static::convertSpecialCharsToRegex($entry);
                 }
                 $entry = static::createRegex($entry);
             }
@@ -126,7 +126,7 @@ class Rule
     @param string $stringToReplace string to replace.
     @return string.
     **/
-    private function convertSpecialCharsToRegex(&$stringToReplace)
+    private static function convertSpecialCharsToRegex(&$stringToReplace)
     {
         $stringToReplace = trim($stringToReplace);
         switch ($stringToReplace){
@@ -244,7 +244,13 @@ class Rule
                 } elseif ($secondStar) {
                     return 1;
                 }
-            } // @codeCoverageIgnore
+
+                // @codeCoverageIgnoreStart
+                if ($valid) {
+                    return 2; //TODO: Could be a bug with the sorting of the perfLabels
+                }
+            }
+            // @codeCoverageIgnoreEnd
         } else {
             if ($first != $second) {
                 $firstResult = preg_match($first, $base);
