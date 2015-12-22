@@ -106,7 +106,7 @@ class GraphPanel extends Panel
 
     /**
     Changes the color of a line.
-    @param int    $alias linename.
+    @param string $alias linename.
     @param string $color hexcolor.
     @return null.
     **/
@@ -119,13 +119,108 @@ class GraphPanel extends Panel
     }
 
     /**
-    Setter for setleftYAxisLabel
-    @param int $label Linewidth.
+    Setter for leftYAxisLabel
+    @param string $label label.
     @return null.
     **/
-    public function setleftYAxisLabel($label)
+    public function setLeftYAxisLabel($label)
     {
         $this->data['leftYAxisLabel'] = $label;
+    }
+
+    /**
+    Setter for rightYAxisLabel
+    @param string $label label.
+    @return null.
+    **/
+    public function setRightYAxisLabel($label)
+    {
+        $this->data['rightYAxisLabel'] = $label;
+    }
+
+    /**
+    Tries to convert the given unit in a "grafana unit" if not possible the leftYAxisLabel will be set.
+    @param string $unit unit.
+    @return null.
+    **/
+    public function setLeftUnit($unit)
+    {
+        $gUnit = $this->convertUnit($unit);
+        if (array_key_exists('y_formats', $this->data) && sizeof($this->data['y_formats']) > 0) {
+            $this->data['y_formats'][0] = $gUnit;
+        } else {
+            $this->data['y_formats'] = array($gUnit, 'short');
+        }
+        if ($gUnit == 'short') {
+            $this->setLeftYAxisLabel($unit);
+        }
+    }
+
+    /**
+    Tries to convert the given unit in a "grafana unit" if not possible the rightYAxisLabel will be set.
+    @param string $unit unit.
+    @return null.
+    **/
+    public function setRightUnit($unit)
+    {
+        $gUnit = $this->convertUnit($unit);
+        if (array_key_exists('y_formats', $this->data) && sizeof($this->data['y_formats']) > 0) {
+            $this->data['y_formats'][1] = $gUnit;
+        } else {
+            $this->data['y_formats'] = array('short', $gUnit);
+        }
+        if ($gUnit == 'short') {
+            $this->setRightYAxisLabel($unit);
+        }
+    }
+
+    /**
+    Try to convert the given unit in a grafana unit.
+    @param string $label unit.
+    @return string if found a grafanaunit.
+    **/
+    private function convertUnit($unit)
+    {
+        switch ($unit) {
+            //Time
+            case 'ns':
+            case 'µs':
+            case 'ms':
+            case 's':
+            case 'm':
+            case 'h':
+            case 'd':
+                return $unit;
+            //Data
+            case 'b':
+                return 'bits';
+                break;
+            case 'B':
+                return 'bytes';
+            case 'KB':
+            case 'KiB':
+            case 'kiB':
+            case 'kB':
+                return 'kbytes';
+            case 'MB':
+            case 'MiB':
+            case 'miB':
+            case 'mB':
+                return 'mbytes';
+            case 'GB':
+            case 'GiB':
+            case 'giB':
+            case 'gB':
+                return 'gbytes';
+            case '%':
+            case 'percent':
+            case 'pct':
+            case 'pct.':
+            case 'pc':
+                return 'percent';
+            default:
+                return 'short';
+        }
     }
 
     /**

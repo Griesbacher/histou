@@ -91,5 +91,30 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
             array('alias' => 'foo', 'fill' => 1),
             $gpanel->toArray()['seriesOverrides'][1]
         );
+
+        //Convert Unit
+            //left
+        $gpanel->setLeftUnit('%');
+        $this->assertSame(array('percent', 'short'), $gpanel->toArray()['y_formats']);
+        $gpanel->setLeftUnit('s');
+        $this->assertSame(array('s', 'short'), $gpanel->toArray()['y_formats']);
+        $gpanel->setLeftUnit('foo');
+        $this->assertSame(array('short', 'short'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('foo', $gpanel->toArray()['leftYAxisLabel']);
+            //right
+        $gpanel->setRightUnit('b');
+        $this->assertSame(array('short', 'bits'), $gpanel->toArray()['y_formats']);
+        $gpanel->setRightUnit('B');
+        $this->assertSame(array('short', 'bytes'), $gpanel->toArray()['y_formats']);
+        $gpanel->setRightUnit('bar');
+        $this->assertSame('bar', $gpanel->toArray()['rightYAxisLabel']);
+        $gpanel = new \histou\grafana\GraphPanel('gpanel');
+        $gpanel->setRightUnit('kB');
+        $this->assertSame(array('short', 'kbytes'), $gpanel->toArray()['y_formats']);
+        $gpanel->setRightUnit('MB');
+        $this->assertSame(array('short', 'mbytes'), $gpanel->toArray()['y_formats']);
+        $gpanel->setRightUnit('GiB');
+        $this->assertSame(array('short', 'gbytes'), $gpanel->toArray()['y_formats']);
+
     }
 }
