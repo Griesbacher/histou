@@ -231,7 +231,8 @@ class Rule
             $baseSize = sizeof($base);
             $hitsFirst = static::compareArrays($first, $base);
             $hitsSecond = static::compareArrays($second, $base);
-            if ($hitsFirst != $hitsSecond || $firstStar != $secondStar) {
+
+            if ($hitsFirst != $hitsSecond) {
                 if ($hitsFirst == $baseSize) {
                     return -1;
                 }
@@ -239,11 +240,13 @@ class Rule
                     return 1;
                 }
 
-                if ($firstStar) {
-                    return -1;
-                } elseif ($secondStar) {
-                    return 1;
-                }
+            }
+
+            //Stars have a reverted logic whome with a star loses
+            if ($firstStar && !$secondStar) {
+                return 1;
+            } elseif ($secondStar) {
+                return -1;
             }
         } else {
             if ($first != $second) {
@@ -268,7 +271,7 @@ class Rule
     **/
     private static function starArray(array $array)
     {
-        return sizeof($array) == 1 && $array[0] == static::createRegex('.*');
+        return in_array(static::createRegex('.*'), $array);
     }
 
     /**
@@ -281,8 +284,8 @@ class Rule
     {
         $hits = 0;
         if (sizeof($arrayToCompare) <= sizeof($base)) {
-            foreach ($arrayToCompare as $comapareLabel) {
-                foreach ($base as $baseLabel) {
+            foreach ($base as $baseLabel) {
+                foreach ($arrayToCompare as $comapareLabel) {
                     if (preg_match($comapareLabel, $baseLabel)) {
                         $hits++;
                         break;
