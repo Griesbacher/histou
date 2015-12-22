@@ -44,8 +44,8 @@ class Loader
     **/
     private static function loadPHPTemplates($filename, $save)
     {
-		if (!$save && !static::isFileValidPHP($filename)) {
-			return null;
+        if (!$save && !static::isFileValidPHP($filename)) {
+            return null;
         }
         include $filename;
         return new Template($filename, $rule, $genTemplate);

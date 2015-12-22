@@ -40,7 +40,7 @@ abstract class Panel
         $this->data['type'] = $type;
         if ($id < 1) {
             $id = static::$currentId;
-			static::$currentId++;
+            static::$currentId++;
         }
         $this->data['id'] = $id;
     }
