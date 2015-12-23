@@ -40,6 +40,7 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
             array(new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2', 'p3'), ''), true),
             array(new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2', 'p3', 'p4'), ''), false),
             array(new \histou\template\Rule('host', 'service', 'command', array('.*'), ''), true),
+            array(new \histou\template\Rule('host', 'service', '.*', array('.*'), ''), true),
             array(new \histou\template\Rule('host', 'service', 'foo', array('.*'), ''), false),
         );
 
@@ -145,6 +146,28 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
                                     new \histou\template\Rule('.*', '.*', '.*', array('p1', 'p2'), ''),
                                     new \histou\template\Rule('.*', '.*', '.*', array('p1', 'p2', 'p3'), ''),
                                     new \histou\template\Rule('.*', '.*', '.*', array('p1', 'p2', 'p3', 'p4'), ''),
+                                )
+            ),
+
+            array(
+                'expected' => new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2', 'p3'), ''),
+                'input' => array(
+                                    new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2', 'p3'), ''),
+                                    new \histou\template\Rule('host', 'service', '.*', array('p1', 'p2', 'p3'), ''),
+                                )
+            ),
+            array(
+                'expected' => new \histou\template\Rule('host', 'service', '.*', array('p1', 'p2', 'p3'), ''),
+                'input' => array(
+                                    new \histou\template\Rule('host', 'service', 'foo', array('p1', 'p2', 'p3'), ''),
+                                    new \histou\template\Rule('host', 'service', '.*', array('p1', 'p2', 'p3'), ''),
+                                )
+            ),
+            array(
+                'expected' => new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2', 'p3'), ''),
+                'input' => array(
+                                    new \histou\template\Rule('host', 'service', '.*', array('p1', 'p2', 'p3'), ''),
+                                    new \histou\template\Rule('host', 'service', 'command', array('p1', 'p2', 'p3'), ''),
                                 )
             ),
         );

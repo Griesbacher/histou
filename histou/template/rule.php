@@ -221,12 +221,12 @@ class Rule
     private static function compareValue($first, $second, $base, $valid)
     {
         if (is_array($first) && is_array($second) && is_array($base)) {
-            $firstStar = static::starArray($first);
+            $firstStar = static::containsStar($first);
             if ($valid && $firstStar) {
                 //If it's a valid compare, it's enought when the first entry(the template) contains a start
                 return 0;
             }
-            $secondStar = static::starArray($second);
+            $secondStar = static::containsStar($second);
             //The array which has the same amount of entries and matching regex will be choosen
             $baseSize = sizeof($base);
             $hitsFirst = static::compareArrays($first, $base);
@@ -259,9 +259,31 @@ class Rule
                         return 1;
                     }
                 }
+                if (static::containsStar($first)) {
+                    if ($valid) {
+                        return 0;
+                    }
+                    return 1;
+                } elseif (static::containsStar($second)) {
+                    return -1;
+                }
             } // @codeCoverageIgnore
         }
         return 0;
+    }
+
+    /**
+    Tests if the object contains an star.
+    @param object $toTest array or string to test.
+    @return bool true if contains start.
+    **/
+    private static function containsStar($toTest)
+    {
+        if (is_array($toTest)) {
+            return static::starArray($toTest);
+        } else {
+            return $toTest == static::createRegex('.*');
+        }
     }
 
     /**
