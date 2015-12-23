@@ -1,4 +1,4 @@
-## v0.2.0 - 22.12.2015:
+## v0.2.0 - 23.12.2015:
 ### Features
 - syntax check on php templates, malformed templates will be ignored but an error appears in the apache error.log
 - template cache, the valid templates will be cached
@@ -13,11 +13,12 @@
 - star regex in perfLabel works, but an exact match wins against star
 - downtime query warning within the query editor
 - percentage in queries
+- perfLabel sorting
 
 ### Breaks
 - dashboards created before this version have to be updated, due to the namespace system and changes of functionnames
 
-## v0.1.0 - 12.11.2015
+## v0.1.0 - 12.11.2015:
 ### Features
 - Change Dashboard to Grafana v.2.5.0
 
@@ -25,6 +26,6 @@
 - changed panelid counter start to 1
 - change background color only on dashboard-solo
 
-## v0.0.1 - 29.10.2015
+## v0.0.1 - 29.10.2015:
 ### Features
 - Everything :wink:
