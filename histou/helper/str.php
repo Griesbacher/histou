@@ -46,4 +46,29 @@ class Str
     {
         return $prefix === "" || strrpos($stringToSearch, $prefix, -strlen($stringToSearch)) !== false;
     }
+
+    /**
+    Returns an influxdb tabelname.
+    @param string $host hostname.
+    @param string $service servicename.
+    @param string $command commandname.
+    @param string $perfLabel perfLabelname.
+    @param string $type perfLabeltype.
+    @return string.
+    **/
+    public static function influxdbTablename($host, $service, $command, $perfLabel, $type)
+    {
+        return sprintf(
+            '%s%s%s%s%s%s%s%s%s',
+            $host,
+            INFLUX_FIELDSEPERATOR,
+            $service,
+            INFLUX_FIELDSEPERATOR,
+            $command,
+            INFLUX_FIELDSEPERATOR,
+            $perfLabel,
+            INFLUX_FIELDSEPERATOR,
+            $type
+        );
+    }
 }
