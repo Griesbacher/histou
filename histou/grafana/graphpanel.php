@@ -238,7 +238,7 @@ class GraphPanel extends Panel
     private function addThreshold($host, $service, $command, $perfLabel, $type, $color, $alias)
     {
         foreach (array('normal', 'min', 'max') as $tag) {
-			$target = \histou\helper\str::influxdbTablename($host, $service, $command, $perfLabel, $type);
+            $target = \histou\helper\str::influxdbTablename($host, $service, $command, $perfLabel, $type);
             $localAlias = '';
             if ($alias == '') {
                 if ($tag == 'normal') {

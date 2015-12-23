@@ -42,7 +42,11 @@ $genTemplate = function ($perfData) {
         $genRow($type, array('min', 'max', 'avg'), '%s_'.$type);
     }
 
-    $genRow('number of services', array('ok', 'warning', 'warning', 'unknown', 'pending', 'unreachable', 'flapping', 'in_downtime', 'acknowledged'), 'num_services_%s');
+    $genRow(
+        'number of services',
+        array('ok', 'warning', 'warning', 'unknown', 'pending', 'unreachable', 'flapping', 'in_downtime', 'acknowledged'),
+        'num_services_%s'
+    );
     $genRow('number of hosts', array('up', 'down', 'unreachable', 'flapping', 'in_downtime', 'acknowledged'), 'num_hosts_%s');
 
 
