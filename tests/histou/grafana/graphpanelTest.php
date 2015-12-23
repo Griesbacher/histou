@@ -63,9 +63,14 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('#FFFC15', $gpanel->toArray()['aliasColors']['warn-max']);
 
         $this->assertSame(5, sizeof($gpanel->toArray()['targets']));
-        $gpanel->addCritical('host&0', 'service1', 'command2', 'perfLabel3%');
+
+        //Custom warn crit label
+        $gpanel->addCritical('host&0', 'service1', 'command2', 'perfLabel3%', 'foo-crit');
         $this->assertSame(8, sizeof($gpanel->toArray()['targets']));
-        $this->assertSame('#FF3727', $gpanel->toArray()['aliasColors']['crit']);
+        $this->assertSame('#FF3727', $gpanel->toArray()['aliasColors']['foo-crit']);
+        $this->assertSame('foo-crit', $gpanel->toArray()['targets'][5]['alias']);
+        $this->assertSame('foo-crit-min', $gpanel->toArray()['targets'][6]['alias']);
+        $this->assertSame('foo-crit-max', $gpanel->toArray()['targets'][7]['alias']);
 
         $gpanel->setLinewidth(10);
         $this->assertSame(10, $gpanel->toArray()['linewidth']);
@@ -92,8 +97,8 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
             $gpanel->toArray()['seriesOverrides'][1]
         );
 
-		//Negate Y
-		$this->assertSame(2, sizeof($gpanel->toArray()['seriesOverrides']));
+        //Negate Y
+        $this->assertSame(2, sizeof($gpanel->toArray()['seriesOverrides']));
         $gpanel->negateY('foo');
         $this->assertSame(3, sizeof($gpanel->toArray()['seriesOverrides']));
         $this->assertSame(

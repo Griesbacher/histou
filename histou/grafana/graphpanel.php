@@ -231,11 +231,11 @@ class GraphPanel extends Panel
     @param string $service   servicename.
     @param string $command   commandname.
     @param array  $perfLabel hostname.
-    @param string $name      line label.
+    @param string $type      line label.
     @param string $color     hexcolor.
     @return null.
     **/
-    private function addThreshold($host, $service, $command, $perfLabel, $name, $color)
+    private function addThreshold($host, $service, $command, $perfLabel, $type, $color, $alias)
     {
         foreach (array('normal', 'min', 'max') as $tag) {
             $target = sprintf(
@@ -248,20 +248,28 @@ class GraphPanel extends Panel
                 INFLUX_FIELDSEPERATOR,
                 $perfLabel,
                 INFLUX_FIELDSEPERATOR,
-                $name
+                $type
             );
-            if ($tag == 'normal') {
-                $alias = $name;
+            $localAlias = '';
+            if ($alias == '') {
+                if ($tag == 'normal') {
+                    $localAlias = $type;
+                } else {
+                    $localAlias = $type.'-'.$tag;
+                }
+            } elseif ($tag != 'normal') {
+                $localAlias = $alias.'-'.$tag;
             } else {
-                $alias = $name.'-'.$tag;
+                $localAlias = $alias;
             }
+
             $this->addTargetSimple(
                 $target,
-                $alias,
-				1,
+                $localAlias,
+                1,
                 array(array('key' => 'type', 'operator'  => '=', 'value' => $tag))
             );
-            $this->addAliasColor($alias, $color);
+            $this->addAliasColor($localAlias, $color);
         }
     }
 
@@ -273,16 +281,9 @@ class GraphPanel extends Panel
     @param array  $perfLabel hostname.
     @return null.
     **/
-    public function addWarning($host, $service, $command, $perfLabel)
+    public function addWarning($host, $service, $command, $perfLabel, $alias = '')
     {
-        $this->addThreshold(
-            $host,
-            $service,
-            $command,
-            $perfLabel,
-            'warn',
-            '#FFFC15'
-        );
+        $this->addThreshold($host, $service, $command, $perfLabel, 'warn', '#FFFC15', $alias);
     }
 
     /**
@@ -293,16 +294,9 @@ class GraphPanel extends Panel
     @param array  $perfLabel hostname.
     @return null.
     **/
-    public function addCritical($host, $service, $command, $perfLabel)
+    public function addCritical($host, $service, $command, $perfLabel, $alias = '')
     {
-        $this->addThreshold(
-            $host,
-            $service,
-            $command,
-            $perfLabel,
-            'crit',
-            '#FF3727'
-        );
+        $this->addThreshold($host, $service, $command, $perfLabel, 'crit', '#FF3727', $alias);
     }
 
     /**
@@ -341,7 +335,7 @@ class GraphPanel extends Panel
         $this->addTargetSimple(
             $target,
             $alias,
-			1,
+            1,
             array(array('key' => 'downtime', 'operator'  => '=', 'value' => '1'))
         );
         array_push(
@@ -373,7 +367,7 @@ class GraphPanel extends Panel
             )
         );
     }
-	/**
+    /**
     Negates the Y Axis.
     @param string $alias     name of the query.
     @return null.
