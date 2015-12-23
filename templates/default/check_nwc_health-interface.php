@@ -1,6 +1,6 @@
 <?php
 /**
-Default Template which will be used if there is no template for the host/service.
+This template is used for check_nwc_health with --mode interface-*.
 PHP version 5
 @category Template_File
 @package Histou/templates/default
@@ -13,23 +13,42 @@ $rule = new \histou\template\Rule(
     $host = '.*',
     $service = '.*',
     $command = '.*',
-    $perfLabel = array('^.*_usage_in$', '^.*_usage_out$', '^.*_traffic_in$', '^.*_traffic_out$')
+    $perfLabel = array('^.*?_(usage|traffic|errors|discards)_(in|out)$')
 );
 
 $genTemplate = function ($perfData) {
-    $perfKeys = array_keys($perfData['perfLabel']);
     $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     $interfaces = array();
+    $types = array();
     foreach ($perfData['perfLabel'] as $key => $value) {
-        if (preg_match(';^(.*?)_\w+?_\w+?$;', $key, $hit)) {
+        if (preg_match(';^(.*?)_(\w+?)_\w+$;', $key, $hit)) {
             array_push($interfaces, $hit[1]);
+            array_push($types, $hit[2]);
         }
     }
     $interfaces = array_unique($interfaces);
+    $types = array_unique($types);
+    usort($types, function ($firstLabel, $secondLabel) {
+        $index = function ($label) {
+            switch($label) {
+                case 'usage':
+                    return 0;
+                case 'traffic':
+                    return 1;
+                case 'errors':
+                    return 2;
+                case 'discards':
+                    return 3;
+                default:
+                    return 4;
+            }
+        };
+        return ($index($firstLabel) - $index($secondLabel)) ? -1 : 1;
+    });
+    $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
     foreach ($interfaces as $interface) {
-        $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-        foreach (array('usage', 'traffic') as $type) {
+        foreach ($types as $type) {
             $panel = new \histou\grafana\GraphPanel($perfData['service'].' '.$interface.' '. $type);
             $panel->setSpan(6);
             foreach (array('in', 'out') as $direction) {
@@ -51,12 +70,12 @@ $genTemplate = function ($perfData) {
                 $panel->fillBelowLine($alias, 2);
                 if ($direction == 'out') {
                     $panel->negateY($alias);
-                    $panel->addAliasColor($alias, '#07ff78');
+                    $panel->addAliasColor($alias, '#4707ff');
                 } else {
                     $panel->addAliasColor($alias, '#085DFF');
                 }
                 $panel->addDowntime($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
-                if ($type == 'usage') {
+                if ($type != 'traffic') {
                     $aliasWarn = $direction.'-warn';
                     $aliasCrit = $direction.'-crit';
                     $panel->addWarning($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, $aliasWarn);
@@ -66,14 +85,13 @@ $genTemplate = function ($perfData) {
                         $panel->negateY('/'.$aliasCrit.'.*/');
                     }
                 }
-
             }
             if (isset($perfData['perfLabel'][$perfLabel]['value']['unit'])) {
                 $panel->setLeftUnit($perfData['perfLabel'][$perfLabel]['value']['unit']);
             }
             $row->addPanel($panel);
         }
-        $dashboard->addRow($row);
     }
+    $dashboard->addRow($row);
     return $dashboard;
 };
