@@ -85,7 +85,8 @@ $valid = $templates[0]->isValid();
 foreach ($templates as $template) {
     \histou\Debug::add($template);
 }
-\histou\Debug::add("Is the first template valid: ".\histou\Debug::printBoolean($valid));
+\histou\Debug::add("Is the first template valid: ".\histou\Debug::printBoolean($valid)."\n");
+\histou\Debug::add("Data: ".print_r($perfData, true));
 
 if ($valid) {
     $template = $templates[0];
