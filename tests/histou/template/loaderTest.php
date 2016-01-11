@@ -21,32 +21,32 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
     }
 
     /*
-	tested:
-		- custom wins over default
-		- just valid files are used
+    tested:
+        - custom wins over default
+        - just valid files are used
 	*/
     public function testLoad()
     {
         $files = array(
             join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template1.php')) => '<?php
-							$rule = new \histou\template\Rule(
-								$host = ".*",
-								$service = ".*",
-								$command = "NONE",
-								$perfLabel = array("rta", "pl")
-							);
-							$genTemplate = function ($perfData) {
-								return "template1";
+                            $rule = new \histou\template\Rule(
+                                $host = ".*",
+                                $service = ".*",
+                                $command = "NONE",
+                                $perfLabel = array("rta", "pl")
+                            );
+                            $genTemplate = function ($perfData) {
+                                return "template1";
 							};',
             join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template2.php')) => '<?php
-							$rule = new \histou\template\Rule(
-								$host = ".*",
-								$service = ".*",		adsfasdfasdf
-								$command = ".*",
-								$perfLabel = array("rta", "pl")
-							);
-							$genTemplate = function ($perfData) {
-								return "template1";
+                            $rule = new \histou\template\Rule(
+                                $host = ".*",
+                                $service = ".*",        adsfasdfasdf
+                                $command = ".*",
+                                $perfLabel = array("rta", "pl")
+                            );
+                            $genTemplate = function ($perfData) {
+                                return "template1";
 							};',
             join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple')) => '
 #simple file
@@ -57,7 +57,7 @@ perfLabel = load1, load5, load15
 
 #Copy the grafana dashboard below:
 {
-	"hallo":"world"
+    "hallo":"world"
 }',
             join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple123')) => '
 #simple file
@@ -68,7 +68,7 @@ perfLabel = load1, load5, load15
 
 #Copy the grafana dashboard below:
 {
-	"hallo":"world"
+    "hallo":"world"
 }',
         );
 
@@ -113,7 +113,7 @@ Rule:
         $this->assertSame(join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template1.php')), $rule->getFileName());
 
         $expected = '{
-	"hallo":"world"
+    "hallo":"world"
 }';
         $this->assertSame($expected, $templates[2]->generateDashboard('foo'));
 

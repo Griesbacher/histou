@@ -152,11 +152,15 @@ class Rule
     **/
     public static function setCheck($host, $service, $command, array $perfLabel)
     {
-        static::$check['host'] = $host;
-        static::$check['service']  = $service;
-        static::$check['command']  = $command;
+        static::$check['host'] = preg_quote($host);
+        static::$check['service']  = preg_quote($service);
+        static::$check['command']  = preg_quote($command);
+        sort($perfLabel, SORT_NATURAL);
+        foreach ($perfLabel as &$entry) {
+            $entry = preg_quote($entry);
+        
+        }
         static::$check['perfLabel']  = $perfLabel;
-        sort(static::$check['perfLabel'], SORT_NATURAL);
     }
 
     /**
