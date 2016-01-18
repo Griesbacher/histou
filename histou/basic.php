@@ -89,7 +89,8 @@ class Basic
     {
         if (is_object($data) && get_class($data) == 'histou\grafana\Dashboard') {
             if (\histou\Debug::isEnable()) {
-                $data->addRow(\histou\Debug::genMarkdownRow(\histou\Debug::getLogAsMarkdown(), 'Debug'));
+                //$data->addRow(\histou\Debug::genMarkdownRow(\histou\Debug::getLogAsMarkdown(), 'Debug')); //for markdown
+                $data->addRow(\histou\Debug::genRow(\histou\Debug::getLog()));
             }
             $data = $data->toArray();
             $json = json_encode($data);

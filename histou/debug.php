@@ -72,15 +72,24 @@ class Debug
     }
 
     /**
+    Returns the log.
+    @return string
+    **/
+    public static function getLog()
+    {
+        return implode("\n", static::$log);
+    }
+
+    /**
     Creates a new Markdown row.
     @param string $message contains the body.
     @param string $header  could contain the headline.
     @return object
     **/
-    public static function genMarkdownRow($message, $header = '')
+    public static function genRow($message, $mode = \histou\grafana\TextPanel::TEXT, $header = '')
     {
         $panel = new \histou\grafana\TextPanel('');
-        $panel->setMode(\histou\grafana\TextPanel::MARKDOWN);
+        $panel->setMode($mode);
         $panel->setContent($message);
         $row = new \histou\grafana\Row($header);
         $row->addPanel($panel);
@@ -95,7 +104,7 @@ class Debug
     public static function errorMarkdownDashboard($message)
     {
         $dashboard = new \histou\grafana\Dashboard('Error');
-        $dashboard->addRow(static::genMarkdownRow($message, 'ERROR'));
+        $dashboard->addRow(static::genRow($message, \histou\grafana\TextPanel::MARKDOWN, 'ERROR'));
         return $dashboard;
     }
 

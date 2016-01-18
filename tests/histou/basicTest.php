@@ -178,7 +178,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
         (
             [0] => Array
                 (
-                    [title] => Debug
+                    [title] => 
                     [editable] => 1
                     [height] => 400px
                     [panels] => Array
@@ -190,7 +190,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
                                     [span] => 12
                                     [editable] => 1
                                     [id] => 1
-                                    [mode] => markdown
+                                    [mode] => text
                                     [content] => 
                                 )
 
@@ -201,5 +201,5 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
         )
 
 )
-<br>0<br>{"id":"1","title":"foo","originalTitle":"CustomDashboard","tags":[],"timezone":"browser","editable":true,"hideControls":true,"sharedCrosshair":false,"nav":[{"type":"timepicker","enable":true,"status":"Stable","time_options":["5m","15m","1h","6h","12h","24h","2d","7d","30d"],"refresh_intervals":["5s","10s","30s","1m","5m","15m","30m","1h","2h","1d"],"now":true,"collapse":false,"notice":false}],"time":{"from":"now-8h","to":"now"},"templating":[],"annotations":{"list":[]},"refresh":"30s","version":"6","rows":[{"title":"Debug","editable":true,"height":"400px","panels":[{"title":"","type":"text","span":12,"editable":true,"id":1,"mode":"markdown","content":""}]}]}<br></pre>';
+<br>0<br>{"id":"1","title":"foo","originalTitle":"CustomDashboard","tags":[],"timezone":"browser","editable":true,"hideControls":true,"sharedCrosshair":false,"nav":[{"type":"timepicker","enable":true,"status":"Stable","time_options":["5m","15m","1h","6h","12h","24h","2d","7d","30d"],"refresh_intervals":["5s","10s","30s","1m","5m","15m","30m","1h","2h","1d"],"now":true,"collapse":false,"notice":false}],"time":{"from":"now-8h","to":"now"},"templating":[],"annotations":{"list":[]},"refresh":"30s","version":"6","rows":[{"title":"","editable":true,"height":"400px","panels":[{"title":"","type":"text","span":12,"editable":true,"id":1,"mode":"text","content":""}]}]}<br></pre>';
 }

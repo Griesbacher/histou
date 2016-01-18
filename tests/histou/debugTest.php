@@ -33,7 +33,7 @@ class DebugTest extends \MyPHPUnitFrameworkTestCase
         $panel->setContent("foo");
         $row = new \histou\grafana\Row("bar");
         $row->addPanel($panel);
-        $this->assertEquals($row, \histou\Debug::genMarkdownRow("foo", "bar"));
+        $this->assertEquals($row, \histou\Debug::genRow("foo", \histou\grafana\TextPanel::MARKDOWN, "bar"));
     }
 
     public function testErrorMarkdownDashboard()
