@@ -371,4 +371,19 @@ class GraphPanel extends Panel
             )
         );
     }
+    /**
+    Display the values on the left or right y axis, left = 1 right = 2.
+    @param string $alias name of the query.
+    @return null.
+    **/
+    public function setYAxis($alias, $number = 1)
+    {
+        array_push(
+            $this->data['seriesOverrides'],
+            array(
+            'alias' => $alias,
+            'yaxis' => $number
+            )
+        );
+    }
 }
