@@ -1,3 +1,7 @@
+general:
+    branches:
+        only:
+            - master
 machine:
   php:
     version: 5.4.19
