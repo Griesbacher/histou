@@ -68,6 +68,16 @@ class GraphPanel extends Panel
     {
         $this->data['tooltip'] = $tooltip;
     }
+    /**
+    Adds an array to the seriesOverrides field and checks for leading slashes.
+    **/
+    public function addToSeriesOverrides(array $data)
+    {
+        if ($data['alias'][0] == '/') {
+            $data['alias'] = '/'.str_replace('/', '\/', $data['alias']).'/';
+        }
+        array_push($this->data['seriesOverrides'], $data);
+    }
 
     /**
     Adds an 'line' to the panel.
@@ -349,11 +359,10 @@ class GraphPanel extends Panel
     **/
     public function fillBelowLine($alias, $intensity)
     {
-        array_push(
-            $this->data['seriesOverrides'],
+        $this->addToSeriesOverrides(
             array(
-            'alias' => $alias,
-            'fill' => $intensity,
+                'alias' => $alias,
+                'fill' => $intensity,
             )
         );
     }
@@ -364,11 +373,10 @@ class GraphPanel extends Panel
     **/
     public function negateY($alias)
     {
-        array_push(
-            $this->data['seriesOverrides'],
+        $this->addToSeriesOverrides(
             array(
-            'alias' => $alias,
-            'transform' => 'negative-Y'
+                'alias' => $alias,
+                'transform' => 'negative-Y'
             )
         );
     }
@@ -379,11 +387,10 @@ class GraphPanel extends Panel
     **/
     public function setYAxis($alias, $number = 1)
     {
-        array_push(
-            $this->data['seriesOverrides'],
+        $this->addToSeriesOverrides(
             array(
-            'alias' => $alias,
-            'yaxis' => $number
+                'alias' => $alias,
+                'yaxis' => $number
             )
         );
     }
@@ -444,14 +451,16 @@ class GraphPanel extends Panel
         return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '#FF3727');
     }
 
-    private function addXToTarget($target, $types, $alias, $color, $keepAlias = true)
+    private function addXToTarget($target, $types, $alias, $color, $keepAlias = false)
     {
         foreach ($types as $type) {
             if ($keepAlias) {
-                $alias = $alias.'-'.$type;
+                $newalias = $alias;
+            } else {
+                $newalias = $alias.'-'.$type;
             }
-            array_push($target['select'], $this->createSelect($type, $alias));
-            $this->addAliasColor($alias, $color);
+            array_push($target['select'], $this->createSelect($type, $newalias));
+            $this->addAliasColor($newalias, $color);
         }
         return $target;
     }
@@ -473,15 +482,14 @@ class GraphPanel extends Panel
             $alias = 'downtime';
         }
         $target = $this->createTarget($host, $service, $command, $performanceLabel, array('downtime' => "true"));
-        $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', false);
-		array_push(
-            $this->data['seriesOverrides'],
+        $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true);
+        $this->addToSeriesOverrides(
             array(
-            'lines' => true,
-            'alias' => $alias,
-            'linewidth' => 3,
-            'legend' => false,
-            'fill' => 3,
+                'lines' => true,
+                'alias' => $alias,
+                'linewidth' => 3,
+                'legend' => false,
+                'fill' => 3,
             )
         );
         return $target;
