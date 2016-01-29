@@ -18,94 +18,54 @@ $rule = new \histou\template\Rule(
 
 $genTemplate = function ($perfData) {
     /*$perfData:
-    Array
-    (
-    [host] => debian
-    [service] => http
-    [perfLabel] => Array
-        (
-            [size] => Array
-                (
-                    [value] => Array
-                        (
-                            [unit] => B
-                        )
+	Array
+	(
+		[host] => debian
+		[service] => hostcheck
+		[perfLabel] => Array
+			(
+				[pl] => Array
+					(
+						[crit] => 100
+						[fill] => none
+						[max] =>
+						[min] => 0
+						[type] => normal
+						[unit] => %
+						[value] => 0
+						[warn] => 80
+					)
 
-                    [min] => Array
-                        (
-                            [unit] => B
-                        )
+				[rta] => Array
+					(
+						[crit] => 5000
+						[fill] => none
+						[max] =>
+						[min] => 0
+						[type] => normal
+						[unit] => ms
+						[value] => 0.045
+						[warn] => 3000
+					)
 
-                )
+			)
 
-            [time] => Array
-                (
-                    [value] => Array
-                        (
-                            [unit] => s
-                        )
-
-                    [min] => Array
-                        (
-                            [unit] => s
-                        )
-
-                )
-
-        )
-
-    [command] => http
-    )
+		[command] => command
+	)
     */
 
-    $perfKeys = array_keys($perfData['perfLabel']);
     $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
-    for ($i = 0; $i < sizeof($perfData['perfLabel']); $i++) {
-        $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-        $panel = new \histou\grafana\GraphPanel(
-            $perfData['host'].' '.$perfData['service']
-            .' '.$perfData['command'].' '.$perfKeys[$i]
-        );
-        //add value graph
-        $target = sprintf(
-            '%s%s%s%s%s%s%s%s%s',
-            $perfData['host'],
-            INFLUX_FIELDSEPERATOR,
-            $perfData['service'],
-            INFLUX_FIELDSEPERATOR,
-            $perfData['command'],
-            INFLUX_FIELDSEPERATOR,
-            $perfKeys[$i],
-            INFLUX_FIELDSEPERATOR,
-            "value"
-        );
-        $alias = $perfData['host']." ".$perfData['service']." ".$perfKeys[$i]." value";
-        $panel->addAliasColor($alias, '#085DFF');
-        $panel->addTargetSimple($target, $alias);
-        $panel->fillBelowLine($alias, 2);
-        //Add Label
-        if (isset($perfData['perfLabel'][$perfKeys[$i]]['value']['unit'])) {
-            $panel->setLeftUnit($perfData['perfLabel'][$perfKeys[$i]]['value']['unit']);
-        }
-        //Add Warning and Critical
-        $panel->addWarning(
-            $perfData['host'],
-            $perfData['service'],
-            $perfData['command'],
-            $perfKeys[$i]
-        );
-        $panel->addCritical(
-            $perfData['host'],
-            $perfData['service'],
-            $perfData['command'],
-            $perfKeys[$i]
-        );
-        $panel->addDowntime(
-            $perfData['host'],
-            $perfData['service'],
-            $perfData['command'],
-            $perfKeys[$i]
-        );
+    foreach($perfData['perfLabel'] as $key => $values){
+		$row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+		$panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' '.$key);
+		$target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $key);
+		$target = $panel->addWarnToTarget($target, $key);
+		$target = $panel->addCritToTarget($target, $key);
+		$panel->addTarget($target);
+
+		$downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
+		$panel->addTarget($downtime);
+
         $row->addPanel($panel);
         $dashboard->addRow($row);
     }

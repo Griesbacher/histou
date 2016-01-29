@@ -56,6 +56,7 @@ class GraphPanel extends Panel
         $this->data['linewidth'] = 2;
         $this->data['targets'] = array();
         $this->data['seriesOverrides'] = array();
+        $this->data['datasource'] = "-- Mixed --";
     }
 
     /**
@@ -75,7 +76,7 @@ class GraphPanel extends Panel
     @param array  $tags   tags for the query.
     @return null.
     **/
-    public function addTargetSimple($target, $alias = "", $factor = 1, array $tags = array())
+    /*public function addTargetSimple($target, $alias = "", $factor = 1, array $tags = array())
     {
         if ($factor == 1) {
             $influxdbQuery = sprintf('select mean(value) from "%s" where AND $timeFilter group by time($interval)', $target);
@@ -104,7 +105,7 @@ class GraphPanel extends Panel
             "datasource" => INFLUX_DB
             )
         );
-    }
+    }*/
 
     /**
     Changes the color of a line.
@@ -235,7 +236,7 @@ class GraphPanel extends Panel
     @param string $color     hexcolor.
     @return null.
     **/
-    private function addThreshold($host, $service, $command, $perfLabel, $type, $color, $alias)
+    /*private function addThreshold($host, $service, $command, $perfLabel, $type, $color, $alias)
     {
         foreach (array('normal', 'min', 'max') as $tag) {
             $target = \histou\helper\str::influxdbTablename($host, $service, $command, $perfLabel, $type);
@@ -260,7 +261,7 @@ class GraphPanel extends Panel
             );
             $this->addAliasColor($localAlias, $color);
         }
-    }
+    }*/
 
     /**
     Adds yellow warning lines
@@ -307,7 +308,7 @@ class GraphPanel extends Panel
     @param string $color     Color of the dots
     @return null.
     **/
-    public function addDowntime($host, $service, $command, $perfLabel, $color = '#EEE')
+    /*public function addDowntime($host, $service, $command, $perfLabel, $color = '#EEE')
     {
         $target = sprintf(
             '%s%s%s%s%s%s%s%svalue',
@@ -338,7 +339,7 @@ class GraphPanel extends Panel
             )
         );
         $this->addAliasColor($alias, $color);
-    }
+    }*/
 
     /**
     Fills the area below a line.
@@ -385,5 +386,113 @@ class GraphPanel extends Panel
             'yaxis' => $number
             )
         );
+    }
+
+    public function createTarget($host, $service, $command, $performanceLabel, array $filterTags = array())
+    {
+        return array(
+                    'measurement' => 'metrics',
+                    'alias' => '$col',
+                    'select' => array(),
+                    'tags' => $this->createFilterTags($host, $service, $command, $performanceLabel, $filterTags),
+                    'dsType' => 'influxdb',
+                    'resultFormat' => 'time_series',
+                    'datasource' => INFLUX_DB
+                    );
+    }
+
+    /**
+    Creates filter tags array based on host, service...
+    **/
+    public function createFilterTags($host, $service, $command, $performanceLabel, array $filterTags = array())
+    {
+        $tags = array();
+        $filter = array('host' => $host, 'service' => $service, 'command' => $command, 'performanceLabel' => $performanceLabel);
+        $filter = array_merge($filter, $filterTags);
+        $i = 0;
+        foreach ($filter as $key => $value) {
+            if ($i == 0) {
+                array_push($tags, array('key'=> $key, 'operator' => '=', 'value' => $value ));
+            } else {
+                array_push($tags, array('condition' => 'AND', 'key'=> $key, 'operator' => '=', 'value' => $value ));
+            }
+            $i++;
+        }
+        return $tags;
+    }
+
+    /**
+    This creates a target with an value.
+    **/
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $alias = '')
+    {
+        if ($alias == '') {
+            $alias = $performanceLabel;
+        }
+        $target = $this->createTarget($host, $service, $command, $performanceLabel);
+        $target = $this->addXToTarget($target, array('value'), $alias, '#085DFF');
+        return $target;
+    }
+
+    public function addWarnToTarget($target, $alias = '')
+    {
+        return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, '#FFFC15');
+    }
+
+    public function addCritToTarget($target, $alias = '')
+    {
+        return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '#FF3727');
+    }
+
+    private function addXToTarget($target, $types, $alias, $color, $keepAlias = true)
+    {
+        foreach ($types as $type) {
+            if ($keepAlias) {
+                $alias = $alias.'-'.$type;
+            }
+            array_push($target['select'], $this->createSelect($type, $alias));
+            $this->addAliasColor($alias, $color);
+        }
+        return $target;
+    }
+
+    public function createSelect($name, $alias)
+    {
+        return array(
+                    array('type' => 'field', 'params' => array($name)),
+                    array('type' => 'mean', 'params' => array()),
+                    array('type' => 'alias', 'params' => array($alias))
+                    );
+    }
+    /**
+    This creates a target for an downtime.
+    **/
+    public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '')
+    {
+        if ($alias == '') {
+            $alias = 'downtime';
+        }
+        $target = $this->createTarget($host, $service, $command, $performanceLabel, array('downtime' => "true"));
+        $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', false);
+		array_push(
+            $this->data['seriesOverrides'],
+            array(
+            'lines' => true,
+            'alias' => $alias,
+            'linewidth' => 3,
+            'legend' => false,
+            'fill' => 3,
+            )
+        );
+        return $target;
+    }
+
+
+    /**
+    Adds the target to the dashboard.
+    **/
+    public function addTarget($target)
+    {
+        array_push($this->data['targets'], $target);
     }
 }

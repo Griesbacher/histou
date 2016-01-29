@@ -133,7 +133,7 @@ class Dashboard
             "iconSize" => $iconSize,
             "lineColor" => $lineColor,
             "name" => $name,
-            "query" => "SELECT * FROM \"$hostname&$servicename&messages\" WHERE \"type\" = '$name' AND \$timeFilter",
+            "query" => "SELECT * FROM messages WHERE type = '$name' AND host = '$hostname' AND service = '$servicename' AND \$timeFilter",
             "showLine" => true,
             "tagsColumn" => "author",
             "textColumn" => "value",
