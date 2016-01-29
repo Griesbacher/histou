@@ -101,7 +101,7 @@ class Influxdb
             }
             $data['perfLabel'][$series['tags']['performanceLabel']] = $labelData;
         }
-		ksort($data['perfLabel'], SORT_NATURAL);
+        ksort($data['perfLabel'], SORT_NATURAL);
         return $data;
     }
 

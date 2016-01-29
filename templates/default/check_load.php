@@ -17,11 +17,11 @@ $rule = new \histou\template\Rule(
 );
 
 $genTemplate = function ($perfData) {
-	$colors = array('#085DFF', '#07ff78', '#4707ff');
+    $colors = array('#085DFF', '#07ff78', '#4707ff');
     $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
     $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
-	$i = 0;
+    $i = 0;
     foreach ($perfData['perfLabel'] as $key => $values) {
         $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $key, $colors[$i]);
         $panel->addTarget($target);
@@ -31,7 +31,7 @@ $genTemplate = function ($perfData) {
         if (isset($values['unit'])) {
             $panel->setLeftUnit($values['unit']);
         }
-		$i++;
+        $i++;
     }
     $row->addPanel($panel);
     $dashboard->addRow($row);
