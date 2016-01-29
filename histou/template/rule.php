@@ -103,7 +103,7 @@ class Rule
     {
         if (sizeof(static::$check) == 4) {
             foreach (array('host', 'service', 'command') as $key) {
-                $search = INFLUX_FIELDSEPERATOR.$key.INFLUX_FIELDSEPERATOR;
+                $search = SPECIAL_CHAR.$key.SPECIAL_CHAR;
                 if (strpos($string, $search) !== false) {
                     $string = str_replace($search, static::$check[$key], $string);
                 }
@@ -316,28 +316,6 @@ class Rule
             }
         }
         return $hits;
-    }
-
-    /**
-    Tests if the given tablename matches table.
-    @param string $tablename name to test.
-    @return boolean.
-    **/
-    public function matchesTablename($tablename)
-    {
-        $tableparts = explode(INFLUX_FIELDSEPERATOR, $tablename);
-        $keys = array_keys($this->data);
-        for ($i = 0; $i < 3; $i++) {
-            if (!preg_match($this->data[$keys[$i]], $tableparts[$i])) {
-                return false;
-            }
-        }
-        foreach ($this->data[$keys[3]] as $perfLabel) {
-            if (preg_match($perfLabel, $tableparts[3])) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

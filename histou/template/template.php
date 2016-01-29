@@ -97,16 +97,6 @@ class Template
     }
 
     /**
-    Tests if a Template matches the given Tablename.
-    @param string $tablename Name to test.
-    @return boolean.
-    **/
-    public function matchesTablename($tablename)
-    {
-        return $this->rule->matchesTablename($tablename);
-    }
-
-    /**
     Sort function to order the objects
     @param object $first  Template1.
     @param object $second Template2.
