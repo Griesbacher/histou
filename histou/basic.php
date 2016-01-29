@@ -53,7 +53,7 @@ class Basic
         } elseif (isset($args['service']) && !empty($args['service'])) {
             define("SERVICE", $args["service"]);  // @codeCoverageIgnore
         } else {   // @codeCoverageIgnore
-            define("SERVICE", "");
+            define("SERVICE", HOSTCHECK_ALIAS);
         }
 
         if (isset($_GET['debug'])) {
@@ -145,6 +145,11 @@ class Basic
             Basic::getConfigKey($config, 'general', 'tmpFolder'),
             sys_get_temp_dir()
         );
+		Basic::setConstant(
+            "SPECIAL_CHAR",
+            Basic::getConfigKey($config, 'general', 'specialChar'),
+            "&"
+        );
         Basic::setConstant(
             "INFLUX_URL",
             Basic::getConfigKey($config, 'influxdb', 'influxdbUrl'),
@@ -155,9 +160,9 @@ class Basic
         }
 
         Basic::setConstant(
-            "INFLUX_FIELDSEPERATOR",
-            Basic::getConfigKey($config, 'influxdb', 'influxFieldseperator'),
-            "&"
+            "HOSTCHECK_ALIAS",
+            Basic::getConfigKey($config, 'influxdb', 'hostcheckAlias'),
+            "hostcheck"
         );
         Basic::setConstant(
             "DEFAULT_TEMPLATE_FOLDER",
