@@ -278,13 +278,13 @@ class GraphPanel extends Panel
         );
     }
 
-    public function createTarget($host, $service, $command, $performanceLabel, array $filterTags = array())
+    public function createTarget(array $filterTags = array())
     {
         return array(
                     'measurement' => 'metrics',
                     'alias' => '$col',
                     'select' => array(),
-                    'tags' => $this->createFilterTags($host, $service, $command, $performanceLabel, $filterTags),
+                    'tags' => $this->createFilterTags($filterTags),
                     'dsType' => 'influxdb',
                     'resultFormat' => 'time_series',
                     'datasource' => INFLUX_DB
@@ -294,13 +294,11 @@ class GraphPanel extends Panel
     /**
     Creates filter tags array based on host, service...
     **/
-    public function createFilterTags($host, $service, $command, $performanceLabel, array $filterTags = array())
+    public function createFilterTags(array $filterTags = array())
     {
         $tags = array();
-        $filter = array('host' => $host, 'service' => $service, 'command' => $command, 'performanceLabel' => $performanceLabel);
-        $filter = array_merge($filter, $filterTags);
         $i = 0;
-        foreach ($filter as $key => $value) {
+        foreach ($filterTags as $key => $value) {
             if ($i == 0) {
                 array_push($tags, array('key'=> $key, 'operator' => '=', 'value' => $value ));
             } else {
@@ -314,12 +312,12 @@ class GraphPanel extends Panel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF',  $alias = '')
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '')
     {
         if ($alias == '') {
             $alias = $performanceLabel;
         }
-        $target = $this->createTarget($host, $service, $command, $performanceLabel);
+        $target = $this->createTarget(array('host' => $host, 'service' => $service, 'command' => $command, 'performanceLabel' => $performanceLabel));
         $target = $this->addXToTarget($target, array('value'), $alias, $color);
         return $target;
     }
@@ -364,7 +362,15 @@ class GraphPanel extends Panel
         if ($alias == '') {
             $alias = 'downtime';
         }
-        $target = $this->createTarget($host, $service, $command, $performanceLabel, array('downtime' => "true"));
+        $target = $this->createTarget(
+            array(
+                                            'host' => $host,
+                                            'service' => $service,
+                                            'command' => $command,
+                                            'performanceLabel' => $performanceLabel,
+                                            'downtime' => "true"
+                                        )
+        );
         $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true);
         $this->addToSeriesOverrides(
             array(
