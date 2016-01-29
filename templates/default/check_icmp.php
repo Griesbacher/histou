@@ -17,61 +17,44 @@ $rule = new \histou\template\Rule(
 );
 
 $genTemplate = function ($perfData) {
+    $colors = array('#085DFF', '#07ff78', '#db07ff');
+		/*echo '<pre>';
+		print_r($perfData);
+		echo '</pre>';*/
     $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
-    foreach (array('rta', 'pl') as $perfLabel) {
-        $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-        $panel = new \histou\grafana\GraphPanel(
-            $perfData['host'].' '.$perfData['service']
-            .' '.$perfData['command'].' '.$perfLabel
-        );
 
-        $colors = array('#085DFF', '#07ff78', '#db07ff');
-        if ($perfLabel == 'rta') {
-            $types = array('rta', 'rtmax', 'rtmin');
-        } else {
-            $types = array('pl');
-        }
-        for ($i = 0; $i < sizeof($types); $i++) {
-            $target = sprintf(
-                '%s%s%s%s%s%s%s%s%s',
-                $perfData['host'],
-                INFLUX_FIELDSEPERATOR,
-                $perfData['service'],
-                INFLUX_FIELDSEPERATOR,
-                $perfData['command'],
-                INFLUX_FIELDSEPERATOR,
-                $types[$i],
-                INFLUX_FIELDSEPERATOR,
-                "value"
-            );
-            $alias = $types[$i];
-            $panel->addAliasColor($alias, $colors[$i]);
-            $panel->addTargetSimple($target, $alias);
-            $panel->fillBelowLine($alias, 2);
-        }
-        $panel->addWarning(
-            $perfData['host'],
-            $perfData['service'],
-            $perfData['command'],
-            $perfLabel
-        );
-        $panel->addCritical(
-            $perfData['host'],
-            $perfData['service'],
-            $perfData['command'],
-            $perfLabel
-        );
-        $panel->addDowntime(
-            $perfData['host'],
-            $perfData['service'],
-            $perfData['command'],
-            $perfLabel
-        );
-        $panel->setLeftUnit($perfData['perfLabel'][$perfLabel]['value']['unit']);
-        $row->addPanel($panel);
+	$row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+	$panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' rta');
+	$i = 0;
+    foreach (array('rta', 'rtmin', 'rtmax') as $type) {
+        $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $type, $colors[$i]);
+        $target = $panel->addWarnToTarget($target, $type);
+        $target = $panel->addCritToTarget($target, $type);
+        $panel->addTarget($target);
 
-        $dashboard->addRow($row);
+        $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $type);
+        $panel->addTarget($downtime);
+        $panel->fillBelowLine($type.'-value', 2);
+		$i++;
     }
+	if (isset($perfData['perfLabel']['rta']['unit'])) {
+		$panel->setLeftUnit($perfData['perfLabel']['rta']['unit']);
+	}
+	$row->addPanel($panel);
+	$dashboard->addRow($row);
+	$row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+	$panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' pl');
+	$target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], 'pl');
+	$target = $panel->addWarnToTarget($target, $type);
+	$target = $panel->addCritToTarget($target, $type);
+	$panel->addTarget($target);
+
+	$downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], 'pl');
+	$panel->addTarget($downtime);
+	$panel->fillBelowLine($type.'-value', 2);
+
+	$row->addPanel($panel);
+	$dashboard->addRow($row);
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     return $dashboard;
 };
