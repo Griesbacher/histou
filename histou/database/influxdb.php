@@ -20,16 +20,6 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
-define(
-    "INFLUX_QUERY",
-    sprintf(
-        "show series from /%s%s%s.*/",
-        str_replace("/", '\/', HOST),
-        INFLUX_FIELDSEPERATOR,
-        str_replace('/', '\/', SERVICE)
-    )
-);
-
 class Influxdb
 {
     private $url;
@@ -42,19 +32,36 @@ class Influxdb
     public function __construct($url)
     {
         $this->url = $url."&q=";
+		$this->perfKeys = array(
+			'value',
+			'warn', 'warn-min', 'warn-max',
+			'crit', 'crit-min', 'crit-max',
+			'min',
+			'max',
+			'type',
+			'unit',
+			'fill'
+		);
     }
 
     public function fetchPerfData()
     {
-        return $this->makeRequest(
+        $result = $this->makeRequest(
             sprintf(
-                "select * from /%s%s%s%s.*/ ORDER BY time DESC limit 1",
-                str_replace("/", '\/', HOST),
-                INFLUX_FIELDSEPERATOR,
-                str_replace('/', '\/', SERVICE),
-                INFLUX_FIELDSEPERATOR
+                "select * from metrics where host='%s' and service='%s' GROUP BY performanceLabel ORDER BY time DESC LIMIT 1",
+                HOST,
+                SERVICE
+            ).';'.sprintf(
+                "select * from metrics where host='%s' and service='%s' GROUP BY performanceLabel LIMIT 1",
+                HOST,
+                SERVICE
             )
         );
+        if (empty($result[0])) {
+            return $result[1];
+        } else {
+            return $result[0];
+        }
     }
 
     /**
@@ -73,57 +80,27 @@ class Influxdb
         return json_decode($content, true)['results'];
     }
 
-    const COLUMNS = 'columns';
-    const PERF_LABEL = 'perfLabel';
     /**
     Filters the Performancedata out of an database request.
     @param string $request        database request.
     @param string $host           hostname to search for.
     @param string $service        servicename to search for.
-    @param string $fieldSeperator database fieldSeperator.
     @return array
     **/
-    public function filterPerfdata($request, $host, $service, $fieldSeperator)
+    public function filterPerfdata($request, $host, $service)
     {
-        $regex = sprintf(
-            "/%s%s%s%s(.*?)%s(.*?)%s(.*)/",
-            preg_quote($host, '/'),
-            $fieldSeperator,
-            preg_quote($service, '/'),
-            $fieldSeperator,
-            $fieldSeperator,
-            $fieldSeperator
-        );
-        $data = array('host' => $host, 'service' => $service);
-        foreach ($request as $queryResult) {
-            if (!empty($queryResult['series'])) {
-                foreach ($queryResult['series'] as $table) {
-                    if (preg_match($regex, $table['name'], $result)) {
-                        if (!array_key_exists(static::PERF_LABEL, $data)) {
-                            $data[static::PERF_LABEL] = array();
-                        }
-                        if (!array_key_exists($result[2], $data[static::PERF_LABEL])) {
-                            $data[static::PERF_LABEL][$result[2]] = array();
-                        }
-                        $data['command'] = $result[1];
-                        $data[static::PERF_LABEL][$result[2]][$result[3]] = array();
-                        if (array_key_exists(static::COLUMNS, $table)) {
-                            for ($tagId = 1; $tagId < sizeof($table[static::COLUMNS]); $tagId++) {
-                                $data[static::PERF_LABEL][$result[2]][$result[3]][$table[static::COLUMNS][$tagId]] = $table['values'][0][$tagId];
-                            }
-                        }
-                    }
-                }
-            } else {
-                return "No datafound";
-            }
-        }
-        if (isset($data[static::PERF_LABEL])) {
-            ksort($data[static::PERF_LABEL], SORT_NATURAL);
-            foreach ($data[static::PERF_LABEL] as &$perfLabel) {
-                uksort($perfLabel, get_class($this).'::comparePerfLabel');
-            }
-        }
+		$data = array('host' => $host, 'service' => $service, 'perfLabel' => array());
+		foreach($request['series'] as $series) {
+			$labelData = array();
+			foreach ($series['columns'] as $index => $value) {
+				if (in_array($value, $this->perfKeys)) {
+					$labelData[$value] = $series['values'][0][$index];
+				}elseif ($value == 'command'){
+					$data['command'] = $series['values'][0][$index];
+				}
+			}
+			$data['perfLabel'][$series['tags']['performanceLabel']] = $labelData;
+		}
         return $data;
     }
 
