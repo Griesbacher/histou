@@ -80,44 +80,6 @@ class GraphPanel extends Panel
     }
 
     /**
-    Adds an 'line' to the panel.
-    @param string $target tablename.
-    @param string $alias  alias.
-    @param array  $tags   tags for the query.
-    @return null.
-    **/
-    /*public function addTargetSimple($target, $alias = "", $factor = 1, array $tags = array())
-    {
-        if ($factor == 1) {
-            $influxdbQuery = sprintf('select mean(value) from "%s" where AND $timeFilter group by time($interval)', $target);
-        } else {
-            $influxdbQuery = sprintf('select (mean(value) * $factor) from "%s" where AND $timeFilter group by time($interval)', $target);
-        }
-        array_push(
-            $this->data['targets'],
-            array(
-            "fields" => array(
-                              array(
-                                    "func" => "mean",
-                                    "name" => "value",
-                                   )
-                             ),
-            "groupBy" => array(
-                               array(
-                                     "interval" => "auto",
-                                     "type" => "time",
-                                    )
-                              ),
-            "measurement" => $target,
-            "query" => $influxdbQuery,
-            "alias" => $alias,
-            "tags" => $tags,
-            "datasource" => INFLUX_DB
-            )
-        );
-    }*/
-
-    /**
     Changes the color of a line.
     @param string $alias linename.
     @param string $color hexcolor.
@@ -237,43 +199,6 @@ class GraphPanel extends Panel
     }
 
     /**
-    Adds any threshold lines
-    @param string $host      hostname.
-    @param string $service   servicename.
-    @param string $command   commandname.
-    @param array  $perfLabel hostname.
-    @param string $type      line label.
-    @param string $color     hexcolor.
-    @return null.
-    **/
-    /*private function addThreshold($host, $service, $command, $perfLabel, $type, $color, $alias)
-    {
-        foreach (array('normal', 'min', 'max') as $tag) {
-            $target = \histou\helper\str::influxdbTablename($host, $service, $command, $perfLabel, $type);
-            $localAlias = '';
-            if ($alias == '') {
-                if ($tag == 'normal') {
-                    $localAlias = $type;
-                } else {
-                    $localAlias = $type.'-'.$tag;
-                }
-            } elseif ($tag != 'normal') {
-                $localAlias = $alias.'-'.$tag;
-            } else {
-                $localAlias = $alias;
-            }
-
-            $this->addTargetSimple(
-                $target,
-                $localAlias,
-                1,
-                array(array('key' => 'type', 'operator'  => '=', 'value' => $tag))
-            );
-            $this->addAliasColor($localAlias, $color);
-        }
-    }*/
-
-    /**
     Adds yellow warning lines
     @param string $host      hostname.
     @param string $service   servicename.
@@ -308,48 +233,6 @@ class GraphPanel extends Panel
     {
         $this->data['linewidth'] = $width;
     }
-
-    /**
-    Adds dots to the value line if there is a downtime
-    @param string $host      hostname.
-    @param string $service   servicename.
-    @param string $command   commandname.
-    @param array  $perfLabel hostname.
-    @param string $color     Color of the dots
-    @return null.
-    **/
-    /*public function addDowntime($host, $service, $command, $perfLabel, $color = '#EEE')
-    {
-        $target = sprintf(
-            '%s%s%s%s%s%s%s%svalue',
-            $host,
-            INFLUX_FIELDSEPERATOR,
-            $service,
-            INFLUX_FIELDSEPERATOR,
-            $command,
-            INFLUX_FIELDSEPERATOR,
-            $perfLabel,
-            INFLUX_FIELDSEPERATOR
-        );
-        $alias = "downtime";
-        $this->addTargetSimple(
-            $target,
-            $alias,
-            1,
-            array(array('key' => 'downtime', 'operator'  => '=', 'value' => '1'))
-        );
-        array_push(
-            $this->data['seriesOverrides'],
-            array(
-            'lines' => true,
-            'alias' => $alias,
-            'linewidth' => 3,
-            'legend' => false,
-            'fill' => 3,
-            )
-        );
-        $this->addAliasColor($alias, $color);
-    }*/
 
     /**
     Fills the area below a line.
@@ -431,13 +314,13 @@ class GraphPanel extends Panel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $alias = '')
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF',  $alias = '')
     {
         if ($alias == '') {
             $alias = $performanceLabel;
         }
         $target = $this->createTarget($host, $service, $command, $performanceLabel);
-        $target = $this->addXToTarget($target, array('value'), $alias, '#085DFF');
+        $target = $this->addXToTarget($target, array('value'), $alias, $color);
         return $target;
     }
 

@@ -17,56 +17,24 @@ $rule = new \histou\template\Rule(
 );
 
 $genTemplate = function ($perfData) {
-
-    $perfKeys = array_keys($perfData['perfLabel']);
+	$colors = array('#085DFF', '#07ff78', '#4707ff');
     $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
-    $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-    $panel = new \histou\grafana\GraphPanel(
-        $perfData['host'].' '.$perfData['service']
-        .' '.$perfData['command']
-    );
-    $colors = array('#085DFF', '#07ff78', '#4707ff');
-    for ($i = 0; $i < sizeof($perfData['perfLabel']); $i++) {
-        $target = sprintf(
-            '%s%s%s%s%s%s%s%s%s',
-            $perfData['host'],
-            INFLUX_FIELDSEPERATOR,
-            $perfData['service'],
-            INFLUX_FIELDSEPERATOR,
-            $perfData['command'],
-            INFLUX_FIELDSEPERATOR,
-            $perfKeys[$i],
-            INFLUX_FIELDSEPERATOR,
-            "value"
-        );
-        $alias = $perfKeys[$i];
-        $panel->addAliasColor($alias, $colors[$i%sizeof($colors)]);
-        $panel->addTargetSimple($target, $alias);
-        $panel->fillBelowLine($alias, 2);
+    $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+    $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+	$i = 0;
+    foreach ($perfData['perfLabel'] as $key => $values) {
+        $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $key, $colors[$i]);
+        $panel->addTarget($target);
 
-        $panel->addDowntime(
-            $perfData['host'],
-            $perfData['service'],
-            $perfData['command'],
-            $perfKeys[$i]
-        );
+        $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
+        $panel->addTarget($downtime);
+        if (isset($values['unit'])) {
+            $panel->setLeftUnit($values['unit']);
+        }
+		$i++;
     }
-    $panel->addWarning(
-        $perfData['host'],
-        $perfData['service'],
-        $perfData['command'],
-        $perfKeys[0]
-    );
-    $panel->addCritical(
-        $perfData['host'],
-        $perfData['service'],
-        $perfData['command'],
-        $perfKeys[0]
-    );
-
     $row->addPanel($panel);
     $dashboard->addRow($row);
-
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     return $dashboard;
 };
