@@ -145,7 +145,7 @@ class Basic
             Basic::getConfigKey($config, 'general', 'tmpFolder'),
             sys_get_temp_dir()
         );
-		Basic::setConstant(
+        Basic::setConstant(
             "SPECIAL_CHAR",
             Basic::getConfigKey($config, 'general', 'specialChar'),
             "&"

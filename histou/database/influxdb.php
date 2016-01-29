@@ -32,16 +32,16 @@ class Influxdb
     public function __construct($url)
     {
         $this->url = $url."&q=";
-		$this->perfKeys = array(
-			'value',
-			'warn', 'warn-min', 'warn-max',
-			'crit', 'crit-min', 'crit-max',
-			'min',
-			'max',
-			'type',
-			'unit',
-			'fill'
-		);
+        $this->perfKeys = array(
+            'value',
+            'warn', 'warn-min', 'warn-max',
+            'crit', 'crit-min', 'crit-max',
+            'min',
+            'max',
+            'type',
+            'unit',
+            'fill'
+        );
     }
 
     public function fetchPerfData()
@@ -89,18 +89,18 @@ class Influxdb
     **/
     public function filterPerfdata($request, $host, $service)
     {
-		$data = array('host' => $host, 'service' => $service, 'perfLabel' => array());
-		foreach($request['series'] as $series) {
-			$labelData = array();
-			foreach ($series['columns'] as $index => $value) {
-				if (in_array($value, $this->perfKeys)) {
-					$labelData[$value] = $series['values'][0][$index];
-				}elseif ($value == 'command'){
-					$data['command'] = $series['values'][0][$index];
-				}
-			}
-			$data['perfLabel'][$series['tags']['performanceLabel']] = $labelData;
-		}
+        $data = array('host' => $host, 'service' => $service, 'perfLabel' => array());
+        foreach ($request['series'] as $series) {
+            $labelData = array();
+            foreach ($series['columns'] as $index => $value) {
+                if (in_array($value, $this->perfKeys)) {
+                    $labelData[$value] = $series['values'][0][$index];
+                } elseif ($value == 'command') {
+                    $data['command'] = $series['values'][0][$index];
+                }
+            }
+            $data['perfLabel'][$series['tags']['performanceLabel']] = $labelData;
+        }
         return $data;
     }
 
