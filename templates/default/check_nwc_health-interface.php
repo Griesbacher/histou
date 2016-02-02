@@ -47,49 +47,43 @@ $genTemplate = function ($perfData) {
         return ($index($firstLabel) - $index($secondLabel)) ? -1 : 1;
     });
     $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
+	$numberPanels = 0;
     foreach ($interfaces as $interface) {
         foreach ($types as $type) {
             $panel = new \histou\grafana\GraphPanel($perfData['service'].' '.$interface.' '. $type);
             $panel->setSpan(6);
+
             foreach (array('in', 'out') as $direction) {
                 $perfLabel = $interface.'_'.$type.'_'.$direction;
-                $target = sprintf(
-                    '%s%s%s%s%s%s%s%s%s',
-                    $perfData['host'],
-                    INFLUX_FIELDSEPERATOR,
-                    $perfData['service'],
-                    INFLUX_FIELDSEPERATOR,
-                    $perfData['command'],
-                    INFLUX_FIELDSEPERATOR,
-                    $perfLabel,
-                    INFLUX_FIELDSEPERATOR,
-                    "value"
-                );
-                $alias = $perfLabel." value";
-                $panel->addTargetSimple($target, $alias);
-                $panel->fillBelowLine($alias, 2);
+				$target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
+				$panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
+				$alias = $perfLabel.'-value';
                 if ($direction == 'out') {
                     $panel->negateY($alias);
                     $panel->addAliasColor($alias, '#4707ff');
                 } else {
                     $panel->addAliasColor($alias, '#085DFF');
                 }
-                $panel->addDowntime($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
                 if ($type != 'traffic') {
-                    $aliasWarn = $direction.'-warn';
-                    $aliasCrit = $direction.'-crit';
-                    $panel->addWarning($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, $aliasWarn);
-                    $panel->addCritical($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, $aliasCrit);
+					$target = $panel->addWarnToTarget($target, $perfLabel);
+					$target = $panel->addCritToTarget($target, $perfLabel);
                     if ($direction == 'out') {
-                        $panel->negateY('/'.$aliasWarn.'.*/');
-                        $panel->negateY('/'.$aliasCrit.'.*/');
+                        $panel->negateY("$perfLabel-warn");
+                        $panel->negateY("$perfLabel-crit");
                     }
                 }
+				$panel->addTarget($target);
             }
             if (isset($perfData['perfLabel'][$perfLabel]['value']['unit'])) {
                 $panel->setLeftUnit($perfData['perfLabel'][$perfLabel]['value']['unit']);
             }
-            $row->addPanel($panel);
+			if ($numberPanels != 0 && $numberPanels % 2 == 0) {
+
+				$dashboard->addRow($row);
+				$row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
+			}
+			$row->addPanel($panel);
+			$numberPanels++;
         }
     }
     $dashboard->addRow($row);
