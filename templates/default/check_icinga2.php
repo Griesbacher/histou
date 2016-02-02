@@ -27,9 +27,8 @@ $genTemplate = function ($perfData) {
         $i = 0;
         foreach ($perfLabelparts as $part) {
             $perfLabel = sprintf($perfLabelformat, $part);
-            $target = \histou\helper\str::influxdbTablename($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, 'value');
-            $panel->addAliasColor($perfLabel, $colors[$i++]);
-            $panel->addTargetSimple($target, $perfLabel);
+			$target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, $colors[$i++]);
+			$panel->addTarget($target);
         }
         $row->addPanel($panel);
         $dashboard->addRow($row);
