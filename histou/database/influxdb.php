@@ -89,6 +89,9 @@ class Influxdb
     **/
     public function filterPerfdata($request, $host, $service)
     {
+        if (empty($request['series'])) {
+            return "No data found";
+        }
         $data = array('host' => $host, 'service' => $service, 'perfLabel' => array());
         foreach ($request['series'] as $series) {
             $labelData = array();
@@ -103,41 +106,5 @@ class Influxdb
         }
         ksort($data['perfLabel'], SORT_NATURAL);
         return $data;
-    }
-
-    /**
-    Index for PerformanceLabels to sort them.
-    @param string $label PerformanceLabel.
-    @return int.
-    **/
-    private static function getPerfLabelIndex($label)
-    {
-        switch($label) {
-            case 'value':
-                return 1;
-            case 'warn':
-                return 2;
-            case 'crit':
-                return 3;
-            case 'min':
-                return 4;
-            case 'max':
-                return 5;
-            default:
-        }
-        return 0;
-    }
-
-    /**
-    Sort function for PerformanceLabels.
-    @param string $firstLabel  first.
-    @param string $secondLabel second.
-    @return int
-    **/
-    private static function comparePerfLabel($firstLabel, $secondLabel)
-    {
-        $first = Influxdb::getPerfLabelIndex($firstLabel);
-        $second = Influxdb::getPerfLabelIndex($secondLabel);
-        return ($first < $second) ? -1 : 1; //equals not possible due to key sorting
     }
 }
