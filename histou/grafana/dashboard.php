@@ -22,38 +22,39 @@ PHP version 5
 class Dashboard
 {
     private $data = array(
-    'id' => '1',
-    'title' => null,
-    'originalTitle' => 'CustomDashboard',
-    'tags' => array(),
-    'timezone' => 'browser',
-    'editable' => true,
-    'hideControls' => true,
-    'sharedCrosshair' => false,
-    'nav' => array(array(
-    'type' => 'timepicker',
-    'enable' => true,
-    'status' => 'Stable',
-    'time_options' => array(
-    "5m","15m","1h","6h","12h","24h","2d","7d","30d"
-    ),
-    'refresh_intervals' => array(
-    "5s","10s","30s","1m","5m","15m","30m","1h","2h","1d"
-    ),
-    'now' => true,
-    'collapse' => false,
-    'notice' => false,
-    )),
-    'time' => array(
-    'from' => 'now-8h',
-    'to' => 'now',
-    ),
-    'templating' => array(),
-    'annotations' => array(),
-    'refresh' => '30s',
-    'version' => '6',
-    'rows' => array(),
-    'annotations' => array('list' => array()),
+        'id' => '1',
+        'title' => null,
+        'originalTitle' => 'CustomDashboard',
+        'tags' => array(),
+        'timezone' => 'browser',
+        'editable' => true,
+        'hideControls' => true,
+        'sharedCrosshair' => false,
+        'nav' => array(array(
+            'type' => 'timepicker',
+            'enable' => true,
+            'status' => 'Stable',
+            'time_options' => array(
+                "5m","15m","1h","6h","12h","24h","2d","7d","30d"
+            ),
+            'refresh_intervals' => array(
+                "5s","10s","30s","1m","5m","15m","30m","1h","2h","1d"
+            ),
+            'now' => true,
+            'collapse' => false,
+            'notice' => false,
+            )),
+        'time' => array(
+            'from' => 'now-8h',
+            'to' => 'now',
+        ),
+        'templating' => array(),
+        'annotations' => array(),
+        'refresh' => '30s',
+        'version' => "6",
+        'rows' => array(),
+        'annotations' => array('list' => array()),
+		'templating' => array('list' => array()),
     );
     private $rows = array();
 
@@ -160,5 +161,26 @@ class Dashboard
         foreach ($annotations as $annotation) {
             $this->addAnnotation($annotation[0], $hostname, $servicename, $annotation[1], $annotation[1]);
         }
+    }
+
+    public function addTemplate($name, $query, $regex = '', $multiFormat = false, $includeAll = false, $datasource = INFLUX_DB)
+    {
+		$this->data['templating']['enable'] = true;
+		array_push(
+			$this->data['templating']['list'],
+			array(
+				'allFormat' => 'regex values',
+				'datasource' => $datasource,
+				'includeAll' => $includeAll,
+				'multi' => $multiFormat,
+				'multiFormat' => 'regex values',
+				'name' => $name,
+				'query' => $query,
+				'refresh' => true,
+				'refresh_on_load' => false,
+				'regex' => $regex,
+				'type' => 'query',
+			)
+		);
     }
 }
