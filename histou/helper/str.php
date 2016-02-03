@@ -47,10 +47,11 @@ class Str
         return $prefix === "" || strrpos($stringToSearch, $prefix, -strlen($stringToSearch)) !== false;
     }
 
-	/**
-	Returns true, if the string starts and ends with slashes.
-	**/
-	public static function isRegex($stringToTest) {
-		return substr($stringToTest, 0, 1) == '/' && substr($stringToTest, -1) != '/';
-	}
+    /**
+    Returns true, if the string starts and ends with slashes.
+    **/
+    public static function isRegex($stringToTest)
+    {
+        return substr($stringToTest, 0, 1) == '/' && substr($stringToTest, -1) != '/';
+    }
 }

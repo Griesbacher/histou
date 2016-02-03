@@ -54,7 +54,7 @@ class Dashboard
         'version' => "6",
         'rows' => array(),
         'annotations' => array('list' => array()),
-		'templating' => array('list' => array()),
+        'templating' => array('list' => array()),
     );
     private $rows = array();
 
@@ -165,22 +165,22 @@ class Dashboard
 
     public function addTemplate($name, $query, $regex = '', $multiFormat = false, $includeAll = false, $datasource = INFLUX_DB)
     {
-		$this->data['templating']['enable'] = true;
-		array_push(
-			$this->data['templating']['list'],
-			array(
-				'allFormat' => 'regex values',
-				'datasource' => $datasource,
-				'includeAll' => $includeAll,
-				'multi' => $multiFormat,
-				'multiFormat' => 'regex values',
-				'name' => $name,
-				'query' => $query,
-				'refresh' => true,
-				'refresh_on_load' => false,
-				'regex' => $regex,
-				'type' => 'query',
-			)
-		);
+        $this->data['templating']['enable'] = true;
+        array_push(
+            $this->data['templating']['list'],
+            array(
+                'allFormat' => 'regex values',
+                'datasource' => $datasource,
+                'includeAll' => $includeAll,
+                'multi' => $multiFormat,
+                'multiFormat' => 'regex values',
+                'name' => $name,
+                'query' => $query,
+                'refresh' => true,
+                'refresh_on_load' => false,
+                'regex' => $regex,
+                'type' => 'query',
+            )
+        );
     }
 }

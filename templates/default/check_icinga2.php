@@ -27,8 +27,8 @@ $genTemplate = function ($perfData) {
         $i = 0;
         foreach ($perfLabelparts as $part) {
             $perfLabel = sprintf($perfLabelformat, $part);
-			$target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, $colors[$i++]);
-			$panel->addTarget($target);
+            $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, $colors[$i++]);
+            $panel->addTarget($target);
         }
         $row->addPanel($panel);
         $dashboard->addRow($row);
