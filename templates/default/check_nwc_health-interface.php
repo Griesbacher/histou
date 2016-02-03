@@ -19,6 +19,9 @@ $rule = new \histou\template\Rule(
 $genTemplate = function ($perfData) {
     $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
+    $templeQuery = 'SHOW TAG VALUES WITH KEY = "performanceLabel" WHERE "host" = \''.$perfData['host'].'\' AND "service" = \''.$perfData['service'].'\'';
+    $templateName = 'Interface';
+    $dashboard->addTemplate('Interface', $templeQuery, $regex = '^(.*?)_(\w+?)_\w+$', $multiFormat = true, $includeAll = false);
     $interfaces = array();
     $types = array();
     foreach ($perfData['perfLabel'] as $key => $value) {
@@ -47,45 +50,41 @@ $genTemplate = function ($perfData) {
         return ($index($firstLabel) - $index($secondLabel)) ? -1 : 1;
     });
     $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-	$numberPanels = 0;
-    foreach ($interfaces as $interface) {
-        foreach ($types as $type) {
-            $panel = new \histou\grafana\GraphPanel($perfData['service'].' '.$interface.' '. $type);
-            $panel->setSpan(6);
+    $numberPanels = 0;
+    foreach ($types as $type) {
+        $panel = new \histou\grafana\GraphPanel($perfData['service']." [[$templateName]] ". $type);
+        $panel->setSpan(6);
 
-            foreach (array('in', 'out') as $direction) {
-                $perfLabel = $interface.'_'.$type.'_'.$direction;
-				$target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
-				$panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
-				$alias = $perfLabel.'-value';
-                if ($direction == 'out') {
-                    $panel->negateY($alias);
-                    $panel->addAliasColor($alias, '#4707ff');
-                } else {
-                    $panel->addAliasColor($alias, '#085DFF');
-                }
-                if ($type != 'traffic') {
-					$target = $panel->addWarnToTarget($target, $perfLabel);
-					$target = $panel->addCritToTarget($target, $perfLabel);
-                    if ($direction == 'out') {
-                        $panel->negateY("$perfLabel-warn");
-                        $panel->negateY("$perfLabel-crit");
-                    }
-                }
-				$panel->addTarget($target);
-            }
-            if (isset($perfData['perfLabel'][$perfLabel]['value']['unit'])) {
-                $panel->setLeftUnit($perfData['perfLabel'][$perfLabel]['value']['unit']);
-            }
-			if ($numberPanels != 0 && $numberPanels % 2 == 0) {
-
-				$dashboard->addRow($row);
-				$row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-			}
-			$row->addPanel($panel);
-			$numberPanels++;
+        if (isset($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit'])) {
+            $panel->setLeftUnit($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit']);
         }
+        foreach (array('in', 'out') as $direction) {
+            $perfLabel = "[[$templateName]]_".$type.'_'.$direction;
+            $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
+            $panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
+            if ($type != 'traffic') {
+                $target = $panel->addWarnToTarget($target, $perfLabel, false);
+                $target = $panel->addCritToTarget($target, $perfLabel, false);
+            }
+            $panel->addTarget($target);
+        }
+        $panel->negateY("/.*?_out-.*/");
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_in-value$/', '#085DFF');
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_out-value$/', '#4707ff');
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_(in|out)-warn-?(min|max)?$/', '#FFFC15');
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_(in|out)-crit-?(min|max)?$/', '#FF3727');
+        if (isset($perfData['perfLabel'][$perfLabel]['value']['unit'])) {
+            $panel->setLeftUnit($perfData['perfLabel'][$perfLabel]['value']['unit']);
+        }
+        if ($numberPanels != 0 && $numberPanels % 2 == 0) {
+            $row->setCustomProperty("repeat", $templateName);
+            $dashboard->addRow($row);
+            $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
+        }
+        $row->addPanel($panel);
+        $numberPanels++;
     }
+    $row->setCustomProperty("repeat", $templateName);
     $dashboard->addRow($row);
     return $dashboard;
 };
