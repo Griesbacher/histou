@@ -8,7 +8,6 @@ class InfluxdbTest extends \MyPHPUnitFrameworkTestCase
     {
         define('HOST', 'host');
         define('SERVICE', 'service');
-        define('INFLUX_FIELDSEPERATOR', '&');
         $classname ='\histou\database\Influxdb';
 
         $stub = $this->getMockBuilder($classname)
@@ -18,22 +17,30 @@ class InfluxdbTest extends \MyPHPUnitFrameworkTestCase
 
         $stub->expects($this->once())
         ->method('makeRequest')
-        ->will($this->returnArgument(0));
+        ->willReturn(array(array(),array(1)));
+        $this->assertSame(array(1), $stub->fetchPerfData());
 
-        $this->assertSame($stub->fetchPerfData(), 'select * from /host&service&.*/ ORDER BY time DESC limit 1');
+
+        $stub2 = $this->getMockBuilder($classname)
+        ->setConstructorArgs(array('url'))
+        ->setMethods(array('makeRequest'))
+        ->getMock();
+
+        $stub2->expects($this->once())
+        ->method('makeRequest')
+        ->willReturn(array(array(0),array()));
+        $this->assertSame(array(0), $stub2->fetchPerfData());
     }
 
     public function testFilterPerfdata()
     {
         define('HOST', 'debian-jessi-devel');
-        define('SERVICE', '');
-        define('INFLUX_FIELDSEPERATOR', '&');
+        define('SERVICE', 'hostcheck');
         $influx = new \histou\database\Influxdb('url');
         $perfData = $influx->filterPerfdata(
-            json_decode($this->influxDBResult, true)['results'],
+            json_decode($this->influxDBResult, true)['results'][0],
             HOST,
-            SERVICE,
-            '\\'.INFLUX_FIELDSEPERATOR
+            SERVICE
         );
         $this->assertSame(HOST, $perfData['host']);
         $this->assertSame(SERVICE, $perfData['service']);
@@ -41,20 +48,11 @@ class InfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(2, sizeof($perfData['perfLabel']));
 
         $error = $influx->filterPerfdata(
-            json_decode($this->emptyResult, true)['results'],
+            json_decode($this->emptyResult, true)['results'][0],
             HOST,
-            SERVICE,
-            '\\'.INFLUX_FIELDSEPERATOR
+            SERVICE
         );
-        $this->assertSame("No datafound", $error);
-
-        $dummy = $influx->filterPerfdata(
-            json_decode($this->dummyResult, true)['results'],
-            HOST,
-            SERVICE,
-            '\\'.INFLUX_FIELDSEPERATOR
-        );
-        $this->assertSame("normal", $dummy['perfLabel']['pl']['foo']['type']);
+        $this->assertSame("No data found", $error);
     }
 
     private $emptyResult = '{
@@ -65,229 +63,5 @@ class InfluxdbTest extends \MyPHPUnitFrameworkTestCase
         }
     ]
 }';
-    private $dummyResult = '{
-    "results": [
-        {
-            "series": [
-                {
-                    "name": "debian-jessi-devel&&hostalive&pl&foo",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "%",
-                            100
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&pl&bar",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "%",
-                            0
-                        ]
-                    ]
-                }
-            ]
-        }
-    ]
-}';
-    private $influxDBResult = '{
-    "results": [
-        {
-            "series": [
-                {
-                    "name": "debian-jessi-devel&&hostalive&pl&crit",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "%",
-                            100
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&pl&max",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "%",
-                            0
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&pl&min",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "%",
-                            0
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&pl&value",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "%",
-                            0
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&pl&warn",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "%",
-                            80
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&rta&crit",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "ms",
-                            5000
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&rta&min",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "ms",
-                            0
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&rta&value",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "ms",
-                            0.043
-                        ]
-                    ]
-                },
-                {
-                    "name": "debian-jessi-devel&&hostalive&rta&warn",
-                    "columns": [
-                        "time",
-                        "fill",
-                        "type",
-                        "unit",
-                        "value"
-                    ],
-                    "values": [
-                        [
-                            "2015-12-16T12:39:08Z",
-                            "none",
-                            "normal",
-                            "ms",
-                            3000
-                        ]
-                    ]
-                }
-            ]
-        }
-    ]
-}';
+    private $influxDBResult = '{"results":[{"series":[{"name":"metrics","tags":{"performanceLabel":"pl"},"columns":["time","command","crit","downtime","fill","host","max","min","service","type","unit","value","warn"],"values":[["2016-01-29T13:47:37Z","hostalive",100,null,"none","debian-jessi-devel",null,0,"hostcheck","normal","%",0,80]]},{"name":"metrics","tags":{"performanceLabel":"rta"},"columns":["time","command","crit","downtime","fill","host","max","min","service","type","unit","value","warn"],"values":[["2016-01-29T13:47:37Z","hostalive",5000,null,"none","debian-jessi-devel",null,0,"hostcheck","normal","ms",0.049,3000]]}]},{"series":[{"name":"metrics","tags":{"performanceLabel":"pl"},"columns":["time","command","crit","downtime","fill","host","max","min","service","type","unit","value","warn"],"values":[["2016-01-28T14:44:13Z","hostalive",100,null,"none","debian-jessi-devel",null,0,"hostcheck","normal","%",0,80]]},{"name":"metrics","tags":{"performanceLabel":"rta"},"columns":["time","command","crit","downtime","fill","host","max","min","service","type","unit","value","warn"],"values":[["2016-01-28T14:44:13Z","hostalive",5000,null,"none","debian-jessi-devel",null,0,"hostcheck","normal","ms",0.039,3000]]}]}]}';
 }

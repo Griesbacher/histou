@@ -7,6 +7,7 @@ class DebugTest extends \MyPHPUnitFrameworkTestCase
     public function init()
     {
         $_GET['host'] = 'host';
+        \histou\Basic::parsIni('histou.ini.example');
         \histou\Basic::parsArgs();
     }
 

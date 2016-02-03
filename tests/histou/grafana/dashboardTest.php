@@ -20,7 +20,7 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(0, sizeof($d->toArray()['annotations']['list']));
         $d->addAnnotation('aname', 'host0', 'service1', '#123', '#234', true, 1, 'foo');
         $this->assertSame(1, sizeof($d->toArray()['annotations']['list']));
-        $this->assertSame('SELECT * FROM "host0&service1&messages" WHERE "type" = \'aname\' AND $timeFilter', $d->toArray()['annotations']['list'][0]['query']);
+        $this->assertSame("SELECT * FROM messages WHERE type = 'aname' AND host = 'host0' AND service = 'service1' AND \$timeFilter", $d->toArray()['annotations']['list'][0]['query']);
 
         $this->assertSame(1, sizeof($d->toArray()['annotations']['list']));
         $d->addDefaultAnnotations('host1', 'service2');
@@ -28,5 +28,11 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('downtime', $d->toArray()['annotations']['list'][5]['name']);
         $this->assertSame('#A218E8', $d->toArray()['annotations']['list'][5]['iconColor']);
         $this->assertSame('#A218E8', $d->toArray()['annotations']['list'][5]['lineColor']);
+
+        $this->assertSame(0, sizeof($d->toArray()['templating']['list']));
+        $d->addTemplate('TEMP', 'show keys');
+        $this->assertSame(1, sizeof($d->toArray()['templating']['list']));
+        $this->assertSame(true, $d->toArray()['templating']['enable']);
+        $this->assertSame('TEMP', $d->toArray()['templating']['list'][0]['name']);
     }
 }

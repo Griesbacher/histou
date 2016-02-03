@@ -7,9 +7,8 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
     public function init()
     {
         $_GET['host'] = 'host';
+        \histou\Basic::parsIni('histou.ini.example');
         \histou\Basic::parsArgs();
-        define('INFLUX_DB', 'nagflux');
-        define('INFLUX_FIELDSEPERATOR', '&');
     }
 
     public function testCreateGraphPanel()
@@ -21,8 +20,16 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         $gpanel->setTooltip(array(true));
         $this->assertSame(array(true), $gpanel->toArray()['tooltip']);
 
+        $this->assertSame(0, sizeof($gpanel->toArray()['seriesOverrides']));
+        $gpanel->addRegexColor('/.*/', '#FFF');
+        $this->assertSame(1, sizeof($gpanel->toArray()['seriesOverrides']));
+        $this->assertSame('/.*/', $gpanel->toArray()['seriesOverrides'][0]['alias']);
+        $gpanel->addRegexColor('/-value', '#FFF');
+        $this->assertSame(2, sizeof($gpanel->toArray()['seriesOverrides']));
+        $this->assertSame('/\/-value/', $gpanel->toArray()['seriesOverrides'][1]['alias']);
+
         $this->assertSame(0, sizeof($gpanel->toArray()['targets']));
-        $gpanel->addTargetSimple("target1", "alias1", -1, array('tag1', 'tag2'));
+/*        $gpanel->addTargetSimple("target1", "alias1", -1, array('tag1', 'tag2'));
         $this->assertSame(1, sizeof($gpanel->toArray()['targets']));
         $this->assertSame('alias1', $gpanel->toArray()['targets'][0]['alias']);
         $this->assertSame('nagflux', $gpanel->toArray()['targets'][0]['datasource']);
@@ -129,6 +136,6 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(array('short', 'mbytes'), $gpanel->toArray()['y_formats']);
         $gpanel->setRightUnit('GiB');
         $this->assertSame(array('short', 'gbytes'), $gpanel->toArray()['y_formats']);
-
+*/
     }
 }
