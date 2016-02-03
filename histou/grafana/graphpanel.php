@@ -73,7 +73,7 @@ class GraphPanel extends Panel
     **/
     public function addToSeriesOverrides(array $data)
     {
-        if ($data['alias'][0] == '/') {
+        if (\histou\helper\str::isRegex($data['alias'])) {
             $data['alias'] = '/'.str_replace('/', '\/', $data['alias']).'/';
         }
         array_push($this->data['seriesOverrides'], $data);
@@ -93,6 +93,21 @@ class GraphPanel extends Panel
         $this->data['aliasColors'][$alias] = $color;
     }
 
+    /**
+    Changes the color of a line by regex.
+    @param string $regex linename.
+    @param string $color hexcolor.
+    @return null.
+    **/
+    public function addRegexColor($regex, $color)
+    {
+        $this->addToSeriesOverrides(
+            array(
+                'alias' => $regex,
+                'color' => $color,
+            )
+        );
+    }
     /**
     Setter for leftYAxisLabel
     @param string $label label.
@@ -199,32 +214,6 @@ class GraphPanel extends Panel
     }
 
     /**
-    Adds yellow warning lines
-    @param string $host      hostname.
-    @param string $service   servicename.
-    @param string $command   commandname.
-    @param array  $perfLabel hostname.
-    @return null.
-    **/
-    public function addWarning($host, $service, $command, $perfLabel, $alias = '')
-    {
-        $this->addThreshold($host, $service, $command, $perfLabel, 'warn', '#FFFC15', $alias);
-    }
-
-    /**
-    Adds red critical lines
-    @param string $host      hostname.
-    @param string $service   servicename.
-    @param string $command   commandname.
-    @param array  $perfLabel hostname.
-    @return null.
-    **/
-    public function addCritical($host, $service, $command, $perfLabel, $alias = '')
-    {
-        $this->addThreshold($host, $service, $command, $perfLabel, 'crit', '#FF3727', $alias);
-    }
-
-    /**
     Setter for Linewidth
     @param int $width Linewidth.
     @return null.
@@ -299,10 +288,12 @@ class GraphPanel extends Panel
         $tags = array();
         $i = 0;
         foreach ($filterTags as $key => $value) {
+            $condition = (array_key_exists('condition', $value) ? $value['condition'] : 'AND');
+            $operator = (array_key_exists('operator', $value) ? $value['operator'] : '=');
             if ($i == 0) {
-                array_push($tags, array('key'=> $key, 'operator' => '=', 'value' => $value ));
+                array_push($tags, array('key'=> $key, 'operator' => $operator, 'value' => $value['value'] ));
             } else {
-                array_push($tags, array('condition' => 'AND', 'key'=> $key, 'operator' => '=', 'value' => $value ));
+                array_push($tags, array('condition' => $condition, 'key'=> $key, 'operator' => $operator, 'value' => $value['value']));
             }
             $i++;
         }
@@ -317,19 +308,30 @@ class GraphPanel extends Panel
         if ($alias == '') {
             $alias = $performanceLabel;
         }
-        $target = $this->createTarget(array('host' => $host, 'service' => $service, 'command' => $command, 'performanceLabel' => $performanceLabel));
+        $target = $this->createTarget(array(
+                                            'host' => array('value' => $host),
+                                            'service' => array('value' => $service),
+                                            'command' => array('value' => $command),
+                                            'performanceLabel' => array('value' => $performanceLabel)
+                                            ));
         $target = $this->addXToTarget($target, array('value'), $alias, $color);
         return $target;
     }
 
-    public function addWarnToTarget($target, $alias = '')
+    public function addWarnToTarget($target, $alias = '', $color = true)
     {
-        return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, '#FFFC15');
+        if ($color) {
+            return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, '#FFFC15');
+        }
+            return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, '');
     }
 
-    public function addCritToTarget($target, $alias = '')
+    public function addCritToTarget($target, $alias = '', $color = true)
     {
-        return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '#FF3727');
+        if ($color) {
+            return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '#FF3727');
+        }
+        return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '');
     }
 
     private function addXToTarget($target, $types, $alias, $color, $keepAlias = false)
@@ -341,7 +343,9 @@ class GraphPanel extends Panel
                 $newalias = $alias.'-'.$type;
             }
             array_push($target['select'], $this->createSelect($type, $newalias));
-            $this->addAliasColor($newalias, $color);
+            if ($color != '') {
+                $this->addAliasColor($newalias, $color);
+            }
         }
         return $target;
     }
@@ -364,12 +368,12 @@ class GraphPanel extends Panel
         }
         $target = $this->createTarget(
             array(
-                                            'host' => $host,
-                                            'service' => $service,
-                                            'command' => $command,
-                                            'performanceLabel' => $performanceLabel,
-                                            'downtime' => "true"
-                                        )
+                    'host' => array('value' => $host),
+                    'service' => array('value' => $service),
+                    'command' => array('value' => $command),
+                    'performanceLabel' => array('value' => $performanceLabel),
+                    'downtime' => array('value' => "true")
+                )
         );
         $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true);
         $this->addToSeriesOverrides(
@@ -383,7 +387,6 @@ class GraphPanel extends Panel
         );
         return $target;
     }
-
 
     /**
     Adds the target to the dashboard.
