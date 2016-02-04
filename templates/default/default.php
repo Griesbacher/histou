@@ -18,40 +18,40 @@ $rule = new \histou\template\Rule(
 
 $genTemplate = function ($perfData) {
     /*$perfData:
-	Array
-	(
-		[host] => debian
-		[service] => hostcheck
-		[perfLabel] => Array
-			(
-				[pl] => Array
-					(
-						[crit] => 100
-						[fill] => none
-						[max] =>
-						[min] => 0
-						[type] => normal
-						[unit] => %
-						[value] => 0
-						[warn] => 80
-					)
+    Array
+    (
+        [host] => debian
+        [service] => hostcheck
+        [perfLabel] => Array
+            (
+                [pl] => Array
+                    (
+                        [crit] => 100
+                        [fill] => none
+                        [max] =>
+                        [min] => 0
+                        [type] => normal
+                        [unit] => %
+                        [value] => 0
+                        [warn] => 80
+                    )
 
-				[rta] => Array
-					(
-						[crit] => 5000
-						[fill] => none
-						[max] =>
-						[min] => 0
-						[type] => normal
-						[unit] => ms
-						[value] => 0.045
-						[warn] => 3000
-					)
+                [rta] => Array
+                    (
+                        [crit] => 5000
+                        [fill] => none
+                        [max] =>
+                        [min] => 0
+                        [type] => normal
+                        [unit] => ms
+                        [value] => 0.045
+                        [warn] => 3000
+                    )
 
-			)
+            )
 
-		[command] => command
-	)
+        [command] => command
+    )
     */
     $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
     foreach ($perfData['perfLabel'] as $key => $values) {
