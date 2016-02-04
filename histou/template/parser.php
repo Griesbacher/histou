@@ -72,35 +72,32 @@ class Parser
         );
 
         $genTemplate = function ($perfData) use ($dashboard) {
-            $tablenameRegex = ";(.*\\\\?\\\"+)(.*?)&(.*?)&(.*?)&(.*?)&(.*?)(.*);";
-            if (preg_match($tablenameRegex, $dashboard, $hits)) {
-                $tempPerfData = array(
-                'host' => $hits[2], 'service' => $hits[3], 'command' => $hits[4]
-                );
-                $dashboard = preg_replace(
-                    $tablenameRegex,
-                    sprintf(
-                        "$1%s%s%s%s%s%s$5%s$6$7",
-                        $perfData['host'],
-                        INFLUX_FIELDSEPERATOR,
-                        $perfData['service'],
-                        INFLUX_FIELDSEPERATOR,
-                        $perfData['command'],
-                        INFLUX_FIELDSEPERATOR,
-                        INFLUX_FIELDSEPERATOR
-                    ),
-                    $dashboard
-                );
-                $tempPerfDataSize = sizeof($tempPerfData);
-                $tempPerfDataKeys = array_keys($tempPerfData);
-                for ($i = 0; $i < $tempPerfDataSize; $i++) {
-                    if ($tempPerfData[$tempPerfDataKeys[$i]] != $tempPerfData[$tempPerfDataKeys[($i+1)%$tempPerfDataSize]]
-                        && $tempPerfData[$tempPerfDataKeys[$i]] != $tempPerfData[$tempPerfDataKeys[($i+2)%$tempPerfDataSize]]
-                        && $tempPerfData[$tempPerfDataKeys[$i]] != $perfData[$tempPerfDataKeys[$i]]
+            $keyValueRegex = "/\\\\\"(host|service|command)\\\\\"\\s+=\\s+'(.*?)'\\s+/";
+            if (preg_match_all($keyValueRegex, $dashboard, $hits)) {
+                $oldPerfData = array();
+                foreach ($hits[1] as $key => $value) {
+                    if (!array_key_exists($value, $oldPerfData)) {
+                        $oldPerfData[$value] = $hits[2][$key];
+                    }
+                }
+                foreach ($oldPerfData as $key => $value) {
+                    $dashboard = str_replace(
+                        sprintf("\\\"%s\\\" = '%s'", $key, $value),
+                        sprintf("\\\"%s\\\" = '%s'", $key, $perfData[$key]),
+                        $dashboard
+                    );
+                }
+                //Test if hostname != service != command if so replace them
+                $oldPerfDataSize = sizeof($oldPerfData);
+                $oldPerfDataKeys = array_keys($oldPerfData);
+                for ($i = 0; $i < $oldPerfDataSize; $i++) {
+                    if ($oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+1)%$oldPerfDataSize]]
+                        && $oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+2)%$oldPerfDataSize]]
+                        && $oldPerfData[$oldPerfDataKeys[$i]] != $perfData[$oldPerfDataKeys[$i]]
                     ) {
-                        $dashboard = preg_replace(
-                            sprintf(";([^%s])(%s)([^%s]);", INFLUX_FIELDSEPERATOR, $tempPerfData[$tempPerfDataKeys[$i]], INFLUX_FIELDSEPERATOR),
-                            sprintf("$1%s$3", $perfData[$tempPerfDataKeys[$i]]),
+                        $dashboard = str_replace(
+                            $oldPerfData[$oldPerfDataKeys[$i]],
+                            $perfData[$oldPerfDataKeys[$i]],
                             $dashboard
                         );
                     }

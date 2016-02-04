@@ -48,8 +48,8 @@ perfLabel = load1, load5, load15
 
 #Copy the grafana dashboard below:
 {
-    "tablename":"host&service&command&perfLabel&value",
-    "title":";host - service;"
+    "query": "SELECT mean(\"value\") FROM \"metrics\" WHERE \"host\" = \'debian-host\' AND \"service\" = \'hostcheck\' AND \"command\" = \'hostalive\' AND \"performanceLabel\" = \'pl\' AND $timeFilter GROUP BY time($interval) fill(null)",
+    "title":";debian-host - hostcheck;"
 }'
         );
         $result = \histou\template\Parser::parseSimpleTemplate($path);
@@ -58,7 +58,7 @@ perfLabel = load1, load5, load15
         $perfData = array('host' => 'h1', 'service' => 's1', 'command' => 'c1', 'perfLabel' => array('p1' => 'v1'));
         $jsonString = $result[1]($perfData);
         $expected = '{
-    "tablename":"h1&s1&c1&perfLabel&value",
+    "query": "SELECT mean(\"value\") FROM \"metrics\" WHERE \"host\" = \'h1\' AND \"service\" = \'s1\' AND \"command\" = \'c1\' AND \"performanceLabel\" = \'pl\' AND $timeFilter GROUP BY time($interval) fill(null)",
     "title":";h1 - s1;"
 }';
         $this->assertEquals($expected, $jsonString);
