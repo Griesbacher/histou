@@ -167,7 +167,7 @@ class Rule
     **/
     public static function compare($first, $second)
     {
-        return static::compareTwoObjects($first, $second, false);
+        return static::compareTwoObjects($first, $second);
     }
 
     /**
@@ -176,13 +176,31 @@ class Rule
     **/
     public function isValid()
     {
-        $gen = new Rule(
-            static::$check['host'],
-            static::$check['service'],
-            static::$check['command'],
-            static::$check['perfLabel']
-        );
-        return static::compareTwoObjects($this, $gen, true)  == 0 ? true : false;
+        if (preg_match($this->data['host'], static::$check['host'])) {
+            if (preg_match($this->data['service'], static::$check['service'])) {
+                if (preg_match($this->data['command'], static::$check['command'])) {
+                    if (sizeof($this->data['perfLabel']) > sizeof(static::$check['perfLabel'])) {
+                        return false;
+                    } elseif ($this->starArray($this->data['perfLabel'])) {
+                        return true;
+                    } else {
+                        $hits = 0;
+                        foreach (static::$check['perfLabel'] as $perfData) {
+                            foreach ($this->data['perfLabel'] as $perfRule) {
+                                if (preg_match($perfRule, $perfData)) {
+                                    $hits++;
+                                    break;
+                                }
+                            }
+                        }
+                        if ($hits == sizeof(static::$check['perfLabel'])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -192,7 +210,7 @@ class Rule
     @param boolean $valid  is the comparison just for validty reasons.
     @return int.
     **/
-    private static function compareTwoObjects($first, $second, $valid)
+    private static function compareTwoObjects($first, $second)
     {
         $checks = array('host', 'service', 'command', 'perfLabel');
         $result = 0;
@@ -200,8 +218,7 @@ class Rule
             $result = static::compareValue(
                 $first->data[$check],
                 $second->data[$check],
-                static::$check[$check],
-                $valid
+                static::$check[$check]
             );
             if ($result != 0) {
                 return $result;
@@ -215,17 +232,12 @@ class Rule
     @param object  $first  array one.
     @param object  $second array two.
     @param array   $base   array base.
-    @param boolean $valid  is the comparison just for validty reasons.
     @return int.
     **/
-    private static function compareValue($first, $second, $base, $valid)
+    private static function compareValue($first, $second, $base)
     {
         if (is_array($first) && is_array($second) && is_array($base)) {
             $firstStar = static::containsStar($first);
-            if ($valid && $firstStar) {
-                //If it's a valid compare, it's enought when the first entry(the template) contains a start
-                return 0;
-            }
             $secondStar = static::containsStar($second);
             //The array which has the same amount of entries and matching regex will be choosen
             $baseSize = sizeof($base);
@@ -239,9 +251,7 @@ class Rule
                 if ($hitsSecond == $baseSize) {
                     return 1;
                 }
-
             }
-
             //Stars have a reverted logic whome with a star loses
             if ($firstStar && !$secondStar) {
                 return 1;
@@ -256,13 +266,10 @@ class Rule
                     if ($firstResult) {
                         return -1;
                     } else {
-                        return 1;
+                        return 1;// @codeCoverageIgnore
                     }
                 }
                 if (static::containsStar($first)) {
-                    if ($valid) {
-                        return 0;
-                    }
                     return 1;
                 } elseif (static::containsStar($second)) {
                     return -1;

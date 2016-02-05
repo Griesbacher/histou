@@ -47,6 +47,19 @@ class TemplateTest extends \MyPHPUnitFrameworkTestCase
         foreach ($validTests as $test) {
             $this->assertSame($test[1], static::createTemplate($test[0])->isValid(), $test[0]);
         }
+        \histou\template\Rule::setCheck('host', '.*', 'command', array('p1', 'p2', 'p3'));
+        $validTests = array(
+            array(new \histou\template\Rule('host', '\\.\\*', 'command', array('p1', 'p2', 'p3'), ''), true),
+            array(new \histou\template\Rule('host', '\\.\\*', 'command', array('.*'), ''), true),
+            array(new \histou\template\Rule('host', '\\.\\*', '.*', array('.*'), ''), true),
+            array(new \histou\template\Rule('host', '.*', 'command', array('p1', 'p2', 'p3'), ''), true),
+            array(new \histou\template\Rule('host', '.*', 'command', array('.*'), ''), true),
+            array(new \histou\template\Rule('host', '.*', '.*', array('.*'), ''), true),
+        );
+        foreach ($validTests as $test) {
+            $this->assertSame($test[1], static::createTemplate($test[0])->isValid(), $test[0]);
+
+        }
     }
 
     public function testVariablesInRules()
