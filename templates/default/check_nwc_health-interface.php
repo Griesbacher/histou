@@ -21,7 +21,7 @@ $genTemplate = function ($perfData) {
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     $templeQuery = 'SHOW TAG VALUES WITH KEY = "performanceLabel" WHERE "host" = \''.$perfData['host'].'\' AND "service" = \''.$perfData['service'].'\'';
     $templateName = 'Interface';
-    $dashboard->addTemplate('Interface', $templeQuery, $regex = '^(.*?)_(\w+?)_\w+$', $multiFormat = true, $includeAll = false);
+    $dashboard->addTemplate($templateName, $templeQuery, $regex = '^(.*?)_(\w+?)_\w+$', $multiFormat = true, $includeAll = false);
     $interfaces = array();
     $types = array();
     foreach ($perfData['perfLabel'] as $key => $value) {
