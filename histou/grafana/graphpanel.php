@@ -276,7 +276,7 @@ class GraphPanel extends Panel
                     'tags' => $this->createFilterTags($filterTags),
                     'dsType' => 'influxdb',
                     'resultFormat' => 'time_series',
-                    'datasource' => INFLUX_DB
+                    'datasource' => INFLUXDB_DB
                     );
     }
 
@@ -288,6 +288,11 @@ class GraphPanel extends Panel
         $tags = array();
         $i = 0;
         foreach ($filterTags as $key => $value) {
+            foreach ($value as $type => &$typeValue) { //Used for Backslash in tag value
+                if (!\histou\helper\str::isRegex($typeValue)) {
+                    $typeValue = str_replace('\\', '\\\\', $typeValue);
+                }
+            }
             $condition = (array_key_exists('condition', $value) ? $value['condition'] : 'AND');
             $operator = (array_key_exists('operator', $value) ? $value['operator'] : '=');
             if ($i == 0) {

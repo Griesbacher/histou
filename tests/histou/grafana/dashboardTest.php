@@ -7,7 +7,7 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
     public function testCreatePanel()
     {
         define("SHOW_ANNOTATION", false);
-        define("INFLUX_DB", 'nagflux');
+        define("INFLUXDB_DB", 'nagflux');
         $d = new \histou\grafana\Dashboard('d1');
         $this->assertSame('d1', $d->toArray()['title']);
 

@@ -123,7 +123,7 @@ class Dashboard
     @param string $datasource  name of the grafana datasource.
     @return return null
     **/
-    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13, $datasource = INFLUX_DB)
+    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13, $datasource = INFLUXDB_DB)
     {
         array_push(
             $this->data['annotations']['list'],
@@ -163,7 +163,7 @@ class Dashboard
         }
     }
 
-    public function addTemplate($name, $query, $regex = '', $multiFormat = false, $includeAll = false, $datasource = INFLUX_DB)
+    public function addTemplate($name, $query, $regex = '', $multiFormat = false, $includeAll = false, $datasource = INFLUXDB_DB)
     {
         $this->data['templating']['enable'] = true;
         array_push(

@@ -29,7 +29,7 @@ On Commandline pass it as the first argument"
 
 parsIni('histou.ini');
 
-$influx = new Influxdb(INFLUX_URL);
+$influx = new Influxdb(URL);
 $series = getSeries($influx);
 
 $availableTemplates = Folder::loadFolders(
@@ -58,7 +58,7 @@ foreach ($templatesToCheck as $template) {
         }
     }
     $hits = array_unique($hits);
-    
+
     print_r($template->getPath().'/'.$template->getFileName().":".$lineEnd);
     print_r('----'.$lineEnd);
     foreach ($hits as $hit) {
