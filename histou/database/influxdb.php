@@ -3,7 +3,7 @@
 Contains Database Class.
 PHP version 5
 @category Database_Class
-@package Histou
+@package Histou\database
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
@@ -14,16 +14,14 @@ namespace histou\database;
 Influxdb Class.
 PHP version 5
 @category Database_Class
-@package Histou
+@package Histou\database
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/Griesbacher/histou
 **/
 
-class Influxdb
+class Influxdb extends JSONDatabase
 {
-    private $url;
-
     /**
     Constructs a new Influxdb client.
     @param string $url address.
@@ -31,22 +29,16 @@ class Influxdb
     **/
     public function __construct($url)
     {
-        $this->url = $url."&q=";
-        $this->perfKeys = array(
-            'value',
-            'warn', 'warn-min', 'warn-max',
-            'crit', 'crit-min', 'crit-max',
-            'min',
-            'max',
-            'type',
-            'unit',
-            'fill'
-        );
+		parent::__construct($url."&q=");
     }
 
+	/**
+	Querys the database for perfdata.
+	@returns array.
+	**/
     public function fetchPerfData()
     {
-        $result = $this->makeRequest(
+        $result = $this->makeGetRequest(
             sprintf(
                 "select * from metrics where host='%s' and service='%s' GROUP BY performanceLabel ORDER BY time DESC LIMIT 1",
                 HOST,
@@ -56,28 +48,12 @@ class Influxdb
                 HOST,
                 SERVICE
             )
-        );
+        )['results'];
         if (empty($result[0])) {
             return $result[1];
         } else {
             return $result[0];
         }
-    }
-
-    /**
-    Querys the database with the given request.
-    @param string $query db query.
-    @return string
-    @codeCoverageIgnore
-    **/
-    public function makeRequest($query)
-    {
-        try {
-            $content = file_get_contents($this->url.urlencode($query));
-        } catch (\ErrorException $e) {
-            return $e->getMessage();
-        }
-        return json_decode($content, true)['results'];
     }
 
     /**
