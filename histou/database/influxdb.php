@@ -29,13 +29,13 @@ class Influxdb extends JSONDatabase
     **/
     public function __construct($url)
     {
-		parent::__construct($url."&q=");
+        parent::__construct($url."&q=");
     }
 
-	/**
-	Querys the database for perfdata.
-	@returns array.
-	**/
+    /**
+    Querys the database for perfdata.
+    @returns array.
+    **/
     public function fetchPerfData()
     {
         $result = $this->makeGetRequest(

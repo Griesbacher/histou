@@ -29,13 +29,13 @@ class Elasticsearch extends JSONDatabase
     **/
     public function __construct($url)
     {
-		parent::__construct($url."-*/_search");
+        parent::__construct($url."-*/_search");
     }
 
-	/**
-	Querys the database for perfdata.
-	@returns array.
-	**/
+    /**
+    Querys the database for perfdata.
+    @returns array.
+    **/
     public function fetchPerfData()
     {
         return $this->makePostRequest(
@@ -142,23 +142,23 @@ class Elasticsearch extends JSONDatabase
 
     public function filterPerfdata($request, $host, $service)
     {
-		if ($request['hits']['total'] == 0){
-			return "No data found";
-		} elseif (!empty($request['timed_out'])){
-			return "Timedout";
-		}
-		$data = array('host' => $host, 'service' => $service, 'perfLabel' => array());
-		$data['command'] = $request['aggregations']['timestamp']['buckets'][0]['command']['buckets'][0]['key'];
-		$perfData = $request['aggregations']['timestamp']['buckets'][0]['command']['buckets'][0]['performanceLabel']['buckets'];
-		foreach($perfData as $perfLabel) {
-			$values = array();
-			foreach($perfLabel as $key => $value){
-				if (in_array($key, $this->perfKeys) && sizeof($value['buckets']) > 0){
-					$values[$key] = $value['buckets'][0]['key'];
-				}
-			}
-			$data['perfLabel'][$perfLabel['key']] = $values;
-		}
-		return $data;
-	}
+        if ($request['hits']['total'] == 0) {
+            return "No data found";
+        } elseif (!empty($request['timed_out'])) {
+            return "Timedout";
+        }
+        $data = array('host' => $host, 'service' => $service, 'perfLabel' => array());
+        $data['command'] = $request['aggregations']['timestamp']['buckets'][0]['command']['buckets'][0]['key'];
+        $perfData = $request['aggregations']['timestamp']['buckets'][0]['command']['buckets'][0]['performanceLabel']['buckets'];
+        foreach ($perfData as $perfLabel) {
+            $values = array();
+            foreach ($perfLabel as $key => $value) {
+                if (in_array($key, $this->perfKeys) && sizeof($value['buckets']) > 0) {
+                    $values[$key] = $value['buckets'][0]['key'];
+                }
+            }
+            $data['perfLabel'][$perfLabel['key']] = $values;
+        }
+        return $data;
+    }
 }

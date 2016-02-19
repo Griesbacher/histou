@@ -44,14 +44,14 @@ class JSONDatabase
         );
     }
 
-	/**
-	Querys the database for perfdata.
-	@returns array.
-	**/
-	public function fetchPerfData()
+    /**
+    Querys the database for perfdata.
+    @returns array.
+    **/
+    public function fetchPerfData()
     {
-		throw new Exception('Not implemented yet');
-	}
+        throw new Exception('Not implemented yet');
+    }
 
     /**
     Filters the Performancedata out of an database request.
@@ -60,10 +60,10 @@ class JSONDatabase
     @param string $service        servicename to search for.
     @return array
     **/
-	public function filterPerfdata($request, $host, $service)
+    public function filterPerfdata($request, $host, $service)
     {
-		throw new Exception('Not implemented yet');
-	}
+        throw new Exception('Not implemented yet');
+    }
 
     /**
     Querys the database with the given request.
@@ -81,19 +81,19 @@ class JSONDatabase
         return json_decode($content, true);
     }
 
-	protected function makePostRequest($data)
-	{
-		$ch = curl_init($this->url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$response = '';
-		try {
-			$response = curl_exec($ch);
+    protected function makePostRequest($data)
+    {
+        $ch = curl_init($this->url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = '';
+        try {
+            $response = curl_exec($ch);
         } catch (\ErrorException $e) {
             $response = $e->getMessage();
         }
-		curl_close($ch);
-		return json_decode($response, true);
-	}
+        curl_close($ch);
+        return json_decode($response, true);
+    }
 }
