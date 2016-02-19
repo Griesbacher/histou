@@ -4,9 +4,17 @@ phpCommand = "php"
 ;leave tmpFolder empty to use default php folder
 tmpFolder = ""
 specialChar = "&"
+; set the backend: influxdb, elasticsearch
+databaseType = "influxdb"
+
 [folder]
 defaultTemplateFolder = "templates/default/"
 customTemplateFolder = "templates/custom/"
+
 [influxdb]
-influxdbUrl = "http://127.0.0.1:8086/query?db=nagflux"
+url = "http://127.0.0.1:8086/query?db=nagflux"
+hostcheckAlias = "hostcheck"
+
+[elasticsearch]
+url = "http://127.0.0.1:8086/nagflux"
 hostcheckAlias = "hostcheck"

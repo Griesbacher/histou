@@ -151,17 +151,28 @@ class Basic
             "&"
         );
         Basic::setConstant(
-            "INFLUX_URL",
-            Basic::getConfigKey($config, 'influxdb', 'influxdbUrl'),
+            "DATABASE_TYPE",
+            strtolower(Basic::getConfigKey($config, 'general', 'databaseType')),
+            "influxdb"
+        );
+        Basic::setConstant(
+            "URL",
+            Basic::getConfigKey($config, DATABASE_TYPE, 'url'),
             "http://127.0.0.1:8086/query?db=nagflux"
         );
-        if (preg_match(";db=(\\w*);", INFLUX_URL, $matches)) {
-            define('INFLUX_DB', $matches[1]);
-        }
-
+		define('INFLUXDB', 'influxdb');
+		define('ELASTICSEARCH', 'elasticsearch');
+        if (DATABASE_TYPE == INFLUXDB && preg_match(";db=(\\w*);", URL, $matches)) {
+            define('INFLUXDB_DB', $matches[1]);
+        } elseif (DATABASE_TYPE == ELASTICSEARCH) {
+			$path = parse_url(URL, PHP_URL_PATH);
+			if ($path){
+				define('ELASTICSEARCH_INDEX', $path);
+			}
+		}
         Basic::setConstant(
             "HOSTCHECK_ALIAS",
-            Basic::getConfigKey($config, 'influxdb', 'hostcheckAlias'),
+            Basic::getConfigKey($config, DATABASE_TYPE, 'hostcheckAlias'),
             "hostcheck"
         );
         Basic::setConstant(

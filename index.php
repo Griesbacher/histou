@@ -36,25 +36,33 @@ ini_set('default_socket_timeout', DEFAULT_SOCKET_TIMEOUT);
 
 
 // database load perfdata
-$influx = new \histou\database\Influxdb(INFLUX_URL);
-$request = $influx->fetchPerfData();
-if (empty($request)) {
-	\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Influxdb not reachable or empty result'), 1);
-	exit(0);
+$perfData = null;
+$database = null;
+if (DATABASE_TYPE == INFLUXDB) {
+	$database = new \histou\database\Influxdb(URL);
+}elseif(DATABASE_TYPE == ELASTICSEARCH){
+	$database = new \histou\database\Elasticsearch(URL);
+}else{
+	\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Unsupported database'), 1);
 }
 
-$perfData = $influx->filterPerfdata(
-    $request,
-    HOST,
-    SERVICE
+$request = $database->fetchPerfData();
+if (empty($request)) {
+	\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Database not reachable or empty result'), 1);
+	exit(0);
+}
+$perfData = $database->filterPerfdata(
+	$request,
+	HOST,
+	SERVICE
 );
 
 $perfDataSize = sizeof($perfData);
 if ($perfDataSize < 4) {
     if ($perfDataSize == 1) {
-        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Influxdb Error: '.$perfData.' Query: '.INFLUX_QUERY), 1);
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Database Error: '.$perfData.' Query: '.INFLUX_QUERY), 1);
     } else {
-        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Host / Service not found in Influxdb'), 1);
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Host / Service not found in Database'), 1);
     }
 }
 //save databaseresult to rule
