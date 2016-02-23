@@ -18,11 +18,18 @@ $rule = new \histou\template\Rule(
 
 $genTemplate = function ($perfData) {
     $colors = array('#085DFF', '#07ff78', "#BA43A9", "#C15C17");
-    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].'-'.$perfData['service']);
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
-    $templeQuery = 'SHOW TAG VALUES WITH KEY = "performanceLabel" WHERE "host" = \''.$perfData['host'].'\' AND "service" = \''.$perfData['service'].'\'';
     $templateName = 'Database';
-    $dashboard->addTemplate($templateName, $templeQuery, $regex = '^db_(.*?)_log_free$', $multiFormat = true, $includeAll = false);
+    $dashboard->addTemplateForPerformanceLabel(
+        $templateName,
+        $perfData['host'],
+        $perfData['service'],
+        $regex = '^db_(.*?)_log_free$',
+        $multiFormat = true,
+        $includeAll = false
+    );
+    $tempalteVariableString = $dashboard->genTemplateVariable($templateName);
     $database = "";
 
     foreach ($perfData['perfLabel'] as $key => $value) {
@@ -39,7 +46,7 @@ $genTemplate = function ($perfData) {
     $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
 
     foreach ($types as $type => $labels) {
-        $panel = new \histou\grafana\GraphPanel($perfData['service']." [[$templateName]] ". $type);
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['service']." $tempalteVariableString ". $type);
         $panel->setSpan(6);
         if ($type == 'fix' && isset($perfData['perfLabel'][$database]['unit'])) {
             $panel->setLeftUnit($perfData['perfLabel'][$database]['unit']);
@@ -49,7 +56,7 @@ $genTemplate = function ($perfData) {
 
         $currentColorIndex = 0;
         foreach ($labels as $label) {
-            $perfLabel = "db_[[$templateName]]_$label";
+            $perfLabel = "db_".$tempalteVariableString"._$label";
             $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
             $panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
             $target = $panel->addWarnToTarget($target, $perfLabel, false);

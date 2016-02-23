@@ -18,12 +18,12 @@ $rule = new \histou\template\Rule(
 
 $genTemplate = function ($perfData) {
     $colors = array( "#7EB26D", "#EAB839", "#6ED0E0", "#1F78C1", "#BA43A9", "#508642", "#CCA300", "#447EBC", "#C15C17");
-    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].'-'.$perfData['service']);
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
 
     $genRow = function ($panelName, array $perfLabelparts, $perfLabelformat) use ($perfData, $colors, $dashboard) {
         $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
-        $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' '.$panelName);
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' '.$panelName);
         $i = 0;
         foreach ($perfLabelparts as $part) {
             $perfLabel = sprintf($perfLabelformat, $part);

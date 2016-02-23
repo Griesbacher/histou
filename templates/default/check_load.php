@@ -18,9 +18,9 @@ $rule = new \histou\template\Rule(
 
 $genTemplate = function ($perfData) {
     $colors = array('#085DFF', '#07ff78', '#4707ff');
-    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].'-'.$perfData['service']);
     $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
-    $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
+    $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
     $i = 0;
     foreach ($perfData['perfLabel'] as $key => $values) {
         $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $key, $colors[$i]);

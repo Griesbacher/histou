@@ -87,7 +87,7 @@ class Basic
     **/
     public static function returnData($data, $returnCode = 0)
     {
-        if (is_object($data) && get_class($data) == 'histou\grafana\Dashboard') {
+        if (is_object($data) && is_subclass_of($data, 'histou\grafana\dashboard\Dashboard')) {
             if (\histou\Debug::isEnable()) {
                 //$data->addRow(\histou\Debug::genMarkdownRow(\histou\Debug::getLogAsMarkdown(), 'Debug')); //for markdown
                 $data->addRow(\histou\Debug::genRow(\histou\Debug::getLog()));
@@ -167,7 +167,7 @@ class Basic
         } elseif (DATABASE_TYPE == ELASTICSEARCH) {
             $path = parse_url(URL, PHP_URL_PATH);
             if ($path) {
-                define('ELASTICSEARCH_INDEX', $path);
+                define('ELASTICSEARCH_INDEX', ltrim($path, '/'));
             }
         }
         Basic::setConstant(

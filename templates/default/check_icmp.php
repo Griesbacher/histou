@@ -18,10 +18,10 @@ $rule = new \histou\template\Rule(
 
 $genTemplate = function ($perfData) {
     $colors = array('#085DFF', '#07ff78', '#db07ff');
-    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].'-'.$perfData['service']);
 
     $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
-    $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' rta');
+    $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' rta');
     $i = 0;
     foreach (array('rta', 'rtmin', 'rtmax') as $type) {
         $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $type, $colors[$i]);
@@ -40,7 +40,7 @@ $genTemplate = function ($perfData) {
     $row->addPanel($panel);
     $dashboard->addRow($row);
     $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
-    $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' pl');
+    $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' pl');
     $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], 'pl');
     $target = $panel->addWarnToTarget($target, $type);
     $target = $panel->addCritToTarget($target, $type);

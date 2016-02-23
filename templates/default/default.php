@@ -53,10 +53,10 @@ $genTemplate = function ($perfData) {
         [command] => command
     )
     */
-    $dashboard = new \histou\grafana\Dashboard($perfData['host'].'-'.$perfData['service']);
+    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].'-'.$perfData['service']);
     foreach ($perfData['perfLabel'] as $key => $values) {
         $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
-        $panel = new \histou\grafana\GraphPanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' '.$key);
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' '.$key);
         $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $key);
         $target = $panel->addWarnToTarget($target, $key);
         $target = $panel->addCritToTarget($target, $key);
