@@ -48,11 +48,13 @@ class Influxdb extends JSONDatabase
                 HOST,
                 SERVICE
             )
-        )['results'];
-        if (empty($result[0])) {
-            return $result[1];
+        );
+        if (empty($result['results'])) {
+            return null;
+        } elseif (empty($result['results'][0])) {
+            return $result['results'][1];
         } else {
-            return $result[0];
+            return $result['results'][0];
         }
     }
 
@@ -65,7 +67,7 @@ class Influxdb extends JSONDatabase
     **/
     public function filterPerfdata($request, $host, $service)
     {
-        if (empty($request['series'])) {
+        if ($request == null || empty($request['series'])) {
             return "No data found";
         }
         $data = array('host' => $host, 'service' => $service, 'perfLabel' => array());

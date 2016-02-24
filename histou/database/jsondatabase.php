@@ -20,7 +20,7 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
-class JSONDatabase
+abstract class JSONDatabase
 {
     protected $url;
 
@@ -48,10 +48,7 @@ class JSONDatabase
     Querys the database for perfdata.
     @returns array.
     **/
-    public function fetchPerfData()
-    {
-        throw new Exception('Not implemented yet');
-    }
+    abstract public function fetchPerfData();
 
     /**
     Filters the Performancedata out of an database request.
@@ -60,10 +57,7 @@ class JSONDatabase
     @param string $service        servicename to search for.
     @return array
     **/
-    public function filterPerfdata($request, $host, $service)
-    {
-        throw new Exception('Not implemented yet');
-    }
+    abstract public function filterPerfdata($request, $host, $service);
 
     /**
     Querys the database with the given request.
