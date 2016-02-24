@@ -68,7 +68,11 @@ $genTemplate = function ($perfData) {
             $panel->setLeftUnit($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit']);
         }
         foreach (array('in', 'out') as $direction) {
-            $perfLabel = $tempalteVariableString."\_".$type.'_'.$direction;
+            if (DATABASE_TYPE == ELASTICSEARCH) { //https://github.com/grafana/grafana/issues/4075
+                $perfLabel = $tempalteVariableString."\_".$type.'_'.$direction;
+            } else {
+                $perfLabel = $tempalteVariableString."_".$type.'_'.$direction;
+            }
             $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
             $panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
             if ($type != 'traffic') {

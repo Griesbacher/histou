@@ -56,7 +56,11 @@ $genTemplate = function ($perfData) {
 
         $currentColorIndex = 0;
         foreach ($labels as $label) {
-            $perfLabel = "db_".$tempalteVariableString"._$label";
+            if (DATABASE_TYPE == ELASTICSEARCH) { //https://github.com/grafana/grafana/issues/4075
+                $perfLabel = $tempalteVariableString."\_".$type.'_'.$direction;
+            } else {
+                $perfLabel = $tempalteVariableString."_".$type.'_'.$direction;
+            }
             $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
             $panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
             $target = $panel->addWarnToTarget($target, $perfLabel, false);
