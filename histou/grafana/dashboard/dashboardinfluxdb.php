@@ -74,7 +74,7 @@ class DashboardInfluxDB extends Dashboard
     public function addTemplateForPerformanceLabel($name, $host, $service, $regex = '', $multiFormat = false, $includeAll = false)
     {
         $query = sprintf('SHOW TAG VALUES WITH KEY = "performanceLabel" WHERE "host" = \'%s\' AND "service" = \'%s\'}', $host, $name);
-        $this->addTemplate(ELASTICSEARCH_INDEX, $name, $query, $regex, $multiFormat = false, $includeAll = false);
+        $this->addTemplate(INFLUXDB_DB, $name, $query, $regex, $multiFormat = false, $includeAll = false);
     }
 
     public function genTemplateVariable($variable)

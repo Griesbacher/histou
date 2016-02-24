@@ -56,7 +56,7 @@ abstract class Dashboard
         'annotations' => array('list' => array()),
         'templating' => array('list' => array()),
     );
-    private $rows = array();
+    protected $rows = array();
 
     /**
     Constructs a new Dashboard.
