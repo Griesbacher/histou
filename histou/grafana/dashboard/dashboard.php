@@ -21,7 +21,7 @@ PHP version 5
 **/
 abstract class Dashboard
 {
-    private $data = array(
+    protected $data = array(
         'id' => '1',
         'title' => null,
         'originalTitle' => 'CustomDashboard',
