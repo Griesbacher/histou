@@ -21,6 +21,16 @@ PHP version 5
 **/
 class DashboardInfluxDB extends Dashboard
 {
+    /**
+    Constructs a new Dashboard.
+    @param string $title name of the dashboard.
+    @return null
+    **/
+    public function __construct($title)
+    {
+        parent::__construct($title);
+    }
+
     public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13)
     {
         array_push(
