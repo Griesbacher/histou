@@ -45,7 +45,7 @@ class DashboardInfluxDB extends Dashboard
             "query" => "SELECT * FROM messages WHERE type = '$name' AND host = '$hostname' AND service = '$servicename' AND \$timeFilter",
             "showLine" => true,
             "tagsColumn" => "author",
-            "textColumn" => "value",
+            "textColumn" => "message",
             "titleColumn" => "type"
             )
         );
