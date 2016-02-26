@@ -3,4 +3,4 @@ sonar-project.properties
 .sonar
 build
 vendor
-*.geany
+histou.geany
