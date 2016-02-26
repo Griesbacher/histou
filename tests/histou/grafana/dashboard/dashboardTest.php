@@ -4,11 +4,11 @@ namespace tests\grafana;
 
 class DashboardTest extends \MyPHPUnitFrameworkTestCase
 {
-    public function testCreatePanel()
+    public function testCreateDashboardInfluxdb()
     {
         define("SHOW_ANNOTATION", false);
         define("INFLUXDB_DB", 'nagflux');
-        $d = new \histou\grafana\Dashboard('d1');
+        $d = new \histou\grafana\dashboard\DashboardInfluxdb('d1');
         $this->assertSame('d1', $d->toArray()['title']);
 
         $d->setEditable(false);
@@ -30,7 +30,7 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('#A218E8', $d->toArray()['annotations']['list'][5]['lineColor']);
 
         $this->assertSame(0, sizeof($d->toArray()['templating']['list']));
-        $d->addTemplate('TEMP', 'show keys');
+        $d->addTemplate('influx', 'TEMP', 'show keys', '.*', false, true);
         $this->assertSame(1, sizeof($d->toArray()['templating']['list']));
         $this->assertSame(true, $d->toArray()['templating']['enable']);
         $this->assertSame('TEMP', $d->toArray()['templating']['list'][0]['name']);

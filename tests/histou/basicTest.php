@@ -7,13 +7,13 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
     public function init()
     {
         $_GET['host'] = 'host';
-        $this->testParseIni();
+        $this->testParseIniInflux();
         \histou\Basic::parsArgs();
     }
 
     public function testParseArgs()
     {
-        $this->testParseIni();
+        $this->testParseIniInflux();
         $_GET['host'] = "host0";
         $_GET['service'] = "service0";
         $_GET['debug'] = "true";
@@ -31,7 +31,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
 
     public function testParseArgsCommandline()
     {
-        $this->testParseIni();
+        $this->testParseIniInflux();
         ob_start();
         \histou\Basic::parsArgs();
         $out1 = ob_get_contents();
@@ -46,12 +46,29 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
 
     }
 
-    public function testParseIni()
+    public function testParseIniInflux()
     {
         \histou\Basic::parsIni('histou.ini.example');
         $this->assertSame(PHP_COMMAND, "php");
+        $this->assertSame(INFLUXDB_DB, "nagflux");
+        $this->assertSame(DATABASE_TYPE, "influxdb");
 
         $this->assertSame(\histou\Basic::parsIni('foo'), "Configuration not found");
+    }
+    
+    public function testParseIniElastic()
+    {
+        $file_contents = file_get_contents('histou.ini.example');
+        $file_contents = str_replace('databaseType = "influxdb"', 'databaseType = "elasticsearch"', $file_contents);
+        file_put_contents('histou.ini.example.tmp', $file_contents);
+        \histou\Basic::parsIni('histou.ini.example.tmp');
+        unlink('histou.ini.example.tmp');
+        
+        $this->assertSame(DATABASE_TYPE, "elasticsearch");
+        $this->assertSame(ELASTICSEARCH_INDEX, "nagflux");
+        $this->assertSame(HOSTCHECK_ALIAS, "hostcheck");
+        $this->assertSame(PHP_COMMAND, "php");
+        
     }
 
     public function testSetConstant()
@@ -83,7 +100,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
     {
         $this->init();
         \histou\Debug::enable();
-        $dashboard = new \histou\grafana\Dashboard('foo');
+        $dashboard = new \histou\grafana\dashboard\DashboardInfluxDB('foo');
         ob_start();
         \histou\Basic::returnData($dashboard);
         $out1 = ob_get_contents();

@@ -18,6 +18,9 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
         if (!file_exists(CUSTOM_TEMPLATE_FOLDER)) {
             mkdir(CUSTOM_TEMPLATE_FOLDER, 0777, true);
         }
+        define('DATABASE_TYPE', 'influxdb');
+        define('INFLUXDB', 'influxdb');
+        define('ELASTICSEARCH', 'elasticsearch');
     }
 
     /*

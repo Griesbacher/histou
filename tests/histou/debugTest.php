@@ -45,7 +45,7 @@ class DebugTest extends \MyPHPUnitFrameworkTestCase
         $panel->setContent("foo");
         $row = new \histou\grafana\Row("ERROR");
         $row->addPanel($panel);
-        $dashboard = new \histou\grafana\Dashboard('Error');
+        $dashboard = new \histou\grafana\dashboard\dashboardInfluxdb('Error');
         $dashboard->addRow($row);
         $this->assertEquals($dashboard, \histou\Debug::errorMarkdownDashboard("foo"));
 

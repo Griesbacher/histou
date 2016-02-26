@@ -12,24 +12,34 @@ class InfluxdbTest extends \MyPHPUnitFrameworkTestCase
 
         $stub = $this->getMockBuilder($classname)
         ->setConstructorArgs(array('url'))
-        ->setMethods(array('makeRequest'))
+        ->setMethods(array('makeGetRequest'))
         ->getMock();
 
         $stub->expects($this->once())
-        ->method('makeRequest')
-        ->willReturn(array(array(),array(1)));
-        $this->assertSame(array(1), $stub->fetchPerfData());
+        ->method('makeGetRequest')
+        ->willReturn(array('results' => array('1', '2')));
+        $this->assertSame('1', $stub->fetchPerfData());
 
 
         $stub2 = $this->getMockBuilder($classname)
         ->setConstructorArgs(array('url'))
-        ->setMethods(array('makeRequest'))
+        ->setMethods(array('makeGetRequest'))
         ->getMock();
 
         $stub2->expects($this->once())
-        ->method('makeRequest')
-        ->willReturn(array(array(0),array()));
-        $this->assertSame(array(0), $stub2->fetchPerfData());
+        ->method('makeGetRequest')
+        ->willReturn(array('results' => array('', '2')));
+        $this->assertSame('2', $stub2->fetchPerfData());
+        
+        $stub3 = $this->getMockBuilder($classname)
+        ->setConstructorArgs(array('url'))
+        ->setMethods(array('makeGetRequest'))
+        ->getMock();
+
+        $stub3->expects($this->once())
+        ->method('makeGetRequest')
+        ->willReturn(array('results' => array()));
+        $this->assertSame(null, $stub3->fetchPerfData());
     }
 
     public function testFilterPerfdata()

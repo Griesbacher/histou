@@ -13,6 +13,9 @@ class ParserTest extends \MyPHPUnitFrameworkTestCase
         if (!file_exists(DEFAULT_TEMPLATE_FOLDER)) {
             mkdir(DEFAULT_TEMPLATE_FOLDER, 0777, true);
         }
+        define('DATABASE_TYPE', 'influxdb');
+        define('INFLUXDB', 'influxdb');
+        define('ELASTICSEARCH', 'elasticsearch');
     }
 
     public function testParseSimpleFile()
@@ -36,7 +39,7 @@ perfLabel = load1, load5, load15
         $this->assertInstanceOf('\closure', $result[1]);
         //Not valid JSON
         $errorDashboard = $result[1]('foo');
-        $this->assertInstanceOf('\histou\grafana\Dashboard', $errorDashboard);
+        $this->assertInstanceOf('\histou\grafana\dashboard\Dashboard', $errorDashboard);
 
         file_put_contents(
             $path,

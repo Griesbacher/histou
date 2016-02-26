@@ -14,7 +14,7 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
     public function testCreateGraphPanelInfluxdb()
     {
         $this->init();
-        $gpanel = new \histou\grafana\GraphPanelInfluxdb('gpanel');
+        $gpanel = new \histou\grafana\graphpanel\GraphPanelInfluxdb('gpanel');
         $this->assertSame(2, $gpanel->toArray()['linewidth']);
 
         $gpanel->setTooltip(array(true));
@@ -51,7 +51,7 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(array('short', 'bytes'), $gpanel->toArray()['y_formats']);
         $gpanel->setRightUnit('bar');
         $this->assertSame('bar', $gpanel->toArray()['rightYAxisLabel']);
-        $gpanel = new \histou\grafana\GraphPanelInfluxdb('gpanel');
+        $gpanel = new \histou\grafana\graphpanel\GraphPanelInfluxdb('gpanel');
         $gpanel->setRightUnit('kB');
         $this->assertSame(array('short', 'kbytes'), $gpanel->toArray()['y_formats']);
         $gpanel->setRightUnit('MB');
