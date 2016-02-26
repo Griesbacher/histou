@@ -129,7 +129,7 @@ class Rule
     private static function convertSpecialCharsToRegex(&$stringToReplace)
     {
         $stringToReplace = trim($stringToReplace);
-        switch ($stringToReplace){
+        switch ($stringToReplace) {
             case "*":
                 //fallthough
             case "ALL":

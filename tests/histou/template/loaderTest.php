@@ -103,9 +103,9 @@ perfLabel = load1, load5, load15
         $this->assertSame('File:	'.$expected[0].':
 Rule:
 	File:	'.$expected[0].':
-		Host: ;.*;
-		Service: ;.*;
-		Command: ;^$;
+        Host: ;.*;
+        Service: ;.*;
+        Command: ;^$;
 		Perflabel: ;pl;, ;rta;', $templates[0]->__toString());
 
         $rule = $templates[0]->getRule();
