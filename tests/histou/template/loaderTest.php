@@ -24,7 +24,7 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
     tested:
         - custom wins over default
         - just valid files are used
-	*/
+    */
     public function testLoad()
     {
         $files = array(
@@ -37,7 +37,7 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
                             );
                             $genTemplate = function ($perfData) {
                                 return "template1";
-							};',
+                            };',
             join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template2.php')) => '<?php
                             $rule = new \histou\template\Rule(
                                 $host = ".*",
@@ -47,7 +47,7 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
                             );
                             $genTemplate = function ($perfData) {
                                 return "template1";
-							};',
+                            };',
             join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template3.simple')) => '
 #simple file
 host = *
@@ -100,13 +100,13 @@ perfLabel = load1, load5, load15
         $this->assertSame(CUSTOM_TEMPLATE_FOLDER, $templates[0]->getPath());
         $this->assertSame('template1.php', $templates[0]->getBaseName());
         $this->assertSame('template1', $templates[0]->getSimpleFileName());
-        $this->assertSame('File:	'.$expected[0].':
+        $this->assertSame("File:\t$expected[0]:
 Rule:
-	File:	'.$expected[0].':
-		Host: ;.*;
-		Service: ;.*;
-		Command: ;^$;
-		Perflabel: ;pl;, ;rta;', $templates[0]->__toString());
+\tFile:\t$expected[0]:
+\t\tHost: ;.*;
+\t\tService: ;.*;
+\t\tCommand: ;^$;
+\t\tPerflabel: ;pl;, ;rta;", $templates[0]->__toString());
 
         $rule = $templates[0]->getRule();
         $this->assertSame('template1.php', $rule->getBaseName());

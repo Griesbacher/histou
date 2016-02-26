@@ -43,7 +43,7 @@ $genTemplate = function ($perfData) {
     $types = array_unique($types);
     usort($types, function ($firstLabel, $secondLabel) {
         $index = function ($label) {
-            switch($label) {
+            switch ($label) {
                 case 'usage':
                     return 0;
                 case 'traffic':
