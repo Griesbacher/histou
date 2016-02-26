@@ -142,10 +142,10 @@ class Elasticsearch extends JSONDatabase
 
     public function filterPerfdata($request, $host, $service)
     {
-        if ($request['hits']['total'] == 0) {
-            return "No data found";
-        } elseif (!empty($request['timed_out'])) {
+        if (!empty($request['timed_out'])) {
             return "Timedout";
+        } elseif ($request['hits']['total'] == 0) {
+            return "No data found";
         }
         $data = array('host' => $host, 'service' => $service, 'perfLabel' => array());
         $data['command'] = $request['aggregations']['timestamp']['buckets'][0]['command']['buckets'][0]['key'];

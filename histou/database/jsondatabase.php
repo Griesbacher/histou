@@ -75,6 +75,12 @@ abstract class JSONDatabase
         return json_decode($content, true);
     }
 
+    /**
+    Makes a POST request and returns the json decoded data
+    @param string $data query.
+    @return string
+    @codeCoverageIgnore
+    **/
     protected function makePostRequest($data)
     {
         $ch = curl_init($this->url);

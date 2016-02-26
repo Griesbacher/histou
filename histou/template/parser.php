@@ -75,7 +75,7 @@ class Parser
             if (DATABASE_TYPE == INFLUXDB) {
                 $keyValueRegex = "/\\\\\"(host|service|command)\\\\\"\\s+=\\s+'(.*?)'\\s+/";
             } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-                $keyValueRegex = "/\\\\\"(host|service|command)\\\\\"\\s+:\\s+'(.*?)'\\s+/";
+                $keyValueRegex = "/(host|service|command)\\s*:\\s*\\\\\"(.*?)\\\\\"\\s*/";
             }
             if (preg_match_all($keyValueRegex, $dashboard, $hits)) {
                 $oldPerfData = array();
