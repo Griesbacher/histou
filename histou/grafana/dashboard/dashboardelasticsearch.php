@@ -75,7 +75,7 @@ class DashboardElasticsearch extends Dashboard
     public function addTemplateForPerformanceLabel($name, $host, $service, $regex = '', $multiFormat = false, $includeAll = false)
     {
         $query = sprintf('{"find": "terms", "field": "performanceLabel", "query": "host: %s, service: %s"}', $host, $service);
-        $this->addTemplate(ELASTICSEARCH_INDEX, $name, $query, $regex, $multiFormat = false, $includeAll = false);
+        $this->addTemplate(ELASTICSEARCH_INDEX, $name, $query, $regex, $multiFormat, $includeAll);
     }
 
     /**

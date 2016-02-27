@@ -1,8 +1,8 @@
 <?php
 /**
-Contains types of Panels.
+Contains a dashboard factory.
 PHP version 5
-@category Panel_Factory
+@category Dashboard_Factory
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -11,9 +11,9 @@ PHP version 5
 namespace histou\grafana\dashboard;
 
 /**
-Base Panel.
+dashboard factory.
 PHP version 5
-@category Panel_Factory
+@category Dashboard_Factory
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -22,8 +22,8 @@ PHP version 5
 class DashboardFactory
 {
     /**
-    Returns depending on the Database_Type a graphpanel.
-    @returns a graphPanel
+    Returns depending on the Database_Type a dashboard.
+    @returns a dashboard
     **/
     public static function generateDashboard($title)
     {
@@ -31,6 +31,8 @@ class DashboardFactory
             return new \histou\grafana\dashboard\DashboardInfluxDB($title);
         } elseif (DATABASE_TYPE == ELASTICSEARCH) {
             return new \histou\grafana\dashboard\DashboardElasticsearch($title);
+        } else{
+             throw new \InvalidArgumentException("The given Database is unkown:".DATABASE_TYPE);
         }
     }
 }
