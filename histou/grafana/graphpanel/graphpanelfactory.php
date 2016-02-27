@@ -31,6 +31,8 @@ class GraphPanelFactory
             return new \histou\grafana\graphpanel\GraphPanelInfluxdb($title, $legendShow, $id);
         } elseif (DATABASE_TYPE == ELASTICSEARCH) {
             return new \histou\grafana\graphpanel\GraphPanelElasticsearch($title, $legendShow, $id);
+        } else {
+            throw new \InvalidArgumentException("The given Database is unkown:".DATABASE_TYPE);
         }
     }
 }
