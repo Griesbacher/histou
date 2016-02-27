@@ -59,7 +59,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
     public function testParseIniElastic()
     {
         $file_contents = file_get_contents('histou.ini.example');
-        $file_contents = str_replace('databaseType = "influxdb"', 'databaseType = "elasticsearch"', $file_contents);
+        $file_contents = str_replace('databaseType = "influxdb"','databaseType = "elasticsearch"',$file_contents);
         file_put_contents('histou.ini.example.tmp', $file_contents);
         \histou\Basic::parsIni('histou.ini.example.tmp');
         unlink('histou.ini.example.tmp');

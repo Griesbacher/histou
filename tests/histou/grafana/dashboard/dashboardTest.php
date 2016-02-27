@@ -35,4 +35,17 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(true, $d->toArray()['templating']['enable']);
         $this->assertSame('TEMP', $d->toArray()['templating']['list'][0]['name']);
     }
+    
+    public function testInvalidDatabase(){
+        define('INFLUXDB', 'influxdb');
+        define('ELASTICSEARCH', 'elasticsearch');
+        try{
+            define("DATABASE_TYPE", 'foo');
+            define("ELASTICSEARCH_INDEX", 'bar');
+        
+            $d = \histou\grafana\dashboard\DashboardFactory::generateDashboard('d1');
+        } catch(\InvalidArgumentException $e){
+            //TODO: add proper test
+        }
+    }
 }
