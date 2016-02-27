@@ -31,7 +31,8 @@ class DashboardElasticsearchTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('$foo', $d->genTemplateVariable('foo'));
     }
     
-    public function testAddAnnotation(){
+    public function testAddAnnotation()
+    {
         define("ELASTICSEARCH_INDEX", 'nagflux');
         define("DATABASE_TYPE", 'elasticsearch');
         define('INFLUXDB', 'influxdb');
@@ -44,7 +45,8 @@ class DashboardElasticsearchTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame($d, $d);
     }
 
-        public function testAddDefaultAnnotations(){
+    public function testAddDefaultAnnotations()
+    {
         define("ELASTICSEARCH_INDEX", 'nagflux');
         define("DATABASE_TYPE", 'elasticsearch');
         define('INFLUXDB', 'influxdb');
