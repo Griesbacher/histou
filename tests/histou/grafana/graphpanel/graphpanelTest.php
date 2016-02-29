@@ -12,7 +12,7 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         define("DATABASE_TYPE", 'foo');
         define("ELASTICSEARCH_INDEX", 'bar');
         
-        $this->expectException('\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $d = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('d1');
     }
 }

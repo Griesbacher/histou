@@ -42,7 +42,7 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
         define('ELASTICSEARCH', 'elasticsearch');
         define("DATABASE_TYPE", 'foo');
         define("ELASTICSEARCH_INDEX", 'bar');
-        $this->expectException('\InvalidArgumentException');
+        $this->setExpectedException('\InvalidArgumentException');
         $d = \histou\grafana\dashboard\DashboardFactory::generateDashboard('d1');
     }
 }
