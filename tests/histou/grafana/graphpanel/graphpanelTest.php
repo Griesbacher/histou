@@ -9,13 +9,10 @@ class GraphpanelTest extends \MyPHPUnitFrameworkTestCase
         define('INFLUXDB', 'influxdb');
         define('ELASTICSEARCH', 'elasticsearch');
         define('SHOW_LEGEND', false);
-        try {
-            define("DATABASE_TYPE", 'foo');
-            define("ELASTICSEARCH_INDEX", 'bar');
+        define("DATABASE_TYPE", 'foo');
+        define("ELASTICSEARCH_INDEX", 'bar');
         
-            $d = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('d1');
-        } catch (\InvalidArgumentException $e) {
-            //TODO: add proper test
-        }
+        $this->expectException(\InvalidArgumentException::class);
+        $d = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('d1');
     }
 }

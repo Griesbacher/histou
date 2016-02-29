@@ -40,13 +40,9 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
     {
         define('INFLUXDB', 'influxdb');
         define('ELASTICSEARCH', 'elasticsearch');
-        try {
-            define("DATABASE_TYPE", 'foo');
-            define("ELASTICSEARCH_INDEX", 'bar');
-        
-            $d = \histou\grafana\dashboard\DashboardFactory::generateDashboard('d1');
-        } catch (\InvalidArgumentException $e) {
-            //TODO: add proper test
-        }
+        define("DATABASE_TYPE", 'foo');
+        define("ELASTICSEARCH_INDEX", 'bar');
+        $this->expectException(\InvalidArgumentException::class);
+        $d = \histou\grafana\dashboard\DashboardFactory::generateDashboard('d1');
     }
 }
