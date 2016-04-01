@@ -1,4 +1,4 @@
-    (function ($) {
+(function ($) {
     function init(plot)
     {
         function fixGaps(plot, series, datapoints)
@@ -30,6 +30,12 @@
         plot.hooks.processOptions.push(addHorizontalRuler);
     }
 
+    function WaitForjQuery()
+    {
+        if (!$.isFunction($.plot)) {
+            setTimeout(WaitForjQuery, 100);
+            return;
+        }
         $.plot.plugins.push(
             {
                 init: init,
@@ -38,6 +44,10 @@
                 version: "0.1"
             }
         );
+    }
+
+    WaitForjQuery();
+
 })(jQuery);
 
 
