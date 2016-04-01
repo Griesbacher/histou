@@ -54,4 +54,11 @@ class Str
     {
         return substr($stringToTest, 0, 1) == '/' && substr($stringToTest, -1) != '/';
     }
+    /**
+    Adds slashes and start, end to regex.
+    **/
+    public static function genRegex($regex)
+    {
+        return "/^$regex$/";
+    }
 }
