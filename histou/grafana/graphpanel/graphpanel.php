@@ -57,6 +57,13 @@ abstract class GraphPanel extends \histou\grafana\Panel
         $this->data['targets'] = array();
         $this->data['seriesOverrides'] = array();
         $this->data['datasource'] = "-- Mixed --";
+        $this->data['grid'] =  array(
+                                    "threshold1"=> null,
+                                    "threshold1Color"=> "rgba(216, 200, 27, 0.27)",
+                                    "threshold2"=> null,
+                                    "threshold2Color"=> "rgba(234, 112, 112, 0.22)"
+                                    );
+        $this->data['y_formats'] = array('short','short');
     }
 
     /**
@@ -138,8 +145,6 @@ abstract class GraphPanel extends \histou\grafana\Panel
         $gUnit = $this->convertUnit($unit);
         if (array_key_exists('y_formats', $this->data) && sizeof($this->data['y_formats']) > 0) {
             $this->data['y_formats'][0] = $gUnit;
-        } else {
-            $this->data['y_formats'] = array($gUnit, 'short');
         }
         if ($gUnit == 'short') {
             $this->setLeftYAxisLabel($unit);
@@ -156,8 +161,6 @@ abstract class GraphPanel extends \histou\grafana\Panel
         $gUnit = $this->convertUnit($unit);
         if (array_key_exists('y_formats', $this->data) && sizeof($this->data['y_formats']) > 0) {
             $this->data['y_formats'][1] = $gUnit;
-        } else {
-            $this->data['y_formats'] = array('short', $gUnit);
         }
         if ($gUnit == 'short') {
             $this->setRightYAxisLabel($unit);
@@ -282,7 +285,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     /**
     This creates a target with an value.
     **/
-    abstract public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '');
+    abstract public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false);
 
     /**
     Adds the warning lines to an query.
@@ -297,5 +300,5 @@ abstract class GraphPanel extends \histou\grafana\Panel
     /**
     This creates a target for an downtime.
     **/
-    abstract public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '');
+    abstract public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '', $useRegex = false);
 }

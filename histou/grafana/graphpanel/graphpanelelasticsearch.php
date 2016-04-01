@@ -70,7 +70,7 @@ class GraphPanelElasticsearch extends GraphPanel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '')
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false)
     {
         if ($alias == '') {
             $alias = $performanceLabel;
@@ -126,7 +126,7 @@ class GraphPanelElasticsearch extends GraphPanel
     /**
     This creates a target for an downtime.
     **/
-    public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '')
+    public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '', $useRegex = false)
     {
         if ($alias == '') {
             $alias = 'downtime';

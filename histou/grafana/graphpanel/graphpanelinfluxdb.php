@@ -73,17 +73,26 @@ class GraphPanelInfluxdb extends GraphPanel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '')
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false)
     {
         if ($alias == '') {
             $alias = $performanceLabel;
         }
-        $target = $this->createTarget(array(
+        if ($useRegex) {
+            $target = $this->createTarget(array(
+                                            'host' => array('value' => \histou\helper\str::genRegex($host), 'operator' => '=~'),
+                                            'service' => array('value' => \histou\helper\str::genRegex($service), 'operator' => '=~'),
+                                            'command' => array('value' => \histou\helper\str::genRegex($command), 'operator' => '=~'),
+                                            'performanceLabel' => array('value' => \histou\helper\str::genRegex($performanceLabel), 'operator' => '=~')
+                                            ));
+        } else {
+            $target = $this->createTarget(array(
                                             'host' => array('value' => $host),
                                             'service' => array('value' => $service),
                                             'command' => array('value' => $command),
                                             'performanceLabel' => array('value' => $performanceLabel)
                                             ));
+        }
         $target = $this->addXToTarget($target, array('value'), $alias, $color);
         return $target;
     }
@@ -131,20 +140,32 @@ class GraphPanelInfluxdb extends GraphPanel
     /**
     This creates a target for an downtime.
     **/
-    public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '')
+    public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '', $useRegex = false)
     {
         if ($alias == '') {
             $alias = 'downtime';
         }
-        $target = $this->createTarget(
-            array(
-                    'host' => array('value' => $host),
-                    'service' => array('value' => $service),
-                    'command' => array('value' => $command),
-                    'performanceLabel' => array('value' => $performanceLabel),
-                    'downtime' => array('value' => "true")
-                )
-        );
+        if ($useRegex) {
+            $target = $this->createTarget(
+                array(
+                        'host' => array('value' => \histou\helper\str::genRegex($host), 'operator' => '=~'),
+                        'service' => array('value' => \histou\helper\str::genRegex($service), 'operator' => '=~'),
+                        'command' => array('value' => \histou\helper\str::genRegex($command), 'operator' => '=~'),
+                        'performanceLabel' => array('value' => \histou\helper\str::genRegex($performanceLabel), 'operator' => '=~'),
+                        'downtime' => array('value' => "true")
+                    )
+            );
+        } else {
+            $target = $this->createTarget(
+                array(
+                        'host' => array('value' => $host),
+                        'service' => array('value' => $service),
+                        'command' => array('value' => $command),
+                        'performanceLabel' => array('value' => $performanceLabel),
+                        'downtime' => array('value' => "true")
+                    )
+            );
+        }
         $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true);
         $this->addToSeriesOverrides(
             array(
