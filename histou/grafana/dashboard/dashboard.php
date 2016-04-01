@@ -33,7 +33,6 @@ abstract class Dashboard
         'nav' => array(array(
             'type' => 'timepicker',
             'enable' => true,
-            'status' => 'Stable',
             'time_options' => array(
                 "5m","15m","1h","6h","12h","24h","2d","7d","30d"
             ),
@@ -124,7 +123,7 @@ abstract class Dashboard
                 'multiFormat' => 'regex values',
                 'name' => $name,
                 'query' => $query,
-                'refresh' => true,
+                'refresh' => false,
                 'refresh_on_load' => false,
                 'regex' => $regex,
                 'type' => 'query',
