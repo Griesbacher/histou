@@ -1,3 +1,12 @@
+## v0.3.0 - 01.04.2016
+### Features
+- Elasticsearch2 support
+- Grafana 3.0 Beta1 support
+
+### Breaks
+- dashboards created before this version have to be updated, due to changes of functionnames
+
+
 ## v0.2.0 - 23.12.2015:
 ### Features
 - syntax check on php templates, malformed templates will be ignored but an error appears in the apache error.log
