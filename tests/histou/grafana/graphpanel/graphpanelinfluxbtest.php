@@ -563,4 +563,16 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame(2, sizeof($gpanel->toArray()['targets']));
         $this->assertSame($downtime1, $gpanel->toArray()['targets'][1]);
     }
+
+    public function testCreateGraphPanelInfluxdbRegex()
+    {
+        $this->init();
+        $gpanel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('gpanel');
+        $target = $gpanel->genTargetSimple('host', 'service', 'command', 'perfLabel', '000', '', True);
+        $this->assertSame('=~', $target['tags'][0]['operator']);
+        $this->assertSame('/^host$/', $target['tags'][0]['value']);
+        $downtime = $gpanel->genDowntimeTarget('host', 'service', 'command', 'perfLabel', '', True);
+        $this->assertSame('=~', $downtime['tags'][0]['operator']);
+        $this->assertSame('/^host$/', $downtime['tags'][0]['value']);
+    }
 }
