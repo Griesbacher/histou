@@ -123,8 +123,7 @@ abstract class Dashboard
                 'multiFormat' => 'regex values',
                 'name' => $name,
                 'query' => $query,
-                'refresh' => false,
-                'refresh_on_load' => false,
+                'refresh' => 1,
                 'regex' => $regex,
                 'type' => 'query',
             )

@@ -568,10 +568,10 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
     {
         $this->init();
         $gpanel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('gpanel');
-        $target = $gpanel->genTargetSimple('host', 'service', 'command', 'perfLabel', '000', '', True);
+        $target = $gpanel->genTargetSimple('host', 'service', 'command', 'perfLabel', '000', '', true);
         $this->assertSame('=~', $target['tags'][0]['operator']);
         $this->assertSame('/^host$/', $target['tags'][0]['value']);
-        $downtime = $gpanel->genDowntimeTarget('host', 'service', 'command', 'perfLabel', '', True);
+        $downtime = $gpanel->genDowntimeTarget('host', 'service', 'command', 'perfLabel', '', true);
         $this->assertSame('=~', $downtime['tags'][0]['operator']);
         $this->assertSame('/^host$/', $downtime['tags'][0]['value']);
     }
