@@ -60,9 +60,11 @@ $perfData = $database->filterPerfdata(
 $perfDataSize = sizeof($perfData);
 if ($perfDataSize < 4) {
     if ($perfDataSize == 1) {
-        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Database Error: '.$perfData), 1);
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database Error: '.$perfData), 1);
+		exit(1);
     } else {
-        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Host / Service not found in Database'), 1);
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Host / Service not found in Database'), 1);
+		exit(1);
     }
 }
 //save databaseresult to rule
