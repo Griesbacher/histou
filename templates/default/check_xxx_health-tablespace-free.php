@@ -1,6 +1,6 @@
 <?php
 /**
-This template is used for check_mssql_health mode: database-free.
+This template is used for check_oracle_health/check_db2_health mode: tabelspace-free.
 PHP version 5
 @category Template_File
 @package Histou/templates/default
