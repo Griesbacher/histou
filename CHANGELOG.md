@@ -1,3 +1,10 @@
+## v0.3.1 - 08.04.2016
+### Features
+- check_oracle/db2_heath templates
+
+### Fixes
+- Templating for Grafana 3 Beta2
+
 ## v0.3.0 - 01.04.2016
 ### Features
 - Elasticsearch2 support
