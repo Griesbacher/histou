@@ -48,7 +48,7 @@ if (DATABASE_TYPE == INFLUXDB) {
 
 $request = $database->fetchPerfData();
 if (empty($request)) {
-	\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Database not reachable or empty result'), 1);
+	\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
 	exit(0);
 }
 $perfData = $database->filterPerfdata(
