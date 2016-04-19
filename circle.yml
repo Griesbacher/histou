@@ -16,6 +16,12 @@ dependencies:
        1)
           phpenv global 5.4.19
           ;;
+       3)
+          phpenv global 5.6.2
+          ;;
+       4)
+          phpenv global 5.5.0
+          ;;
       esac
 
   override:
