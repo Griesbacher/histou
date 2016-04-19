@@ -5,6 +5,8 @@ general:
 machine:
   php:
     version: 5.4.19
+  php:
+    version: 7.0
 
 dependencies:
   override:
