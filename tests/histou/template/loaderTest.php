@@ -97,6 +97,7 @@ perfLabel = load1, load5, load15
 
         $this->assertInstanceOf('\histou\template\Template', $templates[0]);
         $this->assertSame(null, $templates[1]); //Syntaxcheck failed
+        $this->assertContains('Parse error: syntax error', \histou\Debug::getLogAsMarkdown());
         $this->assertInstanceOf('\histou\template\SimpleTemplate', $templates[2]);
         $this->assertSame(null, $templates[3]); //Wrong filename
 

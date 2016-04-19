@@ -76,6 +76,9 @@ class Loader
         if (substr($syntaxCheck, 1, 12) == "Parse error:") {
             \histou\Debug::add("Syntaxcheck: ".$syntaxCheck);
         }
+        if ($returnCode != 0) {
+            \histou\Debug::add("Error: ".$syntaxCheck);
+        }
         return $returnCode == 0;
     }
 }
