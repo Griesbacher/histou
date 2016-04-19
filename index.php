@@ -84,9 +84,9 @@ $templateCache = new \histou\template\cache();
 $templates = $templateCache->loadTemplates($templateFiles);
 
 if (sizeof($templates) == 0) {
-    \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('#Could not load templates!'), 1);
+    \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Could not load templates!'), 1);
+	exit(1);
 }
-
 
 usort($templates, '\histou\template\Template::compare');
 $valid = $templates[0]->isValid();
