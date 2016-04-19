@@ -7,10 +7,22 @@ machine:
     version: 5.4.19
 
 dependencies:
+  pre:
+    - >
+      case $CIRCLE_NODE_INDEX in
+       0)
+          phpenv global 7.0.4
+          ;;
+       1)
+          phpenv global 5.4.19
+          ;;
+      esac
+
   override:
     - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
     - echo "xdebug.max_nesting_level = 250" >> ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
     - tar -xzf conf/vendor.tar.gz
+    - php --version
 
 test:
   override:
