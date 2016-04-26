@@ -51,3 +51,6 @@ Simple templates contain a rule followed by an JSON object. The reason for this 
 
 ### PHP
 In the PHP template you can write PHP code which will be executed when the template gets chosen. You just have to return a JSON string or an object of the build-in PHP dashboard.
+
+## DEMO
+This Dockercontainer contains OMD and everything is preconfigured to use Nagflux/Histou/Grafana/InfluxDB: https://github.com/Griesbacher/docker-omd-grafana
