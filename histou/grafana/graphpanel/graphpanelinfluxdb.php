@@ -32,7 +32,7 @@ class GraphPanelInfluxdb extends GraphPanel
         parent::__construct($title, 'graph', $id);
     }
 
-    private function createTarget(array $filterTags = array())
+    private function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
     {
         return array(
                     'measurement' => 'metrics',
@@ -41,7 +41,7 @@ class GraphPanelInfluxdb extends GraphPanel
                     'tags' => $this->createFilterTags($filterTags),
                     'dsType' => 'influxdb',
                     'resultFormat' => 'time_series',
-                    'datasource' => INFLUXDB_DB
+                    'datasource' => $datasource
                     );
     }
 
@@ -93,8 +93,7 @@ class GraphPanelInfluxdb extends GraphPanel
                                             'performanceLabel' => array('value' => $performanceLabel)
                                             ));
         }
-        $target = $this->addXToTarget($target, array('value'), $alias, $color);
-        return $target;
+        return $this->addXToTarget($target, array('value'), $alias, $color);
     }
 
     public function addWarnToTarget($target, $alias = '', $color = true)
@@ -178,4 +177,54 @@ class GraphPanelInfluxdb extends GraphPanel
         );
         return $target;
     }
+	
+    /**
+    This creates a target for an forecast.
+	@return Returns a target if a forcast config exists, null otherwise.
+    **/
+	public function genForecastTarget($host, $service, $command, $performanceLabel, $color = '#000', $alias = '', $useRegex = false, $addMethodToName = false){
+		$forecastConfig = \histou\template\ForecastTemplate::$config;
+		if (!array_key_exists($performanceLabel, $forecastConfig)){
+			return null;
+		}
+		array_push(\histou\grafana\dashboard\Dashboard::$forecast, $forecastConfig[$performanceLabel]['forecast']);
+		if ($alias == '') {
+            $alias = $performanceLabel.'-forecast';
+        }
+		if ($addMethodToName) {
+			$alias .= $forecastConfig[$performanceLabel]['method'];
+		}
+        if ($useRegex) {
+            $target = $this->createTarget(
+                array(
+                        'host' => array('value' => \histou\helper\str::genRegex($host), 'operator' => '=~'),
+                        'service' => array('value' => \histou\helper\str::genRegex($service), 'operator' => '=~'),
+                        'command' => array('value' => \histou\helper\str::genRegex($command), 'operator' => '=~'),
+                        'performanceLabel' => array('value' => \histou\helper\str::genRegex($performanceLabel), 'operator' => '=~'),
+                    ),
+				FORECAST_DATASOURCE_NAME
+            );
+        } else {
+            $target = $this->createTarget(
+                array(
+                        'host' => array('value' => $host),
+                        'service' => array('value' => $service),
+                        'command' => array('value' => $command),
+                        'performanceLabel' => array('value' => $performanceLabel),
+                    ),
+				FORECAST_DATASOURCE_NAME
+            );
+        }
+		$target = $this->addXToTarget($target, array('value'), $alias, $color, true);
+        $this->addToSeriesOverrides(
+            array(
+                'alias' => $alias,
+                'legend' => false,
+                'lines' => false,
+                'points' => true,
+                'pointradius' => 1,
+            )
+        );
+		return $target;
+	}
 }

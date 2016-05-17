@@ -56,6 +56,7 @@ abstract class Dashboard
         'templating' => array('list' => array()),
     );
     protected $rows = array();
+	public static $forecast = array();
 
     /**
     Constructs a new Dashboard.
@@ -76,6 +77,9 @@ abstract class Dashboard
         foreach ($this->rows as $row) {
             array_push($this->data['rows'], $row->toArray());
         }
+		if (!empty(Dashboard::$forecast)) {
+			$this->data['time']['to'] = 'now+'.\histou\helper\CustomTime::getLongestTime(Dashboard::$forecast);
+		}
         return $this->data;
     }
 

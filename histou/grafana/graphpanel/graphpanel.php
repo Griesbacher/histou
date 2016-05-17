@@ -301,4 +301,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
     This creates a target for an downtime.
     **/
     abstract public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '', $useRegex = false);
+
+    /**
+    This creates a target for an forecast.
+    **/
+    abstract public function genForecastTarget($host, $service, $command, $performanceLabel, $color = '#000', $alias = '', $useRegex = false);
 }

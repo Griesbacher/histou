@@ -156,6 +156,11 @@ class Basic
             "influxdb"
         );
         Basic::setConstant(
+            "FORECAST_DATASOURCE_NAME",
+            strtolower(Basic::getConfigKey($config, 'general', 'forecastDatasourceName')),
+            "forecast"
+        );
+        Basic::setConstant(
             "URL",
             Basic::getConfigKey($config, DATABASE_TYPE, 'url'),
             "http://127.0.0.1:8086/query?db=nagflux"
@@ -184,6 +189,11 @@ class Basic
             "CUSTOM_TEMPLATE_FOLDER",
             Basic::getConfigKey($config, 'folder', 'customTemplateFolder'),
             "histou/templates/custom/"
+        );		
+        Basic::setConstant(
+            "FORECAST_TEMPLATE_FOLDER",
+            Basic::getConfigKey($config, 'folder', 'forecastTemplateFolder'),
+            "histou/forecasts/"
         );
     }
 
