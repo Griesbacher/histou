@@ -6,10 +6,12 @@ tmpFolder = ""
 specialChar = "&"
 ; set the backend: influxdb, elasticsearch
 databaseType = "influxdb"
+forecastDatasourceName = "nagflux_forecast"
 
 [folder]
 defaultTemplateFolder = "templates/default/"
 customTemplateFolder = "templates/custom/"
+forecastTemplateFolder = "forecasts/"
 
 [influxdb]
 url = "http://127.0.0.1:8086/query?db=nagflux"

@@ -158,7 +158,7 @@ class Basic
         Basic::setConstant(
             "FORECAST_DATASOURCE_NAME",
             strtolower(Basic::getConfigKey($config, 'general', 'forecastDatasourceName')),
-            "forecast"
+            "nagflux_forecast"
         );
         Basic::setConstant(
             "URL",
