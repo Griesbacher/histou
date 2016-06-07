@@ -110,7 +110,7 @@ Rule:
 \t\tHost: ;.*;
 \t\tService: ;.*;
 \t\tCommand: ;^$;
-\t\tPerflabel: ;rta;, ;pl;", $templates[0]->__toString());
+\t\tPerflabel: ;pl;, ;rta;", $templates[0]->__toString());
 
         $rule = $templates[0]->getRule();
         $this->assertSame('template1.php', $rule->getBaseName());

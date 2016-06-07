@@ -46,7 +46,7 @@ class Rule
         $this->data['command'] = $command;
         $this->data['perfLabel'] = $perfLabel;
         static::prepareRule($this->data, true);
-        uksort($this->data['perfLabel'], "strnatcmp");
+        usort($this->data['perfLabel'], "strnatcmp");
         $this->file = $file;
     }
 
@@ -155,7 +155,7 @@ class Rule
         static::$check['host'] = $host;
         static::$check['service']  = $service;
         static::$check['command']  = $command;
-        uksort($perfLabel, "strnatcmp");
+        usort($perfLabel, "strnatcmp");
         static::$check['perfLabel']  = $perfLabel;
     }
 
