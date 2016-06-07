@@ -177,23 +177,24 @@ class GraphPanelInfluxdb extends GraphPanel
         );
         return $target;
     }
-	
+    
     /**
     This creates a target for an forecast.
-	@return Returns a target if a forcast config exists, null otherwise.
+    @return Returns a target if a forcast config exists, null otherwise.
     **/
-	public function genForecastTarget($host, $service, $command, $performanceLabel, $color = '#000', $alias = '', $useRegex = false, $addMethodToName = false){
-		$forecastConfig = \histou\template\ForecastTemplate::$config;
-		if (!array_key_exists($performanceLabel, $forecastConfig)){
-			return null;
-		}
-		array_push(\histou\grafana\dashboard\Dashboard::$forecast, $forecastConfig[$performanceLabel]['forecast']);
-		if ($alias == '') {
+    public function genForecastTarget($host, $service, $command, $performanceLabel, $color = '#000', $alias = '', $useRegex = false, $addMethodToName = false)
+    {
+        $forecastConfig = \histou\template\ForecastTemplate::$config;
+        if (!array_key_exists($performanceLabel, $forecastConfig)) {
+            return null;
+        }
+        array_push(\histou\grafana\dashboard\Dashboard::$forecast, $forecastConfig[$performanceLabel]['forecast']);
+        if ($alias == '') {
             $alias = $performanceLabel.'-forecast';
         }
-		if ($addMethodToName) {
-			$alias .= $forecastConfig[$performanceLabel]['method'];
-		}
+        if ($addMethodToName) {
+            $alias .= $forecastConfig[$performanceLabel]['method'];
+        }
         if ($useRegex) {
             $target = $this->createTarget(
                 array(
@@ -202,7 +203,7 @@ class GraphPanelInfluxdb extends GraphPanel
                         'command' => array('value' => \histou\helper\str::genRegex($command), 'operator' => '=~'),
                         'performanceLabel' => array('value' => \histou\helper\str::genRegex($performanceLabel), 'operator' => '=~'),
                     ),
-				FORECAST_DATASOURCE_NAME
+                FORECAST_DATASOURCE_NAME
             );
         } else {
             $target = $this->createTarget(
@@ -212,10 +213,10 @@ class GraphPanelInfluxdb extends GraphPanel
                         'command' => array('value' => $command),
                         'performanceLabel' => array('value' => $performanceLabel),
                     ),
-				FORECAST_DATASOURCE_NAME
+                FORECAST_DATASOURCE_NAME
             );
         }
-		$target = $this->addXToTarget($target, array('value'), $alias, $color, true);
+        $target = $this->addXToTarget($target, array('value'), $alias, $color, true);
         $this->addToSeriesOverrides(
             array(
                 'alias' => $alias,
@@ -225,6 +226,6 @@ class GraphPanelInfluxdb extends GraphPanel
                 'pointradius' => 1,
             )
         );
-		return $target;
-	}
+        return $target;
+    }
 }

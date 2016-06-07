@@ -64,12 +64,12 @@ $genTemplate = function ($perfData) {
 
         $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
         $panel->addTarget($downtime);
-		
-		$forecast = $panel->genForecastTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
-		if ($forecast) {
-			$panel->addTarget($forecast);
-		}
-		
+        
+        $forecast = $panel->genForecastTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
+        if ($forecast) {
+            $panel->addTarget($forecast);
+        }
+        
         $panel->fillBelowLine($key.'-value', 2);
         if (isset($values['unit'])) {
             $panel->setLeftUnit($values['unit']);

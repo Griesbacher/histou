@@ -11,7 +11,7 @@ PHP version 5
 
 namespace histou\template;
 
-define("CACHE_FILE", '.histou_cache');
+define("CACHE_FILE", '.histou_cache-');
 define("FILE_AGE_KEY", 'fileAge');
 define("RULE_KEY", 'template');
 
@@ -61,7 +61,7 @@ class Cache
                 array_push($templates, $this->templates[$path][RULE_KEY]);
                 continue;
             }
-			$template = $loader($path);
+            $template = $loader($path);
             if ($template == null) {
                 \histou\Debug::add("The template: $path is not valid PHP!");
             } else {

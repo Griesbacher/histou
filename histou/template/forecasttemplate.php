@@ -22,8 +22,8 @@ PHP version 5
 class ForecastTemplate extends Template
 {
     private $jsonRules;
-	public static $config;
-	/**
+    public static $config;
+    /**
     Creates a ForecastTemplate.
     @param string  $file        Path to the templatefile.
     @param object  $rule        ruleset.
@@ -32,14 +32,21 @@ class ForecastTemplate extends Template
     **/
     public function __construct($file, Rule $rule, $jsonRules)
     {
-        parent::__construct($file, $rule, function ($perfData){});
+        parent::__construct($file, $rule, function ($perfData) {
+        });
         $this->jsonRules = $jsonRules;
     }
-	
-	public function setForecastDurations(){
-		ForecastTemplate::$config = array();
-		foreach (json_decode($this->jsonRules) as $obj) {
-			ForecastTemplate::$config[$obj->{'label'}] = array('method' => $obj->{'method'}, 'forecast' => $obj->{'forecast'});
-		}
-	}
+    
+    public function setForecastDurations()
+    {
+        ForecastTemplate::$config = array();
+        foreach (json_decode($this->jsonRules) as $obj) {
+            ForecastTemplate::$config[$obj->{'label'}] = array('method' => $obj->{'method'}, 'forecast' => $obj->{'forecast'});
+        }
+    }
+    
+    public function getJSON()
+    {
+        return $this->jsonRules;
+    }
 }

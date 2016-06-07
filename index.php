@@ -120,10 +120,8 @@ if ($fValid) {
 	$className = get_class($forecastTemplate);
 	if ($className == 'histou\template\Rule') {
 		$forecast = \histou\template\loader::loadForecastTemplate($forecastTemplate->getFileName(), true);
-	} elseif ($className == 'histou\template\Template' || $className == 'histou\template\SimpleTemplate') {
-		$forecast = $template;
 	}
-	if ($forecast) {
+	if (isset($forecast)) {
 		$forecast->setForecastDurations();
 	}
 }
