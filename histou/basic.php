@@ -37,6 +37,8 @@ class Basic
         $longopts  = array(
         "host:",
         "service:",
+        "command:",
+        "perf_label:",
         );
 
         $args = getopt($shortopts, $longopts);
@@ -54,6 +56,23 @@ class Basic
             define("SERVICE", $args["service"]);  // @codeCoverageIgnore
         } else {   // @codeCoverageIgnore
             define("SERVICE", HOSTCHECK_ALIAS);
+        }
+        
+        if (isset($_GET['command']) && !empty($_GET['command'])) {
+            define("COMMAND", $_GET["command"]);
+        } elseif (isset($args['command']) && !empty($args['command'])) {
+            define("COMMAND", $args["command"]);  // @codeCoverageIgnore
+        }  // @codeCoverageIgnore
+        
+        if (isset($_GET['perf_label']) && !empty($_GET['perf_label'])) {
+            global $PERF_LABEL;
+            $PERF_LABEL = $_GET["perf_label"];
+        } elseif (isset($args['perf_label']) && !empty($args['perf_label'])) {
+            global $PERF_LABEL;
+            $PERF_LABEL = $args["perf_label"];  // @codeCoverageIgnore
+        }  // @codeCoverageIgnore
+        if (!is_array($PERF_LABEL)) {
+            $PERF_LABEL = array($PERF_LABEL);
         }
 
         if (isset($_GET['debug'])) {
@@ -189,7 +208,7 @@ class Basic
             "CUSTOM_TEMPLATE_FOLDER",
             Basic::getConfigKey($config, 'folder', 'customTemplateFolder'),
             "histou/templates/custom/"
-        );		
+        );
         Basic::setConstant(
             "FORECAST_TEMPLATE_FOLDER",
             Basic::getConfigKey($config, 'folder', 'forecastTemplateFolder'),
@@ -227,4 +246,14 @@ class Basic
             define($NAME, $value);
         }
     }
+	
+	public static function testPath($path){
+		if (file_exists($path)){
+			return $path;
+		}elseif (file_exists(getPath().$path)){
+			return getPath().$path;
+		}else{
+			throw new Exception("Path real path can't be determent: "+$path);
+		}
+	}
 }
