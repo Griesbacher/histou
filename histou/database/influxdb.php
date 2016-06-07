@@ -82,7 +82,7 @@ class Influxdb extends JSONDatabase
             }
             $data['perfLabel'][$series['tags']['performanceLabel']] = $labelData;
         }
-        ksort($data['perfLabel'], SORT_NATURAL);
+        uksort($data['perfLabel'], "strnatcmp");
         return $data;
     }
 }

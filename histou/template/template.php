@@ -21,7 +21,7 @@ PHP version 5
 **/
 class Template
 {
-    use Lambda;
+    #use Lambda;
     private $file;
     private $rule;
     private $genTemplate;
@@ -38,6 +38,7 @@ class Template
         $this->file = $file;
         $rule->file = $file;
         $this->rule = $rule;
+
         $this->genTemplate = $genTemplate;
     }
 
@@ -84,7 +85,7 @@ class Template
     **/
     public function generateDashboard($perfData)
     {
-        return $this->genTemplate($perfData);
+        return $this->genTemplate->__invoke($perfData);
     }
 
     /**
