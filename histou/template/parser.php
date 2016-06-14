@@ -72,43 +72,54 @@ class Parser
         );
 
         $genTemplate = function ($perfData) use ($dashboard) {
-            if (DATABASE_TYPE == INFLUXDB) {
-                $keyValueRegex = "/\\\\\"(host|service|command)\\\\\"\\s+=\\s+'(.*?)'\\s+/";
-            } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-                $keyValueRegex = "/(host|service|command)\\s*:\\s*\\\\\"(.*?)\\\\\"\\s*/";
-            }
-            if (preg_match_all($keyValueRegex, $dashboard, $hits)) {
-                $oldPerfData = array();
-                foreach ($hits[1] as $key => $value) {
-                    if (!array_key_exists($value, $oldPerfData)) {
-                        $oldPerfData[$value] = $hits[2][$key];
+            $oldPerfData = array('host' => array(), 'service' => array(), 'command' => array());
+            $jsonDashboard = json_decode($dashboard, true);
+            if (array_key_exists('rows', $jsonDashboard)) {
+                foreach ($jsonDashboard['rows'] as $row) {
+                    if (array_key_exists('panels', $row)) {
+                        foreach ($row['panels'] as $panel) {
+                            if (array_key_exists('targets', $panel)) {
+                                foreach ($panel['targets'] as $target) {
+                                    if (array_key_exists('tags', $target)) {
+                                        foreach ($target['tags'] as $tag) {
+                                            $key = $tag['key'];
+                                            if (array_key_exists($key, $oldPerfData)) {
+                                                array_push($oldPerfData[$key], $tag['value']);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                foreach ($oldPerfData as $key => $value) {
+            }
+            foreach ($oldPerfData as $label => $value) {
+                $counted = array_count_values($value);
+                $oldPerfData[$label] = array_search(max($counted), $counted);
+            }
+
+            //Test if hostname != service != command if so replace them
+            $oldPerfDataSize = sizeof($oldPerfData);
+            $oldPerfDataKeys = array_keys($oldPerfData);
+            $replaced = false;
+            for ($i = 0; $i < $oldPerfDataSize; $i++) {
+                if ($oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+1)%$oldPerfDataSize]]
+                    && $oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+2)%$oldPerfDataSize]]
+                    && $oldPerfData[$oldPerfDataKeys[$i]] != $perfData[$oldPerfDataKeys[$i]]
+                ) {
                     $dashboard = str_replace(
-                        sprintf("\\\"%s\\\" = '%s'", $key, $value),
-                        sprintf("\\\"%s\\\" = '%s'", $key, $perfData[$key]),
+                        $oldPerfData[$oldPerfDataKeys[$i]],
+                        $perfData[$oldPerfDataKeys[$i]],
                         $dashboard
                     );
+                    $replaced = true;
                 }
-                //Test if hostname != service != command if so replace them
-                $oldPerfDataSize = sizeof($oldPerfData);
-                $oldPerfDataKeys = array_keys($oldPerfData);
-                for ($i = 0; $i < $oldPerfDataSize; $i++) {
-                    if ($oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+1)%$oldPerfDataSize]]
-                        && $oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+2)%$oldPerfDataSize]]
-                        && $oldPerfData[$oldPerfDataKeys[$i]] != $perfData[$oldPerfDataKeys[$i]]
-                    ) {
-                        $dashboard = str_replace(
-                            $oldPerfData[$oldPerfDataKeys[$i]],
-                            $perfData[$oldPerfDataKeys[$i]],
-                            $dashboard
-                        );
-                    }
-                }
-            } else {
-                //regex does not work
             }
+            if (!$replaced) {
+                \histou\Debug::add('# Nothing replace because hostname, service, command are equal in the template');
+            }
+
             if (!static::isStringValidJson($dashboard)) {
                 \histou\Debug::enable();
                 return \histou\Debug::errorMarkdownDashboard(

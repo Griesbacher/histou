@@ -185,7 +185,7 @@ class GraphPanelInfluxdb extends GraphPanel
     public function genForecastTarget($host, $service, $command, $performanceLabel, $color = '#000', $alias = '', $useRegex = false, $addMethodToName = false)
     {
         $forecastConfig = \histou\template\ForecastTemplate::$config;
-        if (!array_key_exists($performanceLabel, $forecastConfig)) {
+        if (!$forecastConfig || !array_key_exists($performanceLabel, $forecastConfig)) {
             return null;
         }
         array_push(\histou\grafana\dashboard\Dashboard::$forecast, $forecastConfig[$performanceLabel]['forecast']);

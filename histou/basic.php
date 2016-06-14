@@ -71,7 +71,7 @@ class Basic
             global $PERF_LABEL;
             $PERF_LABEL = $args["perf_label"];  // @codeCoverageIgnore
         }  // @codeCoverageIgnore
-        if (!is_array($PERF_LABEL)) {
+        if (isset($PERF_LABEL) && !is_array($PERF_LABEL)) {
             $PERF_LABEL = array($PERF_LABEL);
         }
 
@@ -246,14 +246,15 @@ class Basic
             define($NAME, $value);
         }
     }
-	
-	public static function testPath($path){
-		if (file_exists($path)){
-			return $path;
-		}elseif (file_exists(getPath().$path)){
-			return getPath().$path;
-		}else{
-			throw new Exception("Path real path can't be determent: "+$path);
-		}
-	}
+    
+    public static function testPath($path)
+    {
+        if (file_exists($path)) {
+            return $path;
+        } elseif (file_exists(getPath().$path)) {
+            return getPath().$path;
+        } else {
+            throw new Exception("Path real path can't be determent: "+$path);
+        }
+    }
 }

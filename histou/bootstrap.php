@@ -9,8 +9,9 @@ PHP version 5
 @link https://github.com/Griesbacher/histou
 **/
 
-function getPath(){
-	return substr(realpath(dirname(__FILE__)),0,-6);
+function getPath()
+{
+    return substr(realpath(dirname(__FILE__)), 0, -6);
 }
 
 function __autoload($className)
