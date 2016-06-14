@@ -51,8 +51,44 @@ perfLabel = load1, load5, load15
 
 #Copy the grafana dashboard below:
 {
-    "query": "SELECT mean(\"value\") FROM \"metrics\" WHERE \"host\" = \'debian-host\' AND \"service\" = \'hostcheck\' AND \"command\" = \'hostalive\' AND \"performanceLabel\" = \'pl\' AND $timeFilter GROUP BY time($interval) fill(null)",
-    "title":";debian-host - hostcheck;"
+   "rows":[
+      {
+         "panels":[
+            {
+               "targets":[
+                  {
+                     "tags":[
+                        {
+                           "key":"host",
+                           "operator":"=",
+                           "value":"Host"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"service",
+                           "operator":"=",
+                           "value":"Service"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"command",
+                           "operator":"=",
+                           "value":"Command"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"performanceLabel",
+                           "operator":"=",
+                           "value":"pl"
+                        }
+                     ]
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+    "title":";Host - Service;"
 }'
         );
         $result = \histou\template\Parser::parseSimpleTemplate($path);
@@ -61,7 +97,43 @@ perfLabel = load1, load5, load15
         $perfData = array('host' => 'h1', 'service' => 's1', 'command' => 'c1', 'perfLabel' => array('p1' => 'v1'));
         $jsonString = $result[1]($perfData);
         $expected = '{
-    "query": "SELECT mean(\"value\") FROM \"metrics\" WHERE \"host\" = \'h1\' AND \"service\" = \'s1\' AND \"command\" = \'c1\' AND \"performanceLabel\" = \'pl\' AND $timeFilter GROUP BY time($interval) fill(null)",
+   "rows":[
+      {
+         "panels":[
+            {
+               "targets":[
+                  {
+                     "tags":[
+                        {
+                           "key":"host",
+                           "operator":"=",
+                           "value":"h1"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"service",
+                           "operator":"=",
+                           "value":"s1"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"command",
+                           "operator":"=",
+                           "value":"c1"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"performanceLabel",
+                           "operator":"=",
+                           "value":"pl"
+                        }
+                     ]
+                  }
+               ]
+            }
+         ]
+      }
+   ],
     "title":";h1 - s1;"
 }';
         $this->assertEquals($expected, $jsonString);
@@ -83,8 +155,50 @@ perfLabel = load1, load5, load15
 
 #Copy the grafana dashboard below:
 {
-"query":"host: \"localhost.localdomain\" AND service: \"hostcheck\" AND command: \"hostalive\" AND performanceLabel: \"pl\"",
-"title":"localhost.localdomain ... hostcheck"
+   "rows":[
+      {
+         "panels":[
+            {
+               "targets":[
+                  {
+                     "tags":[
+                        {
+                           "key":"host",
+                           "operator":"=",
+                           "value":"Host-2"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"service",
+                           "operator":"=",
+                           "value":"Service-2"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"command",
+                           "operator":"=",
+                           "value":"Command-2"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"performanceLabel",
+                           "operator":"=",
+                           "value":"pl"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"foo",
+                           "operator":"=",
+                           "value":"bar"
+                        }
+                     ]
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+    "title":";Host-2 - Service-2;"
 }'
         );
         $result = \histou\template\Parser::parseSimpleTemplate($path);
@@ -93,8 +207,50 @@ perfLabel = load1, load5, load15
         $perfData = array('host' => 'h1', 'service' => 's1', 'command' => 'c1', 'perfLabel' => array('p1' => 'v1'));
         $jsonString = $result[1]($perfData);
         $expected = '{
-"query":"host: \"h1\" AND service: \"s1\" AND command: \"c1\" AND performanceLabel: \"pl\"",
-"title":"h1 ... s1"
+   "rows":[
+      {
+         "panels":[
+            {
+               "targets":[
+                  {
+                     "tags":[
+                        {
+                           "key":"host",
+                           "operator":"=",
+                           "value":"h1"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"service",
+                           "operator":"=",
+                           "value":"s1"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"command",
+                           "operator":"=",
+                           "value":"c1"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"performanceLabel",
+                           "operator":"=",
+                           "value":"pl"
+                        },
+                        {
+                           "condition":"AND",
+                           "key":"foo",
+                           "operator":"=",
+                           "value":"bar"
+                        }
+                     ]
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+    "title":";h1 - s1;"
 }';
         $this->assertEquals($expected, $jsonString);
 

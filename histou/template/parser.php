@@ -74,7 +74,8 @@ class Parser
         $genTemplate = function ($perfData) use ($dashboard) {
             $oldPerfData = array('host' => array(), 'service' => array(), 'command' => array());
             $jsonDashboard = json_decode($dashboard, true);
-            if (array_key_exists('rows', $jsonDashboard)) {
+
+            if ($jsonDashboard && array_key_exists('rows', $jsonDashboard)) {
                 foreach ($jsonDashboard['rows'] as $row) {
                     if (array_key_exists('panels', $row)) {
                         foreach ($row['panels'] as $panel) {
@@ -95,8 +96,10 @@ class Parser
                 }
             }
             foreach ($oldPerfData as $label => $value) {
-                $counted = array_count_values($value);
-                $oldPerfData[$label] = array_search(max($counted), $counted);
+                if (sizeof($value) > 0) {
+                    $counted = array_count_values($value);
+                    $oldPerfData[$label] = array_search(max($counted), $counted);
+                }
             }
 
             //Test if hostname != service != command if so replace them
