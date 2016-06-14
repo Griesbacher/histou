@@ -52,7 +52,7 @@ abstract class Dashboard
         'refresh' => '30s',
         'version' => "6",
         'rows' => array(),
-        'annotations' => array('list' => array()),
+        'annotations' => array('enable' => true, 'list' => array()),
         'templating' => array('list' => array()),
     );
     protected $rows = array();
