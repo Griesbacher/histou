@@ -52,5 +52,10 @@ class GraphpanelTestElasticsearch extends \MyPHPUnitFrameworkTestCase
         $d1 = $gpanel->genDowntimeTarget('h1', 's1', 'c1', 'p1');
         $this->assertSame('downtime', $d1['alias']);
         $this->assertSame('host: "h1" AND service: "s1" AND command: "c1" AND performanceLabel: "p1" AND downtime: "true"', $d1['query']);
+        try {
+            $d1 = $gpanel->genForecastTarget('h1', 's1', 'c1', 'p1');
+        } catch (\Exception $e) {
+            $this->assertEquals("Not implemented", $e->getMessage());
+        }
     }
 }

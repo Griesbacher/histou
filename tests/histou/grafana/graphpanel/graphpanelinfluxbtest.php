@@ -575,4 +575,118 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('=~', $downtime['tags'][0]['operator']);
         $this->assertSame('/^host$/', $downtime['tags'][0]['value']);
     }
+    
+    public function testGenForecastTarget()
+    {
+        $this->init();
+        $gpanel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('gpanel');
+        $target = $gpanel->genForecastTarget('host', 'service', 'command', 'perfLabel', '000', '', true);
+        $this->assertSame(null, $target);
+        \histou\template\ForecastTemplate::$config = array (
+                                                                'size' =>  array (
+                                                                    'method' => 'SimpleLinearRegression',
+                                                                    'forecast' => '20m',
+                                                                ),
+                                                                'time' =>  array (
+                                                                    'method' => 'SimpleLinearRegression',
+                                                                    'forecast' => '30m',
+                                                                ),
+                                                            );
+        $target = $gpanel->genForecastTarget('host', 'service', 'command', 'size');
+        $expected = array (
+                            'measurement' => 'metrics',
+                            'alias' => '$col',
+                            'select' =>
+                                    array (
+                                            array (
+                                                array (
+                                                'type' => 'field',
+                                                'params' => array ('value'),
+                                                ),
+                                                array (
+                                                'type' => 'mean',
+                                                'params' => array (),
+                                                ),
+                                                array (
+                                                'type' => 'alias',
+                                                'params' => array ('size-forecast'),
+                                                ),
+                                            ),
+                                    ),
+                                    'tags' =>
+                                    array (
+                                    array (
+                                    'key' => 'host',
+                                    'operator' => '=',
+                                    'value' => 'host',
+                                    ),
+                                    array (
+                                    'condition' => 'AND',
+                                    'key' => 'service',
+                                    'operator' => '=',
+                                    'value' => 'service',
+                                    ),
+                                    array (
+                                    'condition' => 'AND',
+                                    'key' => 'performanceLabel',
+                                    'operator' => '=',
+                                    'value' => 'size',
+                                    ),
+                                    ),
+                                    'dsType' => 'influxdb',
+                                    'resultFormat' => 'time_series',
+                                    'datasource' => 'nagflux_forecast',
+        );
+        $this->assertSame($expected, $target);
+        $this->assertSame(array("20m"), \histou\grafana\dashboard\Dashboard::$forecast);
+        $target = $gpanel->genForecastTarget('host', 'service', 'command', 'time', '000', '', true, true);
+        $expected = array (
+                          'measurement' => 'metrics',
+                          'alias' => '$col',
+                          'select' =>
+                          array (
+                            array (
+                              array (
+                                'type' => 'field',
+                                'params' => array ('value'),
+                              ),
+                              array (
+                                'type' => 'mean',
+                                'params' =>
+                                array (),
+                              ),
+                              array (
+                                'type' => 'alias',
+                                'params' =>
+                                array ('time-forecast-SimpleLinearRegression'),
+                              ),
+                            ),
+                          ),
+                          'tags' =>
+                          array (
+                            array (
+                              'key' => 'host',
+                              'operator' => '=~',
+                              'value' => '/^host$/',
+                            ),
+                            array (
+                              'condition' => 'AND',
+                              'key' => 'service',
+                              'operator' => '=~',
+                              'value' => '/^service$/',
+                            ),
+                            array (
+                              'condition' => 'AND',
+                              'key' => 'performanceLabel',
+                              'operator' => '=~',
+                              'value' => '/^time$/',
+                            ),
+                          ),
+                          'dsType' => 'influxdb',
+                          'resultFormat' => 'time_series',
+                          'datasource' => 'nagflux_forecast',
+                        );
+        $this->assertSame($expected, $target);
+        $this->assertSame(array("20m" , "30m"), \histou\grafana\dashboard\Dashboard::$forecast);
+    }
 }
