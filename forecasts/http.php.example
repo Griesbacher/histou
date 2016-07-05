@@ -1,0 +1,34 @@
+<?php
+$rule = new \histou\template\Rule(
+    $host = '*',
+    $service = '*',
+    $command = 'http',
+    $perfLabel = array('size', 'time')
+);
+
+$forecast = <<<EOF
+[
+   {
+      "label":"size",
+      "method":"SimpleLinearRegression",
+      "methodSpecificOptions":{
+
+      },
+      "lookback_range":"30m",
+      "forecast_range":"10m",
+      "forecast_interval":"1m",
+      "update_rate":"1m"
+   },
+   {
+      "label":"time",
+      "method":"SimpleLinearRegression",
+      "methodSpecificOptions":{
+
+      },
+      "lookback_range":"30m",
+      "forecast_range":"10m",
+      "forecast_interval":"1m",
+      "update_rate":"1m"
+   }
+]
+EOF;

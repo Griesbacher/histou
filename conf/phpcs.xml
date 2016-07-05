@@ -3,6 +3,7 @@
     <description>The coding standard for standard PHP application</description>
     <rule ref="PSR2"/>
 	<exclude-pattern>*/cover/*</exclude-pattern>
+	<exclude-pattern>.js</exclude-pattern>
 	<exclude-pattern>index.php</exclude-pattern>
 	<exclude-pattern>testconfig.php</exclude-pattern>
 	<exclude-pattern>tests/bootstrap.php</exclude-pattern>

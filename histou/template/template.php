@@ -21,7 +21,6 @@ PHP version 5
 **/
 class Template
 {
-    #use Lambda;
     private $file;
     private $rule;
     private $genTemplate;

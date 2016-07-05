@@ -22,6 +22,7 @@ PHP version 5
 class Basic
 {
     public static $parsed = false;
+    public static $request = null;
     /**
     Parses the GET parameter.
     @return null.
@@ -37,23 +38,49 @@ class Basic
         $longopts  = array(
         "host:",
         "service:",
+        "command:",
+        "perf_label:",
         );
-
         $args = getopt($shortopts, $longopts);
-        if (isset($_GET['host']) && !empty($_GET['host'])) {
-            define("HOST", $_GET["host"]);
-        } elseif (isset($args['host']) && !empty($args['host'])) {
-            define("HOST", $args["host"]); // @codeCoverageIgnore
-        } else {  // @codeCoverageIgnore
-            \histou\Basic::returnData('Hostname is missing!', 1, 'Hostname is missing!');
-        }
-
-        if (isset($_GET['service']) && !empty($_GET['service'])) {
-            define("SERVICE", $_GET["service"]);
-        } elseif (isset($args['service']) && !empty($args['service'])) {
-            define("SERVICE", $args["service"]);  // @codeCoverageIgnore
-        } else {   // @codeCoverageIgnore
-            define("SERVICE", HOSTCHECK_ALIAS);
+        
+        $input = file_get_contents('php://input');
+        if (!empty($input)) { // @codeCoverageIgnore
+            static::$request = json_decode($input, true); // @codeCoverageIgnore
+        } // @codeCoverageIgnore
+        
+        if (!static::$request) {
+            if (isset($_GET['host']) && !empty($_GET['host'])) {
+                define("HOST", $_GET["host"]);
+            } elseif (isset($args['host']) && !empty($args['host'])) {
+                define("HOST", $args["host"]); // @codeCoverageIgnore
+            } else {  // @codeCoverageIgnore
+                \histou\Basic::returnData('Hostname is missing!', 1, 'Hostname is missing!');
+            }
+            
+            if (isset($_GET['service']) && !empty($_GET['service'])) {
+                define("SERVICE", $_GET["service"]);
+            } elseif (isset($args['service']) && !empty($args['service'])) {
+                define("SERVICE", $args["service"]);  // @codeCoverageIgnore
+            } else {   // @codeCoverageIgnore
+                define("SERVICE", HOSTCHECK_ALIAS);
+            }
+            
+            if (isset($_GET['command']) && !empty($_GET['command'])) {
+                define("COMMAND", $_GET["command"]);
+            } elseif (isset($args['command']) && !empty($args['command'])) {
+                define("COMMAND", $args["command"]);  // @codeCoverageIgnore
+            }  // @codeCoverageIgnore
+            
+            if (isset($_GET['perf_label']) && !empty($_GET['perf_label'])) {
+                global $PERF_LABEL;
+                $PERF_LABEL = $_GET["perf_label"];
+            } elseif (isset($args['perf_label']) && !empty($args['perf_label'])) {
+                global $PERF_LABEL;
+                $PERF_LABEL = $args["perf_label"];  // @codeCoverageIgnore
+            }  // @codeCoverageIgnore
+            if (isset($PERF_LABEL) && !is_array($PERF_LABEL)) {
+                $PERF_LABEL = array($PERF_LABEL);
+            }
         }
 
         if (isset($_GET['debug'])) {
@@ -156,6 +183,11 @@ class Basic
             "influxdb"
         );
         Basic::setConstant(
+            "FORECAST_DATASOURCE_NAME",
+            strtolower(Basic::getConfigKey($config, 'general', 'forecastDatasourceName')),
+            "nagflux_forecast"
+        );
+        Basic::setConstant(
             "URL",
             Basic::getConfigKey($config, DATABASE_TYPE, 'url'),
             "http://127.0.0.1:8086/query?db=nagflux"
@@ -184,6 +216,11 @@ class Basic
             "CUSTOM_TEMPLATE_FOLDER",
             Basic::getConfigKey($config, 'folder', 'customTemplateFolder'),
             "histou/templates/custom/"
+        );
+        Basic::setConstant(
+            "FORECAST_TEMPLATE_FOLDER",
+            Basic::getConfigKey($config, 'folder', 'forecastTemplateFolder'),
+            "histou/forecasts/"
         );
     }
 

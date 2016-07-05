@@ -11,7 +11,7 @@ PHP version 5
 
 namespace histou\template;
 
-define("CACHE_FILE", '.histou_cache');
+define("CACHE_FILE", '.histou_cache-');
 define("FILE_AGE_KEY", 'fileAge');
 define("RULE_KEY", 'template');
 
@@ -33,9 +33,9 @@ class Cache
     /**
     Creates an cache.
     **/
-    public function __construct()
+    public function __construct($extension = "")
     {
-        $this->cachefile = join(DIRECTORY_SEPARATOR, array(TMP_FOLDER, CACHE_FILE));
+        $this->cachefile = join(DIRECTORY_SEPARATOR, array(TMP_FOLDER, CACHE_FILE.$extension));
         if (file_exists($this->cachefile)) {
             $this->loadCache();
         } else {
@@ -48,7 +48,7 @@ class Cache
     @param array $templatepaths list of requested templates.
     @return array list of templates.
     **/
-    public function loadTemplates(array $templatepaths)
+    public function loadTemplates(array $templatepaths, $loader)
     {
         $templates = array();
         $hasChanged = false;
@@ -61,7 +61,7 @@ class Cache
                 array_push($templates, $this->templates[$path][RULE_KEY]);
                 continue;
             }
-            $template = \histou\template\loader::loadTemplate($path);
+            $template = call_user_func($loader, $path);
             if ($template == null) {
                 \histou\Debug::add("The template: $path is not valid PHP!");
             } else {

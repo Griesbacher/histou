@@ -74,6 +74,7 @@ class Parser
         $genTemplate = function ($perfData) use ($dashboard) {
             $oldPerfData = array('host' => array(), 'service' => array(), 'command' => array());
             $jsonDashboard = json_decode($dashboard, true);
+
             if ($jsonDashboard && array_key_exists('rows', $jsonDashboard)) {
                 foreach ($jsonDashboard['rows'] as $row) {
                     if (array_key_exists('panels', $row)) {

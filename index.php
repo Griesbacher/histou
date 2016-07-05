@@ -80,8 +80,8 @@ $templateFiles = \histou\Folder::loadFolders(
     array(CUSTOM_TEMPLATE_FOLDER, DEFAULT_TEMPLATE_FOLDER)
 );
 
-$templateCache = new \histou\template\cache();
-$templates = $templateCache->loadTemplates($templateFiles);
+$templateCache = new \histou\template\cache('templates');
+$templates = $templateCache->loadTemplates($templateFiles, '\histou\template\loader::loadTemplate');
 
 if (sizeof($templates) == 0) {
     \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Could not load templates!'), 1);
@@ -96,12 +96,36 @@ foreach ($templates as $template) {
 }
 \histou\Debug::add("Is the first template valid: ".\histou\Debug::printBoolean($valid)."\n");
 \histou\Debug::add("Data: ".print_r($perfData, true));
-
 if ($valid) {
     $template = $templates[0];
 } else {
     $template = \histou\template\Template::findDefaultTemplate($templates, 'default.php');
 }
+
+// load ForecastTemplates
+$forecastTemplateFiles = \histou\Folder::loadFolders(
+	array(FORECAST_TEMPLATE_FOLDER)
+);
+$forcastTemplateCache = new \histou\template\cache('forecast');
+$forecastTemplates = $forcastTemplateCache->loadTemplates($forecastTemplateFiles, '\histou\template\loader::loadForecastTemplate');
+usort($forecastTemplates, '\histou\template\Template::compare');
+$fValid = $forecastTemplates[0]->isValid();
+\histou\Debug::add("ForecastTemplate order:");
+foreach ($forecastTemplates as $ftemplate) {
+	\histou\Debug::add($ftemplate);
+}
+\histou\Debug::add("Is the first ForecastTemplate valid: ".\histou\Debug::printBoolean($fValid)."\n");
+if ($fValid) {
+	$forecastTemplate = $forecastTemplates[0];
+	$className = get_class($forecastTemplate);
+	if ($className == 'histou\template\Rule') {
+		$forecast = \histou\template\loader::loadForecastTemplate($forecastTemplate->getFileName(), true);
+	}
+	if (isset($forecast)) {
+		$forecast->setForecastDurations();
+	}
+}
+
 if (isset($template) && !empty($template)) {
     $className = get_class($template);
     if ($className == 'histou\template\Rule') {

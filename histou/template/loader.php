@@ -35,7 +35,22 @@ class Loader
             return static::loadSimpleTemplates($filename);
         }
     }
-
+    
+    /**
+    Creates ForecastTemplate from File.
+    @param string $filename foldername.
+    @param bool   $save     if true no syntax check will be done.
+    @return bool.
+    **/
+    public static function loadForecastTemplate($filename, $save = false)
+    {
+        if (!$save && !static::isFileValidPHP($filename)) {
+            return null;
+        }
+        include $filename;
+        return new ForecastTemplate($filename, $rule, $forecast);
+    }
+    
     /**
     Creates a Basic Template.
     @param string $filename foldername.

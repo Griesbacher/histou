@@ -160,6 +160,3 @@ function clearUi()
         );
     }
 }
-
-
-

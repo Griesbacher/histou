@@ -4,4 +4,4 @@ sonar-project.properties
 build
 vendor
 *.geany
-
+templates/custom
