@@ -61,7 +61,7 @@ class Cache
                 array_push($templates, $this->templates[$path][RULE_KEY]);
                 continue;
             }
-            $template = $loader($path);
+            $template = call_user_func($loader, $path);
             if ($template == null) {
                 \histou\Debug::add("The template: $path is not valid PHP!");
             } else {
