@@ -153,4 +153,9 @@ class GraphPanelElasticsearch extends GraphPanel
         );
         return $target;
     }
+
+    public function genForecastTarget($host, $service, $command, $performanceLabel, $color = '#000', $alias = '', $useRegex = false, $addMethodToName = false)
+    {
+        throw new \Exception('Not implemented');
+    }
 }
