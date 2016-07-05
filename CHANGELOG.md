@@ -1,3 +1,15 @@
+## v0.3.4 - 05.07.2016
+### Features
+- API to get forecast config added (experimental)
+
+## v0.3.3 - 07.06.2016
+### Fixes
+- Simplefiles should work again, after layoutchange
+
+## v0.3.2 - 07.06.2016
+### Features
+- Now PHP 5.3.3 upto PHP 7.04 should work
+
 ## v0.3.1 - 08.04.2016
 ### Features
 - check_oracle/db2_heath templates
