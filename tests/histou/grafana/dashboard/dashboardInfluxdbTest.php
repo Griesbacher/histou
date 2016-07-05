@@ -108,8 +108,7 @@ class DashboardInfluxDBTest extends \MyPHPUnitFrameworkTestCase
                           ),
                           'templating' =>
                           array ( 'list' => array ()),
-                          'annotations' =>
-                          array ('list' =>array ()),
+                          'annotations' => array ('enable' => true, 'list' =>array ()),
                           'refresh' => '30s',
                           'version' => '6',
                           'rows' =>array (),
