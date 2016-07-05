@@ -193,14 +193,14 @@ class GraphPanelInfluxdb extends GraphPanel
             $alias = $performanceLabel.'-forecast';
         }
         if ($addMethodToName) {
-            $alias .= $forecastConfig[$performanceLabel]['method'];
+            $alias .= '-'.$forecastConfig[$performanceLabel]['method'];
         }
         if ($useRegex) {
             $target = $this->createTarget(
                 array(
                         'host' => array('value' => \histou\helper\str::genRegex($host), 'operator' => '=~'),
                         'service' => array('value' => \histou\helper\str::genRegex($service), 'operator' => '=~'),
-                        'command' => array('value' => \histou\helper\str::genRegex($command), 'operator' => '=~'),
+                        //'command' => array('value' => \histou\helper\str::genRegex($command), 'operator' => '=~'),
                         'performanceLabel' => array('value' => \histou\helper\str::genRegex($performanceLabel), 'operator' => '=~'),
                     ),
                 FORECAST_DATASOURCE_NAME
@@ -210,7 +210,7 @@ class GraphPanelInfluxdb extends GraphPanel
                 array(
                         'host' => array('value' => $host),
                         'service' => array('value' => $service),
-                        'command' => array('value' => $command),
+                        //'command' => array('value' => $command),
                         'performanceLabel' => array('value' => $performanceLabel),
                     ),
                 FORECAST_DATASOURCE_NAME
