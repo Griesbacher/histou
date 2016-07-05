@@ -41,7 +41,10 @@ class ForecastTemplate extends Template
     {
         ForecastTemplate::$config = array();
         foreach (json_decode($this->jsonRules) as $obj) {
-            ForecastTemplate::$config[$obj->{'label'}] = array('method' => $obj->{'method'}, 'forecast' => $obj->{'forecast'});
+            ForecastTemplate::$config[$obj->{'label'}] = array(
+                'method' => $obj->{'method'},
+                'forecast' => $obj->{'forecast_range'}
+            );
         }
     }
     
