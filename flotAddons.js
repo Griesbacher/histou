@@ -49,9 +49,3 @@
     WaitForjQuery();
 
 })(jQuery);
-
-
-
-
-
-

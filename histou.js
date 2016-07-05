@@ -154,7 +154,3 @@ function clearUi()
         );
     }
 }
-
-
-
-
