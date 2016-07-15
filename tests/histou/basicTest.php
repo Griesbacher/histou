@@ -105,7 +105,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
         \histou\Basic::returnData($dashboard);
         $out1 = ob_get_contents();
         ob_end_clean();
-		
+        
         $this->assertSame($this->emptyDashboard, $out1);
         $_GET["callback"] = 1;
         ob_start();

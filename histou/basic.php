@@ -46,7 +46,9 @@ class Basic
         $input = file_get_contents('php://input');
         if (!empty($input)) { // @codeCoverageIgnore
             static::$request = json_decode($input, true); // @codeCoverageIgnore
-        } // @codeCoverageIgnore
+        } elseif (isset($args['request']) && !empty($args['host'])) { // @codeCoverageIgnore
+            static::$request = json_decode($args['request'], true);// @codeCoverageIgnore
+        }// @codeCoverageIgnore
         
         if (!static::$request) {
             if (isset($_GET['host']) && !empty($_GET['host'])) {
