@@ -109,7 +109,7 @@ $forecastTemplateFiles = \histou\Folder::loadFolders(
 $forcastTemplateCache = new \histou\template\cache('forecast');
 $forecastTemplates = $forcastTemplateCache->loadTemplates($forecastTemplateFiles, '\histou\template\loader::loadForecastTemplate');
 usort($forecastTemplates, '\histou\template\Template::compare');
-$fValid = $forecastTemplates[0]->isValid();
+$fValid = !empty($forecastTemplates) && $forecastTemplates[0]->isValid();
 \histou\Debug::add("ForecastTemplate order:");
 foreach ($forecastTemplates as $ftemplate) {
 	\histou\Debug::add($ftemplate);
