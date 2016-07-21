@@ -40,13 +40,14 @@ class Basic
         "service:",
         "command:",
         "perf_label:",
+        "request:",
         );
         $args = getopt($shortopts, $longopts);
         
         $input = file_get_contents('php://input');
         if (!empty($input)) { // @codeCoverageIgnore
             static::$request = json_decode($input, true); // @codeCoverageIgnore
-        } elseif (isset($args['request']) && !empty($args['host'])) { // @codeCoverageIgnore
+        } elseif (isset($args['request']) && !empty($args['request'])) { // @codeCoverageIgnore
             static::$request = json_decode($args['request'], true);// @codeCoverageIgnore
         }// @codeCoverageIgnore
         
