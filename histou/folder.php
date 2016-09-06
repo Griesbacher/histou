@@ -46,17 +46,21 @@ class Folder
     **/
     private static function pushFolder(&$templateFiles, $foldername, &$alreadyRead)
     {
-        if ($handle = opendir($foldername)) {
-            while (false !== ($file = readdir($handle))) {
-                if (!\histou\helper\Str::startsWith($file, '.')
-                    && !in_array($file, $alreadyRead)
-                    && static::isValidFile($file)
-                ) {
-                    array_push($templateFiles, join(DIRECTORY_SEPARATOR, array($foldername,$file)));
-                    array_push($alreadyRead, $file);
+        try {
+            if ($handle = opendir($foldername)) {
+                while (false !== ($file = readdir($handle))) {
+                    if (!\histou\helper\Str::startsWith($file, '.')
+                        && !in_array($file, $alreadyRead)
+                        && static::isValidFile($file)
+                    ) {
+                        array_push($templateFiles, join(DIRECTORY_SEPARATOR, array($foldername,$file)));
+                        array_push($alreadyRead, $file);
+                    }
                 }
+                closedir($handle);
             }
-            closedir($handle);
+        } catch (\ErrorException $e) {
+            \histou\Debug::add("Could not open folder: $foldername");
         }
     }
 
