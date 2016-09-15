@@ -1,3 +1,13 @@
+## v0.3.5 - 
+### Change
+- Annotation function changed header
+
+### Features
+- Sakuli Images are displayed withing Grafana
+
+### Fixes
+- Missing Forecastfolder should not throw an exception
+
 ## v0.3.4 - 05.07.2016
 ### Features
 - API to get forecast config added (experimental)
