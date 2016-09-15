@@ -31,22 +31,22 @@ class DashboardInfluxDB extends Dashboard
         parent::__construct($title);
     }
 
-    public function addAnnotation($name, $hostname, $servicename, $iconColor, $lineColor, $enabled = SHOW_ANNOTATION, $iconSize = 13)
+    public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource = INFLUXDB_DB, $enabled = SHOW_ANNOTATION, $iconSize = 13)
     {
         array_push(
             $this->data['annotations']['list'],
             array(
-            "datasource" => INFLUXDB_DB,
+            "datasource" => $datasource,
             "enable" => $enabled,
             "iconColor" => $iconColor,
             "iconSize" => $iconSize,
             "lineColor" => $lineColor,
             "name" => $name,
-            "query" => "SELECT * FROM messages WHERE type = '$name' AND host = '$hostname' AND service = '$servicename' AND \$timeFilter",
+            "query" => $query,
             "showLine" => true,
-            "tagsColumn" => "author",
-            "textColumn" => "message",
-            "titleColumn" => "type"
+            "tagsColumn" => $tags,
+            "textColumn" => $text,
+            "titleColumn" => $title
             )
         );
     }
@@ -67,7 +67,15 @@ class DashboardInfluxDB extends Dashboard
         array('downtime', '#A218E8'),
         );
         foreach ($annotations as $annotation) {
-            $this->addAnnotation($annotation[0], $hostname, $servicename, $annotation[1], $annotation[1]);
+            $this->addAnnotation(
+                $annotation[0],
+                "SELECT * FROM messages WHERE type = '$annotation[0]' AND host = '$hostname' AND service = '$servicename' AND \$timeFilter",
+                "type",
+                "message",
+                "author",
+                $annotation[1],
+                $annotation[1]
+            );
         }
     }
 
