@@ -41,10 +41,12 @@ class ForecastTemplate extends Template
     {
         ForecastTemplate::$config = array();
         foreach (json_decode($this->jsonRules) as $obj) {
-            ForecastTemplate::$config[$obj->{'label'}] = array(
-                'method' => $obj->{'method'},
-                'forecast' => $obj->{'forecast_range'}
-            );
+            if (property_exists($obj, 'forecast_range') && property_exists($obj, 'method') && property_exists($obj, 'label')) {
+                ForecastTemplate::$config[$obj->{'label'}] = array(
+                    'method' => $obj->{'method'},
+                    'forecast' => $obj->{'forecast_range'}
+                );
+            }
         }
     }
     
