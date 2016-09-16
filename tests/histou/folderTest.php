@@ -23,6 +23,7 @@ class FolderTest extends \MyPHPUnitFrameworkTestCase
     tested:
         - custom wins over default
         - just valid files are used
+		- missing folder
 	*/
     public function testLoad()
     {
@@ -54,5 +55,7 @@ class FolderTest extends \MyPHPUnitFrameworkTestCase
             join(DIRECTORY_SEPARATOR, array(DEFAULT_TEMPLATE_FOLDER, 'template2.simple')),
         );
         $this->assertEquals(sort($expected), sort($templateFiles2));
+		
+		\histou\Folder::loadFolders(array("adsf"));
     }
 }

@@ -18,9 +18,22 @@ class DashboardTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('bar', $d->toArray()['foo']);
 
         $this->assertSame(0, sizeof($d->toArray()['annotations']['list']));
-        $d->addAnnotation('aname', 'host0', 'service1', '#123', '#234', true, 1, 'foo');
+        $d->addAnnotation('aname', 'query!!', 'title', 'text', 'tags','#123', '#234', 'datasource?', true, 1, 10);
         $this->assertSame(1, sizeof($d->toArray()['annotations']['list']));
-        $this->assertSame("SELECT * FROM messages WHERE type = 'aname' AND host = 'host0' AND service = 'service1' AND \$timeFilter", $d->toArray()['annotations']['list'][0]['query']);
+        $this->assertSame(array (
+								  'datasource' => 'datasource?',
+								  'enable' => true,
+								  'iconColor' => '#123',
+								  'iconSize' => 1,
+								  'lineColor' => '#234',
+								  'name' => 'aname',
+								  'query' => 'query!!',
+								  'showLine' => true,
+								  'tagsColumn' => 'tags',
+								  'textColumn' => 'text',
+								  'titleColumn' => 'title',
+								)
+							, $d->toArray()['annotations']['list'][0]);
 
         $this->assertSame(1, sizeof($d->toArray()['annotations']['list']));
         $d->addDefaultAnnotations('host1', 'service2');

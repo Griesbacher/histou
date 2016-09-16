@@ -41,7 +41,7 @@ class DashboardElasticsearchTest extends \MyPHPUnitFrameworkTestCase
         
         $d = \histou\grafana\dashboard\DashboardFactory::generateDashboard('d1');
         //This should do nothing at the moment
-        $d->addAnnotation('name', 'hostname', 'servicename', 'iconColor', 'lineColor');
+        $d->addAnnotation('name', 'query!', 'title', 'text', 'tags', 'iconColor', 'lineColor');
         $this->assertSame($d, $d);
     }
 
