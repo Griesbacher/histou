@@ -117,7 +117,9 @@ class Template
         $className = get_class($maybeRule);
         if ($className == 'histou\template\Rule') {
             return $maybeRule;
-        } elseif ($className == 'histou\template\Template' || $className == 'histou\template\SimpleTemplate') {
+        } elseif ($className == 'histou\template\Template' ||
+                    $className == 'histou\template\SimpleTemplate' ||
+                    $className == 'histou\template\ForecastTemplate') {
             return $maybeRule->rule;
         } else {
             throw new \InvalidArgumentException("unkown class $className");
