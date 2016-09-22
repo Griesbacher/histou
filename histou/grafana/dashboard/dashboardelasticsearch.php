@@ -32,7 +32,7 @@ class DashboardElasticsearch extends Dashboard
         parent::__construct($title);
     }
 
-    public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource=ELASTICSEARCH_INDEX, $enabled = SHOW_ANNOTATION, $iconSize = 13)
+    public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource = ELASTICSEARCH_INDEX, $enabled = SHOW_ANNOTATION, $iconSize = 13)
     {
         /*array_push(
             $this->data['annotations']['list'],
