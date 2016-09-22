@@ -689,4 +689,38 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame($expected, $target);
         $this->assertSame(array("20m" , "30m"), \histou\grafana\dashboard\Dashboard::$forecast);
     }
+
+    public function testGraphPanelInfluxdbStack()
+    {
+        $this->init();
+        $gpanel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('gpanel');
+        $gpanel->stack("foo.*");
+        $this->assertSame(array(
+                                array(
+                                'alias' => 'foo.*',
+                                'stack' => true,
+                                ),
+                            ), $gpanel->toArray()['seriesOverrides']);
+    }
+    public function testGraphPanelInfluxdbSetLegend()
+    {
+        $this->init();
+        $gpanel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('gpanel');
+        $gpanel->setLegend(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $this->assertSame(
+            array (
+                                  'show' => 1,
+                                  'values' => 2,
+                                  'min' => 3,
+                                  'max' => 4,
+                                  'current' => 5,
+                                  'total' => 6,
+                                  'avg' => 7,
+                                  'alignAsTable' => 8,
+                                  'rightSide' => 9,
+                                  'hideEmpty' => 10,
+                            ),
+            $gpanel->toArray()['legend']
+        );
+    }
 }
