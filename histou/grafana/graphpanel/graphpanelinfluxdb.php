@@ -32,7 +32,7 @@ class GraphPanelInfluxdb extends GraphPanel
         parent::__construct($title, 'graph', $id);
     }
 
-    private function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
+    public function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
     {
         return array(
                     'measurement' => 'metrics',
@@ -44,7 +44,7 @@ class GraphPanelInfluxdb extends GraphPanel
                     'datasource' => $datasource
                     );
     }
-
+    
     /**
     Creates filter tags array based on host, service...
     **/
@@ -112,7 +112,7 @@ class GraphPanelInfluxdb extends GraphPanel
         return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '');
     }
 
-    private function addXToTarget($target, array $types, $alias, $color, $keepAlias = false)
+    public function addXToTarget($target, array $types, $alias, $color, $keepAlias = false)
     {
         foreach ($types as $type) {
             if ($keepAlias) {
