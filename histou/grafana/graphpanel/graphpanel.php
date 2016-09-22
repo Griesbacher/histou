@@ -273,6 +273,47 @@ abstract class GraphPanel extends \histou\grafana\Panel
     }
 
     /**
+    Stacks certain series.
+    @param string $alias name of the query.
+    @return null.
+    **/
+    public function stack($alias)
+    {
+        $this->addToSeriesOverrides(
+            array(
+                'alias' => $alias,
+                'stack' => true
+            )
+        );
+    }
+    
+    public function setLegend(
+        $show = SHOW_LEGEND,
+        $values = false,
+        $min = false,
+        $max = false,
+        $current = false,
+        $total = false,
+        $avg = false,
+        $alignAsTable = false,
+        $rightSide = false,
+        $hideEmpty = true
+    ) {
+        $this->data['legend'] = array(
+                                'show' =>  $show,
+                                'values' =>  $values,
+                                'min' =>  $min,
+                                'max' =>  $max,
+                                'current' =>  $current,
+                                'total' =>  $total,
+                                'avg' =>  $avg,
+                                "alignAsTable" => $alignAsTable,
+                                "rightSide" => $rightSide,
+                                "hideEmpty" => $hideEmpty
+                            );
+    }
+    
+    /**
     Adds the target to the dashboard.
     **/
     public function addTarget($target)
