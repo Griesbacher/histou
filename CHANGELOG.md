@@ -1,8 +1,9 @@
-## v0.3.5 - 
+## v0.3.5 - 23.07.2016
 ### Change
 - Annotation function changed header
 
 ### Features
+- Sakuli template
 - Sakuli Images are displayed withing Grafana
 
 ### Fixes
