@@ -33,31 +33,39 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('#123', $gpanel->toArray()['aliasColors']['foo']);
 
         $gpanel->setleftYAxisLabel('ms');
-        $this->assertSame('ms', $gpanel->toArray()['leftYAxisLabel']);
+        $this->assertSame('ms', $gpanel->toArray()['yaxes'][0]['label']);
 
         //Convert Unit
         //left
         $gpanel->setLeftUnit('%');
-        $this->assertSame(array('percent', 'short'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('percent', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][1]['format']);
         $gpanel->setLeftUnit('s');
-        $this->assertSame(array('s', 'short'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('s', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][1]['format']);
         $gpanel->setLeftUnit('foo');
-        $this->assertSame(array('short', 'short'), $gpanel->toArray()['y_formats']);
-        $this->assertSame('foo', $gpanel->toArray()['leftYAxisLabel']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][1]['format']);
+        $this->assertSame('foo', $gpanel->toArray()['yaxes'][0]['label']);
         //right
         $gpanel->setRightUnit('b');
-        $this->assertSame(array('short', 'bits'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('bits', $gpanel->toArray()['yaxes'][1]['format']);
         $gpanel->setRightUnit('B');
-        $this->assertSame(array('short', 'bytes'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('bytes', $gpanel->toArray()['yaxes'][1]['format']);
         $gpanel->setRightUnit('bar');
-        $this->assertSame('bar', $gpanel->toArray()['rightYAxisLabel']);
+        $this->assertSame('bar', $gpanel->toArray()['yaxes'][1]['label']);
         $gpanel = new \histou\grafana\graphpanel\GraphPanelInfluxdb('gpanel');
         $gpanel->setRightUnit('kB');
-        $this->assertSame(array('short', 'kbytes'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('kbytes', $gpanel->toArray()['yaxes'][1]['format']);
         $gpanel->setRightUnit('MB');
-        $this->assertSame(array('short', 'mbytes'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('mbytes', $gpanel->toArray()['yaxes'][1]['format']);
         $gpanel->setRightUnit('GiB');
-        $this->assertSame(array('short', 'gbytes'), $gpanel->toArray()['y_formats']);
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('gbytes', $gpanel->toArray()['yaxes'][1]['format']);
 
         //Linewidth
         $gpanel->setLinewidth(10);

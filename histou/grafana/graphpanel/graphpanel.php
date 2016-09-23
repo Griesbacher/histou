@@ -63,7 +63,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
                                     "threshold2"=> null,
                                     "threshold2Color"=> "rgba(234, 112, 112, 0.22)"
                                     );
-        $this->data['y_formats'] = array('short','short');
+        $this->data['yaxes'] = array(array('format' => 'short'), array('format' => 'short'));
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function setLeftYAxisLabel($label)
     {
-        $this->data['leftYAxisLabel'] = $label;
+        $this->data['yaxes'][0]['label'] = $label;
     }
 
     /**
@@ -132,7 +132,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function setRightYAxisLabel($label)
     {
-        $this->data['rightYAxisLabel'] = $label;
+        $this->data['yaxes'][1]['label'] = $label;
     }
 
     /**
@@ -143,8 +143,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function setLeftUnit($unit)
     {
         $gUnit = $this->convertUnit($unit);
-        if (array_key_exists('y_formats', $this->data) && sizeof($this->data['y_formats']) > 0) {
-            $this->data['y_formats'][0] = $gUnit;
+        if (array_key_exists('yaxes', $this->data) && sizeof($this->data['yaxes']) > 0) {
+            $this->data['yaxes'][0]['format'] = $gUnit;
+            $this->data['yaxes'][0]['show'] = true;
         }
         if ($gUnit == 'short') {
             $this->setLeftYAxisLabel($unit);
@@ -159,8 +160,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function setRightUnit($unit)
     {
         $gUnit = $this->convertUnit($unit);
-        if (array_key_exists('y_formats', $this->data) && sizeof($this->data['y_formats']) > 0) {
-            $this->data['y_formats'][1] = $gUnit;
+        if (array_key_exists('yaxes', $this->data) && sizeof($this->data['yaxes']) > 0) {
+            $this->data['yaxes'][1]['format'] = $gUnit;
+            $this->data['yaxes'][1]['show'] = true;
         }
         if ($gUnit == 'short') {
             $this->setRightYAxisLabel($unit);
