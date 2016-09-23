@@ -134,6 +134,37 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->data['yaxes'][1]['label'] = $label;
     }
+	
+    /**
+    Setter for leftYAxis min max
+    @param float $min min, use Null to skipp.
+    @param float $max max, use Null to skipp.
+    @return null.
+    **/
+    public function setLeftYAxisMinMax($min, $max = Null)
+    {
+		if ($min !== Null){
+			$this->data['yaxes'][0]['min'] = $min;
+		}
+		if ($max !== Null){
+			$this->data['yaxes'][0]['max'] = $max;
+		}
+    }
+    /**
+    Setter for rightYAxis min max
+    @param float $min min, use Null to skipp.
+    @param float $max max, use Null to skipp.
+    @return null.
+    **/
+    public function setRightAxisMinMax($min, $max = Null)
+    {
+		if ($min !== Null){
+			$this->data['yaxes'][1]['min'] = $min;
+		}
+		if ($max !== Null){
+			$this->data['yaxes'][1]['max'] = $max;
+		}
+	}
 
     /**
     Tries to convert the given unit in a "grafana unit" if not possible the leftYAxisLabel will be set.
