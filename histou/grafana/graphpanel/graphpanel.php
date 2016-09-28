@@ -238,6 +238,10 @@ abstract class GraphPanel extends \histou\grafana\Panel
             case 'giB':
             case 'gB':
                 return 'gbytes';
+			case 'Bps'
+			case 'BPS'
+			case 'BpS'
+                return 'Bps';
             case '%':
             case 'percent':
             case 'pct':
