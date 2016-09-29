@@ -54,3 +54,6 @@ In the PHP template you can write PHP code which will be executed when the templ
 
 ## DEMO
 This Dockercontainer contains OMD and everything is preconfigured to use Nagflux/Histou/Grafana/InfluxDB: https://github.com/Griesbacher/docker-omd-grafana
+
+## Presentation
+Here is a presentation I held about Nagflux and Histou (only in German, sorry): http://www.slideshare.net/PhilipGriesbacher/monitoring-workshop-kiel-2016-performancedaten-visualisierung-mit-grafana-influxdb
