@@ -23,6 +23,8 @@ class Basic
 {
     public static $parsed = false;
     public static $request = null;
+    public static $phpCommand = "php";
+    public static $height = "400px";
     /**
     Parses the GET parameter.
     @return null.
@@ -91,9 +93,7 @@ class Basic
         }
 
         if (isset($_GET['height']) && !empty($_GET['height'])) {
-            define("HEIGHT", $_GET["height"]);
-        } else {
-            define("HEIGHT", "400px");
+            static::$height = $_GET["height"];
         }
 
         if (isset($_GET['legend']) && !empty($_GET['legend']) && $_GET["legend"] == "false") {
@@ -165,11 +165,9 @@ class Basic
             Basic::getConfigKey($config, 'general', 'socketTimeout'),
             10
         );
-        Basic::setConstant(
-            "PHP_COMMAND",
-            Basic::getConfigKey($config, 'general', 'phpCommand'),
-            "php"
-        );
+        if (!empty(Basic::getConfigKey($config, 'general', 'phpCommand'))) {
+            static::$phpCommand = Basic::getConfigKey($config, 'general', 'phpCommand');
+        }
         Basic::setConstant(
             "TMP_FOLDER",
             Basic::getConfigKey($config, 'general', 'tmpFolder'),
@@ -225,6 +223,23 @@ class Basic
             Basic::getConfigKey($config, 'folder', 'forecastTemplateFolder'),
             "histou/forecasts/"
         );
+    }
+    
+    public static function testConfig()
+    {
+        //test php command
+        $phpHelp = static::$phpCommand." -h 2>&1";
+        ob_start();
+        system($phpHelp, $returnCode);
+        ob_end_clean();
+        if ($returnCode != 0) {
+            \histou\Basic::returnData(
+                \histou\Debug::errorMarkdownDashboard("# '".$phpHelp."' did not return with returncode 0. Maybe the phpCommand is not set properly."),
+                1
+            );
+            return 1;
+        }
+        return 0;
     }
 
     /**

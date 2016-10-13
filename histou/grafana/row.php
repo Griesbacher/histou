@@ -35,8 +35,11 @@ class Row
     @param string $height row height.
     @return object
     **/
-    public function __construct($title, $height = HEIGHT)
+    public function __construct($title, $height = "")
     {
+        if ($height == "") {
+            $height = \histou\Basic::$height;
+        }
         $this->data['title'] = $title;
         $this->data['height'] = $height;
     }

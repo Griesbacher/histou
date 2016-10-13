@@ -22,11 +22,17 @@ set_error_handler(
     }
 );
 
-//Set path to config file
+//Set path to config file and parse it
 \histou\Basic::parsIni('histou.ini');
 
 //Parse commandline and get parameter
 \histou\Basic::parsArgs();
+
+//Test config
+$returnCode = \histou\Basic::testConfig();
+if (isset($returnCode) && $returnCode != 0){
+	exit($returnCode);
+}
 
 header("access-control-allow-origin: *");
 //Disable warnings
