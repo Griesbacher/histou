@@ -66,6 +66,9 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $gpanel->setRightUnit('GiB');
         $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
         $this->assertSame('gbytes', $gpanel->toArray()['yaxes'][1]['format']);
+        $gpanel->setRightUnit('Bps');
+        $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
+        $this->assertSame('Bps', $gpanel->toArray()['yaxes'][1]['format']);
 
 		//Y Min Max
 		$gpanel->setLeftYAxisMinMax(0);
