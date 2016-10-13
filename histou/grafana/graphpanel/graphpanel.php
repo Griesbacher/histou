@@ -134,21 +134,21 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->data['yaxes'][1]['label'] = $label;
     }
-	
+    
     /**
     Setter for leftYAxis min max
     @param float $min min, use Null to skipp.
     @param float $max max, use Null to skipp.
     @return null.
     **/
-    public function setLeftYAxisMinMax($min, $max = Null)
+    public function setLeftYAxisMinMax($min, $max = null)
     {
-		if ($min !== Null){
-			$this->data['yaxes'][0]['min'] = $min;
-		}
-		if ($max !== Null){
-			$this->data['yaxes'][0]['max'] = $max;
-		}
+        if ($min !== null) {
+            $this->data['yaxes'][0]['min'] = $min;
+        }
+        if ($max !== null) {
+            $this->data['yaxes'][0]['max'] = $max;
+        }
     }
     /**
     Setter for rightYAxis min max
@@ -156,15 +156,15 @@ abstract class GraphPanel extends \histou\grafana\Panel
     @param float $max max, use Null to skipp.
     @return null.
     **/
-    public function setRightAxisMinMax($min, $max = Null)
+    public function setRightAxisMinMax($min, $max = null)
     {
-		if ($min !== Null){
-			$this->data['yaxes'][1]['min'] = $min;
-		}
-		if ($max !== Null){
-			$this->data['yaxes'][1]['max'] = $max;
-		}
-	}
+        if ($min !== null) {
+            $this->data['yaxes'][1]['min'] = $min;
+        }
+        if ($max !== null) {
+            $this->data['yaxes'][1]['max'] = $max;
+        }
+    }
 
     /**
     Tries to convert the given unit in a "grafana unit" if not possible the leftYAxisLabel will be set.
@@ -238,9 +238,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
             case 'giB':
             case 'gB':
                 return 'gbytes';
-			case 'Bps':
-			case 'BPS':
-			case 'BpS':
+            case 'Bps':
+            case 'BPS':
+            case 'BpS':
                 return 'Bps';
             case '%':
             case 'percent':

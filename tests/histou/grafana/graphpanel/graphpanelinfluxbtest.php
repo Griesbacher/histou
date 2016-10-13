@@ -70,22 +70,22 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('short', $gpanel->toArray()['yaxes'][0]['format']);
         $this->assertSame('Bps', $gpanel->toArray()['yaxes'][1]['format']);
 
-		//Y Min Max
-		$gpanel->setLeftYAxisMinMax(0);
-		$this->assertSame(0, $gpanel->toArray()['yaxes'][0]['min']);
-		$this->assertSame(false, array_key_exists('max', $gpanel->toArray()['yaxes'][0]));
-		$gpanel->setLeftYAxisMinMax(1, 2);
-		$this->assertSame(1, $gpanel->toArray()['yaxes'][0]['min']);
-		$this->assertSame(2, $gpanel->toArray()['yaxes'][0]['max']);
-		
-		$gpanel->setRightAxisMinMax(0);
-		$this->assertSame(0, $gpanel->toArray()['yaxes'][1]['min']);
-		$this->assertSame(false, array_key_exists('max', $gpanel->toArray()['yaxes'][1]));
-		$gpanel->setRightAxisMinMax(1, 2);
-		$this->assertSame(1, $gpanel->toArray()['yaxes'][1]['min']);
-		$this->assertSame(2, $gpanel->toArray()['yaxes'][1]['max']);
-		
-		
+        //Y Min Max
+        $gpanel->setLeftYAxisMinMax(0);
+        $this->assertSame(0, $gpanel->toArray()['yaxes'][0]['min']);
+        $this->assertSame(false, array_key_exists('max', $gpanel->toArray()['yaxes'][0]));
+        $gpanel->setLeftYAxisMinMax(1, 2);
+        $this->assertSame(1, $gpanel->toArray()['yaxes'][0]['min']);
+        $this->assertSame(2, $gpanel->toArray()['yaxes'][0]['max']);
+        
+        $gpanel->setRightAxisMinMax(0);
+        $this->assertSame(0, $gpanel->toArray()['yaxes'][1]['min']);
+        $this->assertSame(false, array_key_exists('max', $gpanel->toArray()['yaxes'][1]));
+        $gpanel->setRightAxisMinMax(1, 2);
+        $this->assertSame(1, $gpanel->toArray()['yaxes'][1]['min']);
+        $this->assertSame(2, $gpanel->toArray()['yaxes'][1]['max']);
+        
+        
         //Linewidth
         $gpanel->setLinewidth(10);
         $this->assertSame(10, $gpanel->toArray()['linewidth']);
