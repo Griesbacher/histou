@@ -1,4 +1,8 @@
-## v0.3.5 - 23.07.2016
+## v0.3.6 - 13.10.2016
+### Features
+- Test if phpCommand from config is valid
+
+## v0.3.5 - 23.09.2016
 ### Change
 - Annotation function changed header
 
