@@ -165,8 +165,9 @@ class Basic
             Basic::getConfigKey($config, 'general', 'socketTimeout'),
             10
         );
-        if (!empty(Basic::getConfigKey($config, 'general', 'phpCommand'))) {
-            static::$phpCommand = Basic::getConfigKey($config, 'general', 'phpCommand');
+        $phpCommand = Basic::getConfigKey($config, 'general', 'phpCommand');
+        if (!empty($phpCommand)) {
+            static::$phpCommand = $phpCommand;
         }
         Basic::setConstant(
             "TMP_FOLDER",
