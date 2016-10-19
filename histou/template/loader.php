@@ -84,10 +84,15 @@ class Loader
     public static function isFileValidPHP($filePath)
     {
         //TODO:test if php content. e.g. just foo would work...
-        ob_start();
-        system(\histou\Basic::$phpCommand." -l $filePath 2>&1", $returnCode);
-        $syntaxCheck = ob_get_contents();
-        ob_end_clean();
+        $cmd = \histou\Basic::$phpCommand." -l $filePath 2>&1";
+        $process = proc_open($cmd, \histou\Basic::$descriptorSpec, $pipes);
+        if (!is_resource($process)) {
+            \histou\Debug::add("Error: Could not start: $cmd");  // @codeCoverageIgnore
+            return false;  // @codeCoverageIgnore
+        }
+        $syntaxCheck = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        $returnCode = proc_close($process);
         if (substr($syntaxCheck, 1, 12) == "Parse error:") {
             \histou\Debug::add("Syntaxcheck: ".$syntaxCheck);
         }

@@ -25,6 +25,10 @@ class Basic
     public static $request = null;
     public static $phpCommand = "php";
     public static $height = "400px";
+    public static $descriptorSpec = array(
+        1 => array("pipe", "w"),    // STDOUT
+    );
+ 
     /**
     Parses the GET parameter.
     @return null.
@@ -229,16 +233,17 @@ class Basic
     public static function testConfig()
     {
         //test php command
-        $phpHelp = static::$phpCommand." -h 2>&1";
-        ob_start();
-        system($phpHelp, $returnCode);
-        ob_end_clean();
+        $cmd = static::$phpCommand." -h 2>&1";
+        $process = proc_open($cmd, \histou\Basic::$descriptorSpec, $pipes);
+        if (!is_resource($process)) {
+            \histou\Basic::returnData("Error: Could not start: $cmd"); // @codeCoverageIgnore
+            return 1; // @codeCoverageIgnore
+        }
+        $returnCode = proc_close($process);
         if ($returnCode != 0) {
-            \histou\Basic::returnData(
-                \histou\Debug::errorMarkdownDashboard("# '".$phpHelp."' did not return with returncode 0. Maybe the phpCommand is not set properly."),
-                1
-            );
+            \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard("# '".$cmd."' did not return with returncode 0. Maybe the phpCommand is not set properly."), 1);
             return 1;
+
         }
         return 0;
     }
