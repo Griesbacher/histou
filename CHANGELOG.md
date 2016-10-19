@@ -1,3 +1,10 @@
+## v0.3.7 - 19.10.2016
+### Features
+- Execution of phpCommand is changed from system to proc_open - in most cases this should not change anything
+
+### Fixes
+- Can't use function return value in write context
+
 ## v0.3.6 - 13.10.2016
 ### Features
 - Test if phpCommand from config is valid
