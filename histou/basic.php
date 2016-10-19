@@ -26,7 +26,9 @@ class Basic
     public static $phpCommand = "php";
     public static $height = "400px";
     public static $descriptorSpec = array(
+        0 => array("pipe", "r"),    // STDIN
         1 => array("pipe", "w"),    // STDOUT
+        2 => array("pipe", "w")     // STERR
     );
  
     /**
@@ -239,6 +241,8 @@ class Basic
             \histou\Basic::returnData("Error: Could not start: $cmd"); // @codeCoverageIgnore
             return 1; // @codeCoverageIgnore
         }
+        stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
         $returnCode = proc_close($process);
         if ($returnCode != 0) {
             \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard("# '".$cmd."' did not return with returncode 0. Maybe the phpCommand is not set properly."), 1);
