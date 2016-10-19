@@ -238,7 +238,7 @@ class Basic
         $cmd = static::$phpCommand." -h 2>&1";
         $process = proc_open($cmd, \histou\Basic::$descriptorSpec, $pipes);
         if (!is_resource($process)) {
-            \histou\Basic::returnData("Error: Could not start: $cmd"); // @codeCoverageIgnore
+            \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard("# Error: Could not start: $cmd")); // @codeCoverageIgnore
             return 1; // @codeCoverageIgnore
         }
         stream_get_contents($pipes[1]);
