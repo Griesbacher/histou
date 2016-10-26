@@ -114,7 +114,7 @@ abstract class Dashboard
         array_push($this->rows, $row);
     }
 
-    public function addTemplate($datasource, $name, $query, $regex, $multiFormat, $includeAll)
+    public function addTemplate($datasource, $name, $query, $regex, $multiFormat, $includeAll, $hide = 0)
     {
         $this->data['templating']['enable'] = true;
         array_push(
@@ -130,6 +130,7 @@ abstract class Dashboard
                 'refresh' => 1,
                 'regex' => $regex,
                 'type' => 'query',
+                'hide' => $hide,
             )
         );
     }
