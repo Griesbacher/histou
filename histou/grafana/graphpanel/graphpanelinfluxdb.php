@@ -53,11 +53,6 @@ class GraphPanelInfluxdb extends GraphPanel
         $tags = array();
         $i = 0;
         foreach ($filterTags as $key => $value) {
-            foreach ($value as $type => &$typeValue) { //Used for Backslash in tag value
-                if (!\histou\helper\str::isRegex($typeValue)) {
-                    $typeValue = str_replace('\\', '\\\\', $typeValue);
-                }
-            }
             $condition = (array_key_exists('condition', $value) ? $value['condition'] : 'AND');
             $operator = (array_key_exists('operator', $value) ? $value['operator'] : '=');
             if ($i == 0) {
@@ -120,7 +115,7 @@ class GraphPanelInfluxdb extends GraphPanel
             } else {
                 $newalias = $alias.'-'.$type;
             }
-            array_push($target['select'], $this->createSelect($type, $newalias));
+            array_push($target['select'], $this->createSelect($type, \histou\helper\str::escapeBackslash($newalias)));
             if ($color != '') {
                 $this->addAliasColor($newalias, $color);
             }

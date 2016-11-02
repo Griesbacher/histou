@@ -61,4 +61,12 @@ class Str
     {
         return "/^$regex$/";
     }
+
+    /**
+    Escapes an Backslash
+    **/
+    public static function escapeBackslash($string)
+    {
+        return str_replace('\\', '\\\\', $string);
+    }
 }
