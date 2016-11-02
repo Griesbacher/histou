@@ -1,3 +1,10 @@
+## v0.3.8 - 02.11.2016
+### Features
+- check_multi template
+
+### Fixes
+- Backslash in perflables
+
 ## v0.3.7 - 19.10.2016
 ### Features
 - Execution of phpCommand is changed from system to proc_open - in most cases this should not change anything
