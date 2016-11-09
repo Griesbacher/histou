@@ -47,9 +47,7 @@ $genTemplate = function ($perfData) {
                         [value] => 0.045
                         [warn] => 3000
                     )
-
             )
-
         [command] => command
     )
     */
@@ -57,12 +55,26 @@ $genTemplate = function ($perfData) {
     foreach ($perfData['perfLabel'] as $key => $values) {
         $row = new \histou\grafana\Row($perfData['host'].' '.$perfData['service'].' '.$perfData['command']);
         $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['host'].' '.$perfData['service'].' '.$perfData['command'].' '.$key);
+
         $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $key);
+        if (isset($values['unit'])) {
+            if ($values['unit'] == "c") {
+                //create a new Target if the type is counter, with difference in select
+                $target = $panel->genTarget($perfData['host'], $perfData['service'], $perfData['command'], $key, '#085DFF', '', false, "\histou\grafana\graphpanel\GraphPanelInfluxdb::createCounterSelect");
+            } else {
+                $panel->setLeftUnit($values['unit']);
+            }
+        }
         $target = $panel->addWarnToTarget($target, $key);
         $target = $panel->addCritToTarget($target, $key);
         $panel->addTarget($target);
 
-        $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
+        if (isset($values['unit']) && $values['unit'] == "c") {
+			//create a new Target if the type is counter, with difference in select
+            $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key, '', false, "\histou\grafana\graphpanel\GraphPanelInfluxdb::createCounterSelect");
+        } else {
+            $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
+        }
         $panel->addTarget($downtime);
         
         $forecast = $panel->genForecastTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
@@ -71,9 +83,7 @@ $genTemplate = function ($perfData) {
         }
         
         $panel->fillBelowLine($key.'-value', 2);
-        if (isset($values['unit'])) {
-            $panel->setLeftUnit($values['unit']);
-        }
+
 
         $row->addPanel($panel);
         $dashboard->addRow($row);

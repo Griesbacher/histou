@@ -70,6 +70,14 @@ class GraphPanelInfluxdb extends GraphPanel
     **/
     public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false)
     {
+        return $this->genTarget($host, $service, $command, $performanceLabel, $color, $alias, $useRegex);
+    }
+
+    /**
+    This creates a target with an value.
+    **/
+    public function genTarget($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $customSelect = null)
+    {
         if ($alias == '') {
             $alias = $performanceLabel;
         }
@@ -88,7 +96,7 @@ class GraphPanelInfluxdb extends GraphPanel
                                             'performanceLabel' => array('value' => $performanceLabel)
                                             ));
         }
-        return $this->addXToTarget($target, array('value'), $alias, $color);
+        return $this->addXToTarget($target, array('value'), $alias, $color, false, $customSelect);
     }
 
     public function addWarnToTarget($target, $alias = '', $color = true)
@@ -107,15 +115,18 @@ class GraphPanelInfluxdb extends GraphPanel
         return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '');
     }
 
-    public function addXToTarget($target, array $types, $alias, $color, $keepAlias = false)
+    public function addXToTarget($target, array $types, $alias, $color, $keepAlias = false, $createSelect = null)
     {
+        if ($createSelect == null) {
+            $createSelect = "\histou\grafana\graphpanel\GraphPanelInfluxdb::createSelect";
+        }
         foreach ($types as $type) {
             if ($keepAlias) {
                 $newalias = $alias;
             } else {
                 $newalias = $alias.'-'.$type;
             }
-            array_push($target['select'], $this->createSelect($type, \histou\helper\str::escapeBackslash($newalias)));
+            array_push($target['select'], call_user_func_array($createSelect, array($type, \histou\helper\str::escapeBackslash($newalias))));
             if ($color != '') {
                 $this->addAliasColor($newalias, $color);
             }
@@ -123,7 +134,17 @@ class GraphPanelInfluxdb extends GraphPanel
         return $target;
     }
 
-    private function createSelect($name, $alias)
+    public static function createCounterSelect($name, $alias)
+    {
+        return array(
+                    array('type' => 'field', 'params' => array($name)),
+                    array('type' => 'mean', 'params' => array()),
+                    array('type' => 'difference', 'params' => array()),
+                    array('type' => 'alias', 'params' => array($alias))
+                    );
+    }
+
+    public static function createSelect($name, $alias)
     {
         return array(
                     array('type' => 'field', 'params' => array($name)),
@@ -131,10 +152,11 @@ class GraphPanelInfluxdb extends GraphPanel
                     array('type' => 'alias', 'params' => array($alias))
                     );
     }
+
     /**
     This creates a target for an downtime.
     **/
-    public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '', $useRegex = false)
+    public function genDowntimeTarget($host, $service, $command, $performanceLabel, $alias = '', $useRegex = false, $customSelect = null)
     {
         if ($alias == '') {
             $alias = 'downtime';
@@ -160,7 +182,7 @@ class GraphPanelInfluxdb extends GraphPanel
                     )
             );
         }
-        $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true);
+        $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true, $customSelect);
         $this->addToSeriesOverrides(
             array(
                 'lines' => true,

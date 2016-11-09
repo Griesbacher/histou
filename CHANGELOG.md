@@ -1,3 +1,7 @@
+## v0.3.9 -
+### Features
+- support Counter results(uom unit is a 'c') within the default template
+
 ## v0.3.8 - 02.11.2016
 ### Features
 - check_multi template
