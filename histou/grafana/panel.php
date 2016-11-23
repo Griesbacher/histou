@@ -52,6 +52,9 @@ abstract class Panel
     **/
     public function toArray()
     {
+        if (\histou\Basic::$disablePanelTitel) {
+            $this->data['title'] = "";
+        }
         return $this->data;
     }
 

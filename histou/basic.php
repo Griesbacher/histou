@@ -30,6 +30,7 @@ class Basic
         1 => array("pipe", "w"),    // STDOUT
         2 => array("pipe", "w")     // STERR
     );
+    public static $disablePanelTitel = false;
  
     /**
     Parses the GET parameter.
@@ -92,6 +93,10 @@ class Basic
             if (isset($PERF_LABEL) && !is_array($PERF_LABEL)) {
                 $PERF_LABEL = array($PERF_LABEL);
             }
+        }
+
+        if (isset($_GET['disablePanelTitel'])) {
+            static::$disablePanelTitel = true;
         }
 
         if (isset($_GET['debug'])) {
@@ -175,6 +180,10 @@ class Basic
         if (!empty($phpCommand)) {
             static::$phpCommand = $phpCommand;
         }
+        $disablePanelTitel = Basic::getConfigKey($config, 'general', 'disablePanelTitel');
+        if (!empty($disablePanelTitel)) {
+            static::$disablePanelTitel = $disablePanelTitel;
+        }
         Basic::setConstant(
             "TMP_FOLDER",
             Basic::getConfigKey($config, 'general', 'tmpFolder'),
@@ -195,6 +204,7 @@ class Basic
             strtolower(Basic::getConfigKey($config, 'general', 'forecastDatasourceName')),
             "nagflux_forecast"
         );
+
         Basic::setConstant(
             "URL",
             Basic::getConfigKey($config, DATABASE_TYPE, 'url'),
