@@ -1,3 +1,7 @@
+## v0.3.10 - 23.11.2016
+### Features
+- URL/Config param to disable paneltitles for bigger graphs. Url flag: disablePanelTitel
+
 ## v0.3.9 - 09.11.2016
 ### Features
 - Support Counter results(uom unit is a 'c') within the default template
