@@ -72,13 +72,24 @@ class Parser
         );
 
         $genTemplate = function ($perfData) use ($dashboard) {
-            $oldPerfData = array('host' => array(), 'service' => array(), 'command' => array());
-            $jsonDashboard = json_decode($dashboard, true);
+            $jsonDashboard = static::isStringValidJson($dashboard);
+            if ($jsonDashboard === null) {
+                \histou\Debug::enable();
+                return \histou\Debug::errorMarkdownDashboard(
+                    '#The Template given was not valid json!'
+                );
+            }
 
+            $oldPerfData = array('host' => array(), 'service' => array(), 'command' => array());
             if ($jsonDashboard && array_key_exists('rows', $jsonDashboard)) {
-                foreach ($jsonDashboard['rows'] as $row) {
+                foreach ($jsonDashboard['rows'] as &$row) {
                     if (array_key_exists('panels', $row)) {
-                        foreach ($row['panels'] as $panel) {
+                        foreach ($row['panels'] as &$panel) {
+                            // remove PanelTitel if needed
+                            if (\histou\Basic::$disablePanelTitel) {
+                                $panel['title'] = '';
+                            }
+                            // get old Perfdata
                             if (array_key_exists('targets', $panel)) {
                                 foreach ($panel['targets'] as $target) {
                                     if (array_key_exists('tags', $target)) {
@@ -95,6 +106,8 @@ class Parser
                     }
                 }
             }
+            $dashboard = json_encode($jsonDashboard);
+
             foreach ($oldPerfData as $label => $value) {
                 if (sizeof($value) > 0) {
                     $counted = array_count_values($value);
@@ -122,27 +135,25 @@ class Parser
             if (!$replaced) {
                 \histou\Debug::add('# Nothing replace because hostname, service, command are equal in the template');
             }
-
-            if (!static::isStringValidJson($dashboard)) {
-                \histou\Debug::enable();
-                return \histou\Debug::errorMarkdownDashboard(
-                    '#The Template given was not valid json!'
-                );
-            } else {
-                return $dashboard;
-            }
+            return $dashboard;
         };
 
         return array($rule, $genTemplate);
     }
 
     /**
-    Checks if a string is valid json and returns a boolean.
+    Checks if a string is valid json and returns an object if so, null if not.
     @param string $string String to test.
-    @return boolean.
+    @return obj or null.
     **/
     public static function isStringValidJson($string)
     {
-        return is_string($string) && is_object(json_decode($string)) ? true : false;
+        if (is_string($string)) {
+            $obj = json_decode($string, true);
+            if (is_array($obj)) {
+                return $obj;
+            }
+        }
+        return null;
     }
 }
