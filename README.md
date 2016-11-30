@@ -48,6 +48,8 @@ They are just valid for the current call, you can't change anything permanently.
 |annotations|Bool|If false the annotations will be unchecked|
 |debug|Flag|If set an additional Panel will be added to the bottom which contains some debug infos|
 |disablePanelTitel|Flag|If set the Paneltitel will be hidden|
+|specificTemplate|String|If a filename is passed this away, only this template will be used, regardless the rules. E.g. ping.simple. Makes more or less just sens with simple templates|
+|disablePerfdataLookup|Flag|If set no data will be fetched from the InfluxDB, so the only data available in the template is the host and servicename. Works only if specificTemplate is set!|
 
 ## Templates
 There are two types of templates, the simple and the PHP. Simple templates are static, PHP are dynamic. Both cointains a rule, which describes on which host/service combination the template is uses. The type of the template is defined by its file-ending, `.simple` or `.php`

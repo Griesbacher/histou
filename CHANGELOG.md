@@ -1,3 +1,9 @@
+## v0.3.11 - 
+### Features
+- URL/Config param to disable paneltitles for bigger graphs. Url flag: disablePanelTitel - works now also on simple templates.
+- URL param to specify a certain template. Take a look at the README.
+- URL param to disable Influxdb lookup. Take a look at the README.
+
 ## v0.3.10 - 23.11.2016
 ### Features
 - URL/Config param to disable paneltitles for bigger graphs. Url flag: disablePanelTitel
