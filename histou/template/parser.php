@@ -114,19 +114,20 @@ class Parser
                     $oldPerfData[$label] = array_search(max($counted), $counted);
                 }
             }
-
             //Test if hostname != service != command if so replace them
-            $oldPerfDataSize = sizeof($oldPerfData);
-            $oldPerfDataKeys = array_keys($oldPerfData);
+            $perfDataSize = sizeof($oldPerfData);
+            $perfDataKeys = array_keys($oldPerfData);
             $replaced = false;
-            for ($i = 0; $i < $oldPerfDataSize; $i++) {
-                if ($oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+1)%$oldPerfDataSize]]
-                    && $oldPerfData[$oldPerfDataKeys[$i]] != $oldPerfData[$oldPerfDataKeys[($i+2)%$oldPerfDataSize]]
-                    && $oldPerfData[$oldPerfDataKeys[$i]] != $perfData[$oldPerfDataKeys[$i]]
+            for ($i = 0; $i < $perfDataSize; $i++) {
+                if ($oldPerfData[$perfDataKeys[$i]] != $oldPerfData[$perfDataKeys[($i+1)%$perfDataSize]]
+                    && $oldPerfData[$perfDataKeys[$i]] != $oldPerfData[$perfDataKeys[($i+2)%$perfDataSize]]
+                    && array_key_exists($perfDataKeys[$i], $oldPerfData)
+                    && array_key_exists($perfDataKeys[$i], $perfData)
+                    && $oldPerfData[$perfDataKeys[$i]] != $perfData[$perfDataKeys[$i]]
                 ) {
                     $dashboard = str_replace(
-                        $oldPerfData[$oldPerfDataKeys[$i]],
-                        $perfData[$oldPerfDataKeys[$i]],
+                        $oldPerfData[$perfDataKeys[$i]],
+                        $perfData[$perfDataKeys[$i]],
                         $dashboard
                     );
                     $replaced = true;
