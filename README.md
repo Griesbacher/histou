@@ -18,15 +18,34 @@ Histou is designed to add templates to Grafana from Nagios Data. Therefor Nagflu
 - Depending on the URL the `index.php` is published on the webserver, change the Variable `var url = 'http://localhost/histou/';` in in the histou.js file. If you copied the Histoufolder to the root of your webserver, the default URL is perfect.
 
 ## Configuration
+### Configfile
 Here are some of the important config-options:
 
 | Section       | Config-Key    | Meaning       |
 | ------------- | ------------- | ------------- |
 |general|socketTimeout|This timeout defines the duration in seconds, which Histou will wait for a response from the InfluxDB|
-|general|phpCommand|This is the command which is used to call PHP on the commandline. If it's in the PATH php is mostly enough, if not write the full path to the file.
+|general|phpCommand|This is the command which is used to call PHP on the commandline. If it's in the PATH php is mostly enough, if not write the full path to the file.|
+|general|tmpFolder|Set a folder path, if the default PHP Tmp folder does not suite you.|
+|general|specialChar|Can be used to create more specific regex within the rules. E.g. $host = '&host&' will be replaced with 'linux-server1' if the select hostname is linux-server1. This works likewise with host, service, command.|
+|general|databaseType|Choose between influxDB and elasticsearch. Elasticsearch farewide not that supported as InfluxDB is, because InfluxDB is the main target database.|
+|general|disablePanelTitel|If this is set to true the PanelTitels are hidden globaly, there is an URL Flag which does it just with the current page. It is usefull to get a bigger Graphpicture.|
 |folder|defaultTemplateFolder|This is the path to the folder containing the default templates|
 |folder|customTemplateFolder|This is the path to the folder containing the custom templates. The templates in this folder will override files in the default folder, if they have the same filename|
-|influxdb|influxFieldseperator|This char has to be the same as in the Nagflux-config. It separates the logical parts of the Tablename|
+|influxdb|url|You can guess it...|
+|influxdb|hostcheckAlias|This string will be used on hostchecks, because normaly there is no service name for it, but Histou needs one.|
+
+### URL-Parameters
+They are just valid for the current call, you can't change anything permanently.
+
+| Name          | Values        | Meaning       |
+| ------------- | ------------- | ------------- |
+|host|String|The hostname to generate the graph for|
+|service|String|The servicename to generate the graph for|
+|height|String|The height of an panel, e.g. default is: "400px"|
+|legend|Bool|If false the legend will be hidden, default: true|
+|annotations|Bool|If false the annotations will be unchecked|
+|debug|Flag|If set an additional Panel will be added to the bottom which contains some debug infos|
+|disablePanelTitel|Flag|If set the Paneltitel will be hidden|
 
 ## Templates
 There are two types of templates, the simple and the PHP. Simple templates are static, PHP are dynamic. Both cointains a rule, which describes on which host/service combination the template is uses. The type of the template is defined by its file-ending, `.simple` or `.php`
