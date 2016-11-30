@@ -13,7 +13,7 @@ return function (callback) {
     }
 
     var url = 'http://localhost/histou/';
-    var configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug+disablePanelTitel+'&annotations='+annotations;
+    var configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug+disablePanelTitel+disablePerfdataLookup+specificTemplate+'&annotations='+annotations;
 
     var flotAddons = url + 'flotAddons.js';
     $.getScript(flotAddons, function (){});
@@ -155,7 +155,18 @@ function parseArgs()
     }else{
         disablePanelTitel = "&disablePanelTitel";
     }
+	
+    if(_.isUndefined(ARGS.disablePerfdataLookup)) {
+        disablePerfdataLookup = '';
+    }else{
+        disablePerfdataLookup = "&disablePerfdataLookup";
+    }
 
+    if(_.isUndefined(ARGS.specificTemplate)) {
+        specificTemplate = '';
+    }else{
+        specificTemplate = "&specificTemplate="+ARGS.specificTemplate;
+    }
 }
 
 function clearUi()

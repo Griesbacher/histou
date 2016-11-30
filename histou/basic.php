@@ -31,6 +31,8 @@ class Basic
         2 => array("pipe", "w")     // STERR
     );
     public static $disablePanelTitel = false;
+    public static $specificTemplate = '';
+    public static $disablePerfdataLookup = false;
  
     /**
     Parses the GET parameter.
@@ -117,6 +119,14 @@ class Basic
             define("SHOW_ANNOTATION", true);
         } else {
             define("SHOW_ANNOTATION", false);
+        }
+
+        if (isset($_GET['specificTemplate']) && !empty($_GET['specificTemplate'])) {
+            static::$specificTemplate = $_GET["specificTemplate"];
+        }
+
+        if (static::$specificTemplate != "" && isset($_GET['disablePerfdataLookup'])) {
+            static::$disablePerfdataLookup = true;
         }
     }
 
