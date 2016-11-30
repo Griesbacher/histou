@@ -70,7 +70,7 @@ $genTemplate = function ($perfData) {
         $panel->addTarget($target);
 
         if (isset($values['unit']) && $values['unit'] == "c") {
-			//create a new Target if the type is counter, with difference in select
+            //create a new Target if the type is counter, with difference in select
             $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key, '', false, "\histou\grafana\graphpanel\GraphPanelInfluxdb::createCounterSelect");
         } else {
             $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
