@@ -39,7 +39,7 @@ Here are some of the important config-options:
 ### URL-Parameters
 They are just valid for the current call, you can't change anything permanently.
 
-| Name          | Values        | Meaning       |
+| Name          | Type          | Meaning       |
 | ------------- | ------------- | ------------- |
 |host|String|The hostname to generate the graph for|
 |service|String|The servicename to generate the graph for|
