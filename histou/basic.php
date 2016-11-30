@@ -30,7 +30,7 @@ class Basic
         1 => array("pipe", "w"),    // STDOUT
         2 => array("pipe", "w")     // STERR
     );
-    public static $disablePanelTitel = false;
+    public static $disablePanelTitle = false;
     public static $specificTemplate = '';
     public static $disablePerfdataLookup = false;
  
@@ -191,9 +191,9 @@ class Basic
         if (!empty($phpCommand)) {
             static::$phpCommand = $phpCommand;
         }
-        $disablePanelTitel = Basic::getConfigKey($config, 'general', 'disablePanelTitel');
-        if (!empty($disablePanelTitel)) {
-            static::$disablePanelTitel = $disablePanelTitel;
+        $disablePanelTitle = Basic::getConfigKey($config, 'general', 'disablePanelTitle');
+        if (!empty($disablePanelTitle)) {
+            static::$disablePanelTitle = $disablePanelTitle;
         }
         Basic::setConstant(
             "TMP_FOLDER",

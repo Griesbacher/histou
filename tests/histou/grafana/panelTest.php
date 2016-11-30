@@ -14,7 +14,7 @@ class PanelTest extends \MyPHPUnitFrameworkTestCase
     {
         $panel1 = new \histou\grafana\graphpanel\GraphPanelInfluxdb('p1', 'test');
         $this->assertSame('p1', $panel1->toArray()['title']);
-        \histou\Basic::$disablePanelTitel = true;
+        \histou\Basic::$disablePanelTitle = true;
         $this->assertSame('', $panel1->toArray()['title']);
         $panel1->setSpan(20);
         $this->assertSame(20, $panel1->toArray()['span']);

@@ -50,11 +50,11 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
     {
         $file_contents = file_get_contents('histou.ini.example');
         $file_contents = str_replace('phpCommand = "php"', 'phpCommand = "foo"', $file_contents);
-        $file_contents = str_replace('disablePanelTitel = false', 'disablePanelTitel = true', $file_contents);
+        $file_contents = str_replace('disablePanelTitle = false', 'disablePanelTitle = true', $file_contents);
         file_put_contents('histou.ini.example.tmp', $file_contents);
         \histou\Basic::parsIni('histou.ini.example.tmp');
         unlink('histou.ini.example.tmp');
-        $this->assertTrue((boolean)\histou\Basic::$disablePanelTitel);
+        $this->assertTrue((boolean)\histou\Basic::$disablePanelTitle);
         $this->assertSame(\histou\Basic::$phpCommand, "foo");
         ob_start();
         $this->assertSame(1, \histou\Basic::testConfig());

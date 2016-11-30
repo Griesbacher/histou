@@ -86,7 +86,7 @@ class Parser
                     if (array_key_exists('panels', $row)) {
                         foreach ($row['panels'] as &$panel) {
                             // remove PanelTitel if needed
-                            if (\histou\Basic::$disablePanelTitel) {
+                            if (\histou\Basic::$disablePanelTitle) {
                                 $panel['title'] = '';
                             }
                             // get old Perfdata

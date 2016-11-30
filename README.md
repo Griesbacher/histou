@@ -30,7 +30,7 @@ Here are some of the important config-options:
 |general|tmpFolder|Set a folder path, if the default PHP Tmp folder does not suite you.|
 |general|specialChar|Can be used to create more specific regex within the rules. E.g. $host = '&host&' will be replaced with 'linux-server1' if the select hostname is linux-server1. This works likewise with host, service, command.|
 |general|databaseType|Choose between influxDB and elasticsearch. Elasticsearch farewide not that supported as InfluxDB is, because InfluxDB is the main target database.|
-|general|disablePanelTitel|If this is set to true the PanelTitels are hidden globaly, there is an URL Flag which does it just with the current page. It is usefull to get a bigger Graphpicture.|
+|general|disablePanelTitle|If this is set to true the PanelTitels are hidden globaly, there is an URL Flag which does it just with the current page. It is usefull to get a bigger Graphpicture.|
 |folder|defaultTemplateFolder|This is the path to the folder containing the default templates|
 |folder|customTemplateFolder|This is the path to the folder containing the custom templates. The templates in this folder will override files in the default folder, if they have the same filename|
 |influxdb|url|You can guess it...|
@@ -47,7 +47,7 @@ They are just valid for the current call, you can't change anything permanently.
 |legend|Bool|If false the legend will be hidden, default: true|
 |annotations|Bool|If false the annotations will be unchecked|
 |debug|Flag|If set an additional Panel will be added to the bottom which contains some debug infos|
-|disablePanelTitel|Flag|If set the Paneltitel will be hidden|
+|disablePanelTitle|Flag|If set the Paneltitel will be hidden|
 |specificTemplate|String|If a filename is passed this away, only this template will be used, regardless the rules. E.g. ping.simple. Makes more or less just sens with simple templates|
 |disablePerfdataLookup|Flag|If set no data will be fetched from the InfluxDB, so the only data available in the template is the host and servicename. Works only if specificTemplate is set!|
 

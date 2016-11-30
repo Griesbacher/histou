@@ -150,10 +150,10 @@ function parseArgs()
         annotations = false;
     }
 
-    if(_.isUndefined(ARGS.disablePanelTitel)) {
-        disablePanelTitel = '';
+    if(_.isUndefined(ARGS.disablePanelTitle)) {
+        disablePanelTitle = '';
     }else{
-        disablePanelTitel = "&disablePanelTitel";
+        disablePanelTitle = "&disablePanelTitle";
     }
 	
     if(_.isUndefined(ARGS.disablePerfdataLookup)) {

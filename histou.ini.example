@@ -8,7 +8,7 @@ specialChar = "&"
 databaseType = "influxdb"
 forecastDatasourceName = "nagflux_forecast"
 ; disable the Panel Titel globally
-disablePanelTitel = false
+disablePanelTitle = false
 
 [folder]
 defaultTemplateFolder = "templates/default/"
