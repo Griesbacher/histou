@@ -96,46 +96,7 @@ perfLabel = load1, load5, load15
         $this->assertInstanceOf('\closure', $result[1]);
         $perfData = array('host' => 'h1', 'service' => 's1', 'command' => 'c1', 'perfLabel' => array('p1' => 'v1'));
         $jsonString = $result[1]($perfData);
-        $expected = '{
-   "rows":[
-      {
-         "panels":[
-            {
-               "targets":[
-                  {
-                     "tags":[
-                        {
-                           "key":"host",
-                           "operator":"=",
-                           "value":"h1"
-                        },
-                        {
-                           "condition":"AND",
-                           "key":"service",
-                           "operator":"=",
-                           "value":"s1"
-                        },
-                        {
-                           "condition":"AND",
-                           "key":"command",
-                           "operator":"=",
-                           "value":"c1"
-                        },
-                        {
-                           "condition":"AND",
-                           "key":"performanceLabel",
-                           "operator":"=",
-                           "value":"pl"
-                        }
-                     ]
-                  }
-               ]
-            }
-         ]
-      }
-   ],
-    "title":";h1 - s1;"
-}';
+        $expected = '{"rows":[{"panels":[{"targets":[{"tags":[{"key":"host","operator":"=","value":"h1"},{"condition":"AND","key":"service","operator":"=","value":"s1"},{"condition":"AND","key":"command","operator":"=","value":"c1"},{"condition":"AND","key":"performanceLabel","operator":"=","value":"pl"}]}]}]}],"title":";h1 - s1;"}';
         $this->assertEquals($expected, $jsonString);
 
 
@@ -206,52 +167,7 @@ perfLabel = load1, load5, load15
         $this->assertInstanceOf('\closure', $result[1]);
         $perfData = array('host' => 'h1', 'service' => 's1', 'command' => 'c1', 'perfLabel' => array('p1' => 'v1'));
         $jsonString = $result[1]($perfData);
-        $expected = '{
-   "rows":[
-      {
-         "panels":[
-            {
-               "targets":[
-                  {
-                     "tags":[
-                        {
-                           "key":"host",
-                           "operator":"=",
-                           "value":"h1"
-                        },
-                        {
-                           "condition":"AND",
-                           "key":"service",
-                           "operator":"=",
-                           "value":"s1"
-                        },
-                        {
-                           "condition":"AND",
-                           "key":"command",
-                           "operator":"=",
-                           "value":"c1"
-                        },
-                        {
-                           "condition":"AND",
-                           "key":"performanceLabel",
-                           "operator":"=",
-                           "value":"pl"
-                        },
-                        {
-                           "condition":"AND",
-                           "key":"foo",
-                           "operator":"=",
-                           "value":"bar"
-                        }
-                     ]
-                  }
-               ]
-            }
-         ]
-      }
-   ],
-    "title":";h1 - s1;"
-}';
+        $expected = '{"rows":[{"panels":[{"targets":[{"tags":[{"key":"host","operator":"=","value":"h1"},{"condition":"AND","key":"service","operator":"=","value":"s1"},{"condition":"AND","key":"command","operator":"=","value":"c1"},{"condition":"AND","key":"performanceLabel","operator":"=","value":"pl"},{"condition":"AND","key":"foo","operator":"=","value":"bar"}]}]}]}],"title":";h1 - s1;"}';
         $this->assertEquals($expected, $jsonString);
 
 

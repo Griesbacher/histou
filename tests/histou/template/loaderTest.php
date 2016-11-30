@@ -120,9 +120,7 @@ Rule:
         $this->assertSame('template1.php', $rule->getBaseName());
         $this->assertSame(join(DIRECTORY_SEPARATOR, array(CUSTOM_TEMPLATE_FOLDER, 'template1.php')), $rule->getFileName());
 
-        $expected = '{
-    "hallo":"world"
-}';
+        $expected = '{"hallo":"world"}';
         $this->assertSame($expected, $templates[2]->generateDashboard('foo'));
 
         $default = \histou\template\template::findDefaultTemplate($templates, "template1.php");

@@ -137,7 +137,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
         \histou\Basic::returnData(1);
         $out3 = ob_get_contents();
         ob_end_clean();
-        $this->assertSame("<pre>Don't know what to do with this: 1</pre>", $out3);
+        $this->assertContains("<pre>Don't know what to do with this type: integer", $out3);
     }
     private $emptyDashboard = '<pre>Array
 (
