@@ -139,7 +139,8 @@ class Basic
             $json = $data;
         } else {
             echo '<pre>';
-            print_r("Don't know what to do with this: $data");
+            print_r("Don't know what to do with this type: ".gettype($data));
+            var_dump($data);
             echo '</pre>';
         }
         if (isset($json)) {
