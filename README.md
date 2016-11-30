@@ -6,9 +6,8 @@ Histou is designed to add templates to Grafana from Nagios Data. Therefor Nagflu
 
 ## Installation
 ### Dependencies
-- Grafana
-- Webserver with PHP 5.4+
-- PHP commandline tool
+- Webserver with PHP 5.3.3+
+- PHP commandline tool / phpcgi
 
 ### Webserver
 - The whole Histoufolder accessible by copying to your webserver. On Debian with apache this would mean, to copy the whole Histoufolder to /var/www/
@@ -16,6 +15,9 @@ Histou is designed to add templates to Grafana from Nagios Data. Therefor Nagflu
 ### Grafana
 - Move the file `histou.js` in the `public/dashboards/` folder within Grafana.
 - Depending on the URL the `index.php` is published on the webserver, change the Variable `var url = 'http://localhost/histou/';` in in the histou.js file. If you copied the Histoufolder to the root of your webserver, the default URL is perfect.
+
+### OMD - the easy way
+Nagflux is fully integrated in [OMD-Labs](https://github.com/ConSol/omd), as well as Histou is. Therefor if you wanna try it out, it's maybe easier to install OMD-Labs.
 
 ## Configuration
 ### Configfile
