@@ -13,7 +13,7 @@ return function (callback) {
     }
 
     var url = 'http://localhost/histou/';
-    var configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug+disablePanelTitel+disablePerfdataLookup+specificTemplate+'&annotations='+annotations;
+    var configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug+disablePanelTitle+disablePerfdataLookup+specificTemplate+'&annotations='+annotations;
 
     var flotAddons = url + 'flotAddons.js';
     $.getScript(flotAddons, function (){});
