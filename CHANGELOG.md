@@ -1,3 +1,7 @@
+## v0.4.1 - 30.01.2017
+### Fixes
+- Changes "Null value" to "connected"
+
 ## v0.4.0 - 30.11.2016
 ### Features
 - URL/Config param to disable paneltitles for bigger graphs. Url flag: disablePanelTitel - works now also on simple templates.
