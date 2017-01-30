@@ -77,11 +77,12 @@ $genTemplate = function ($perfData) {
         }
         $panel->addTarget($downtime);
         
+        // Used to display forecast data
         $forecast = $panel->genForecastTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
         if ($forecast) {
             $panel->addTarget($forecast);
         }
-        
+
         $panel->fillBelowLine($key.'-value', 2);
 
 
