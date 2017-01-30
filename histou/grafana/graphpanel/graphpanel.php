@@ -64,6 +64,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
                                     "threshold2Color"=> "rgba(234, 112, 112, 0.22)"
                                     );
         $this->data['yaxes'] = array(array('format' => 'short'), array('format' => 'short'));
+        $this->data['nullPointMode'] = "connected";
     }
 
     /**
