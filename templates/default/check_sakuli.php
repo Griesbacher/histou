@@ -24,7 +24,7 @@ $genTemplate = function ($perfData) {
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     $dashboard->addAnnotation(
         "errors",
-        "SELECT path FROM images WHERE host = '".$perfData['host']."' AND service = '".$perfData['service']."' AND \$timeFilter",
+        "SELECT path FROM images WHERE host = '".$perfData['host']."' AND service = '".$perfData['service']."' AND \$timeFilter ORDER BY time DESC LIMIT 100",
         "",
         "path",
         "",
