@@ -1,3 +1,7 @@
+## v0.4.2 - 15.09.2017
+### Features
+- Customize Grafana CSS
+
 ## v0.4.1 - 30.01.2017
 ### Fixes
 - Changes "Null value" to "connected"
