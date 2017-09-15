@@ -1,4 +1,32 @@
+/* big red loadingwheel */
+/*
 .panel-loading{
     font-size: 50px;
     color: red;
+}
+
+*/
+
+/* growing big red loadingwheel */
+.panel-loading{
+    -webkit-animation-name: loading;
+    -webkit-animation-duration: 7s;
+    animation-name: loading;
+    animation-duration: 7s;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+}
+@-webkit-keyframes loading {
+    from {color: black;}
+    to {
+        color: red;
+        font-size:50px;
+    }
+}
+@keyframes loading {
+    from {color: black;}
+    to {
+        color: red;
+        font-size:50px;
+    }
 }
