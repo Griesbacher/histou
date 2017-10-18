@@ -63,9 +63,10 @@ abstract class Dashboard
     @param string $title name of the dashboard.
     @return null
     **/
-    public function __construct($title)
+    public function __construct($title, $sharedCrosshair)
     {
         $this->data['title'] = $title;
+        $this->data['sharedCrosshair'] = $sharedCrosshair;
     }
 
     /**
