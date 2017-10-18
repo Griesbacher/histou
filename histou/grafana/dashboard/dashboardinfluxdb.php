@@ -26,9 +26,9 @@ class DashboardInfluxDB extends Dashboard
     @param string $title name of the dashboard.
     @return null
     **/
-    public function __construct($title)
+    public function __construct($title, $sharedCrosshair)
     {
-        parent::__construct($title);
+        parent::__construct($title,$sharedCrosshair);
     }
 
     public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource = INFLUXDB_DB, $enabled = SHOW_ANNOTATION, $iconSize = 13)
