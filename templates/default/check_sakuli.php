@@ -39,7 +39,7 @@ $genTemplate = function ($perfData) {
         $perfData['service'],
         $regex = '/^c_(\d\d\d)/',
         $multiFormat = true,
-        $includeAll = false
+        $includeAll = true
     );
     $templateVariableString = $dashboard->genTemplateVariable($templateName);
 
