@@ -20,7 +20,7 @@ $genTemplate = function ($perfData) {
     $caseColors = array ('#DEEBF7','#C6DBEF','#9ECAE1','#6BAED6','#4292C6','#2171B5','#08519C','#08306B');
     $stepColors = array ('#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2');
     
-    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].' '.$perfData['service']);
+    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].' '.$perfData['service'], true);
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     $dashboard->addAnnotation(
         "errors",

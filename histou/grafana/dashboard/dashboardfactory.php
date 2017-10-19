@@ -25,14 +25,14 @@ class DashboardFactory
     Returns depending on the Database_Type a dashboard.
     @returns a dashboard
     **/
-    public static function generateDashboard($title)
+    public static function generateDashboard($title, $sharedCrosshair=false)
     {
         if (DATABASE_TYPE == INFLUXDB) {
-            return new \histou\grafana\dashboard\DashboardInfluxDB($title);
+            return new \histou\grafana\dashboard\DashboardInfluxDB($title, $sharedCrosshair);
         } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-            return new \histou\grafana\dashboard\DashboardElasticsearch($title);
+            return new \histou\grafana\dashboard\DashboardElasticsearch($title, $sharedCrosshair);
         } else {
              throw new \InvalidArgumentException("The given Database is unkown:".DATABASE_TYPE);
         }
-    }
+    }    
 }
