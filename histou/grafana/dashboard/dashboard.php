@@ -63,10 +63,9 @@ abstract class Dashboard
     @param string $title name of the dashboard.
     @return null
     **/
-    public function __construct($title, $sharedCrosshair)
+    public function __construct($title)
     {
         $this->data['title'] = $title;
-        $this->data['sharedCrosshair'] = $sharedCrosshair;
     }
 
     /**
@@ -86,12 +85,22 @@ abstract class Dashboard
 
     /**
     Setter for Editable.
-    @param boolean $editable true7false.
+    @param boolean $editable.
     @return null
     **/
     public function setEditable($editable)
     {
         $this->data['editable'] = $editable;
+    }
+    
+    /**
+    Enable sharedCrosshair.
+    @param boolean $sharedCrosshair.
+    @return null
+    **/
+    public function setSharedCrosshair($sharedCrosshair)
+    {
+        $this->data['sharedCrosshair'] = $sharedCrosshair;
     }
 
     /**

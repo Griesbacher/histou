@@ -19,8 +19,9 @@ $rule = new \histou\template\Rule(
 $genTemplate = function ($perfData) {
     $caseColors = array ('#DEEBF7','#C6DBEF','#9ECAE1','#6BAED6','#4292C6','#2171B5','#08519C','#08306B');
     $stepColors = array ('#9E0142','#D53E4F','#F46D43','#FDAE61','#FEE08B','#E6F598','#ABDDA4','#66C2A5','#3288BD','#5E4FA2');
-    
-    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].' '.$perfData['service'], true);
+
+    $dashboard = \histou\grafana\dashboard\DashboardFactory::generateDashboard($perfData['host'].' '.$perfData['service']);
+    $dashboard->setSharedCrosshair(true);
     $dashboard->addDefaultAnnotations($perfData['host'], $perfData['service']);
     $dashboard->addAnnotation(
         "errors",
@@ -69,8 +70,8 @@ $genTemplate = function ($perfData) {
             continue;
         }
     }
-    
-    
+
+
     //Suite Row
     $suiteRow = new \histou\grafana\Row("Suite-Runtime");
     //Suite Panel
@@ -101,9 +102,9 @@ $genTemplate = function ($perfData) {
     $suiteStat->addRangeToTextElement(1.5, 2.5, 'Crit');
     $suiteStat->addRangeToTextElement(2.5, 3.5, 'Unkn');
     $suiteRow->addPanel($suiteStat);
-    
+
     $dashboard->addRow($suiteRow);
-    
+
     //Case Row
     $caseRow = new \histou\grafana\Row("Case-Runtime");
     $caseRow->setCustomProperty("repeat", $templateName);
@@ -145,7 +146,7 @@ $genTemplate = function ($perfData) {
         $c = ($c + 1) % (sizeof($stepColors) - 1);
     }
     $caseRow->addPanel($casePanel);
-    
+
     //Case Stat Panel
     $caseStat = \histou\grafana\singlestatpanel\SinglestatPanelFactory::generatePanel("");
     $caseStat->setSpan(1);
@@ -157,8 +158,8 @@ $genTemplate = function ($perfData) {
     $caseStat->addRangeToTextElement(1.5, 2.5, 'Crit');
     $caseStat->addRangeToTextElement(2.5, 3.5, 'Unkn');
     $caseRow->addPanel($caseStat);
-    
+
     $dashboard->addRow($caseRow);
-    
+
     return $dashboard;
 };
