@@ -1,3 +1,7 @@
+## v0.4.3 - 20.10.2017
+### Features
+- Sakuli customizations
+
 ## v0.4.2 - 15.09.2017
 ### Features
 - Customize Grafana CSS
