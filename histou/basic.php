@@ -97,8 +97,8 @@ class Basic
             }
         }
 
-        if (isset($_GET['disablePanelTitel'])) {
-            static::$disablePanelTitel = true;
+        if (isset($_GET['disablePanelTitle'])) {
+            static::$disablePanelTitle = true;
         }
 
         if (isset($_GET['debug'])) {
