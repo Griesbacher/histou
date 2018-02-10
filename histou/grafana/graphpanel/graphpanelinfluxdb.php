@@ -29,7 +29,7 @@ class GraphPanelInfluxdb extends GraphPanel
     **/
     public function __construct($title, $legendShow = SHOW_LEGEND, $id = -1)
     {
-        parent::__construct($title, 'graph', $id);
+        parent::__construct($title, $legendShow, $id);
     }
 
     public function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
