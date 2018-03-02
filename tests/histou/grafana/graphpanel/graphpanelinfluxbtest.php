@@ -715,6 +715,7 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
                         );
         $this->assertSame($expected, $target);
         $this->assertSame(array("20m" , "30m"), \histou\grafana\dashboard\Dashboard::$forecast);
+
     }
 
     public function testGraphPanelInfluxdbStack()
@@ -749,5 +750,14 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
                             ),
             $gpanel->toArray()['legend']
         );
+    }
+    public function testGenTargetWithDefaultInfluxdbGroupByTime()
+    {
+        $this->init();
+        \histou\Basic::$defaultInfluxdbGroupByTime = '5m';
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('panel');
+        $target = $panel->genTargetSimple('host', 'service', 'command', 'time');
+        $expected = array( array("params" => array('5m'), "type" => "time") );
+        $this->assertSame($target['groupBy'], $expected);
     }
 }

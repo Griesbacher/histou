@@ -34,7 +34,7 @@ class GraphPanelInfluxdb extends GraphPanel
 
     public function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
     {
-        return array(
+        $target = array(
                     'measurement' => 'metrics',
                     'alias' => '$col',
                     'select' => array(),
@@ -43,6 +43,15 @@ class GraphPanelInfluxdb extends GraphPanel
                     'resultFormat' => 'time_series',
                     'datasource' => $datasource
                     );
+
+        $groupBy = $this->createDefaultGroupBy();
+        if (!empty($groupBy)) {
+            // set the groupBy to the target only if it is not empty to
+            // so that if it is empty grafana will set his own default values
+            $target['groupBy'] = $groupBy;
+        }
+
+        return $target;
     }
     
     /**
@@ -63,6 +72,21 @@ class GraphPanelInfluxdb extends GraphPanel
             $i++;
         }
         return $tags;
+    }
+
+    /**
+    Create and return groupBy array with defalt values.
+    **/
+    private function createDefaultGroupBy()
+    {
+        $groupBy = array();
+
+        if (!is_null(\histou\Basic::$defaultInfluxdbGroupByTime)) {
+            $time = array("params" => array(\histou\Basic::$defaultInfluxdbGroupByTime), "type" => "time");
+            array_push($groupBy, $time);
+        }
+
+        return $groupBy;
     }
 
     /**

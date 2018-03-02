@@ -33,6 +33,8 @@ class Basic
     public static $disablePanelTitle = false;
     public static $specificTemplate = '';
     public static $disablePerfdataLookup = false;
+
+    public static $defaultInfluxdbGroupByTime = null;
  
     /**
     Parses the GET parameter.
@@ -215,6 +217,11 @@ class Basic
             strtolower(Basic::getConfigKey($config, 'general', 'forecastDatasourceName')),
             "nagflux_forecast"
         );
+
+        $defaultInfluxdbGroupByTime = Basic::getConfigKey($config, 'graph', 'defaultInfluxdbGroupByTime');
+        if (!empty($defaultInfluxdbGroupByTime)) {
+            static::$defaultInfluxdbGroupByTime = $defaultInfluxdbGroupByTime;
+        }
 
         Basic::setConstant(
             "URL",
