@@ -760,4 +760,17 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $expected = array( array("params" => array('5m'), "type" => "time") );
         $this->assertSame($target['groupBy'], $expected);
     }
+    public function testGenTargetWithDefaultInfluxdbGroupByTimeFill()
+    {
+        $this->init();
+        \histou\Basic::$defaultInfluxdbGroupByTime = '5m';
+        \histou\Basic::$defaultInfluxdbGroupByTimeFill = 'previous';
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('panel');
+        $target = $panel->genTargetSimple('host', 'service', 'command', 'time');
+        $expected = array(
+            array("params" => array('5m'), "type" => "time"),
+            array("params" => array('previous'), "type" => "fill") ,
+        );
+        $this->assertSame($target['groupBy'], $expected);
+    }
 }

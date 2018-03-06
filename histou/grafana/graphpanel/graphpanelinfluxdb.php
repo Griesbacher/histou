@@ -86,6 +86,11 @@ class GraphPanelInfluxdb extends GraphPanel
             array_push($groupBy, $time);
         }
 
+        if(!is_null(\histou\Basic::$defaultInfluxdbGroupByTimeFill)) {
+            $fill = array("params" => array(\histou\Basic::$defaultInfluxdbGroupByTimeFill), "type" => "fill");
+            array_push($groupBy, $fill);
+        }
+
         return $groupBy;
     }
 

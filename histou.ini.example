@@ -12,6 +12,7 @@ disablePanelTitle = false
 
 [graph]
 ; defaultInfluxdbGroupByTime = 5m
+; defaultInfluxdbGroupByTimeFill = previous
 
 [folder]
 defaultTemplateFolder = "templates/default/"
