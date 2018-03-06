@@ -31,6 +31,8 @@ Here are some of the important config-options:
 |general|specialChar|Can be used to create more specific regex within the rules. E.g. $host = '&host&' will be replaced with 'linux-server1' if the select hostname is linux-server1. This works likewise with host, service, command.|
 |general|databaseType|Choose between influxDB and elasticsearch. Elasticsearch farewide not that supported as InfluxDB is, because InfluxDB is the main target database.|
 |general|disablePanelTitle|If this is set to true the PanelTitels are hidden globaly, there is an URL Flag which does it just with the current page. It is usefull to get a bigger Graphpicture.|
+|graph|defaultInfluxdbGroupByTime|Value: `time_interval[,offset_interval]`. This option will set the [GROUP BY time intervals](https://docs.influxdata.com/influxdb/latest/query_language/data_exploration/#group-by-time-intervals) value for all influxdb queries. The `time_interval` and the `offset_interval` are [duration literal](https://docs.influxdata.com/influxdb/v1.4/query_language/spec/#durations), E.g.: `5m`, `1h`, `5m,1m`. Each template can overwrite this option.
+|graph|defaultInfluxdbGroupByTimeFill|Value: `fill_option`. This will set the fill condition for all influxdb queries. Possible value are listed and explained here: [GROUP BY time intervals and fill()](https://docs.influxdata.com/influxdb/v1.4/query_language/data_exploration/#group-by-time-intervals-and-fill)
 |folder|defaultTemplateFolder|This is the path to the folder containing the default templates|
 |folder|customTemplateFolder|This is the path to the folder containing the custom templates. The templates in this folder will override files in the default folder, if they have the same filename|
 |influxdb|url|You can guess it...|
