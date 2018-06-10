@@ -96,7 +96,7 @@ $genTemplate = function ($perfData) {
         $suitePanel->setSpan(11);
         $suitePanel->setLeftYAxisMinMax(0);
         $suitePanel->fillBelowLine("/^(?!warning|critical).*$/", 5);
-        $suitePanel->setLegend(true, true, true, true, false, false, true, true, true, true);
+        $suitePanel->setLegend(SHOW_LEGEND, true, true, true, false, false, true, true, true, true);
         $suitePanel->addTarget($suitePanel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $suiteLabel, $caseColors[0], $suiteName));
         $c = 1;
         for ($i = 0; $i < sizeof($caseLabels); $i++) {
@@ -132,7 +132,7 @@ $genTemplate = function ($perfData) {
         $casePanel->setSpan(11);
         $casePanel->setLeftYAxisMinMax(0);
         $casePanel->fillBelowLine("/^(?!warning|critical).*$/", 5);
-        $casePanel->setLegend(true, true, true, true, false, false, true, true, true, true);
+        $casePanel->setLegend(SHOW_LEGEND, true, true, true, false, false, true, true, true, true);
         $target1 = $casePanel->createTarget(array('host' => array('value' => $perfData['host'], 'operator' => '='),
                                         'service' => array('value' => $perfData['service'], 'operator' => '='),
                                         'command' => array('value' => $perfData['command'], 'operator' => '='),
@@ -189,7 +189,7 @@ $genTemplate = function ($perfData) {
         $stepPanel->setSpan(12);
         $stepPanel->setLeftYAxisMinMax(0);
         $stepPanel->fillBelowLine("/^(?!warning|critical).*$/", 5);
-        $stepPanel->setLegend(true, true, true, true, false, false, true, true, true, true);
+        $stepPanel->setLegend(SHOW_LEGEND, true, true, true, false, false, true, true, true, true);
         $stepPanel->addTarget($stepPanel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], 's_'.$stepId.'_'.$stepName, $stepColors[0], $stepName));
         $stepRow->addPanel($stepPanel);
         $dashboard->addRow($stepRow);
