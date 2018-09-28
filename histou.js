@@ -12,7 +12,7 @@ return function (callback) {
         document.documentElement.style.background = '#FFF';
     }
 
-    var url = 'http://localhost/histou/';
+    var url = location.protocol+'//'+window.location.hostname+'/histou/';
     var configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug+disablePanelTitle+disablePerfdataLookup+specificTemplate+'&annotations='+annotations;
 
     var flotAddons = url + 'flotAddons.js';
