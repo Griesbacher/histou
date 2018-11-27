@@ -64,7 +64,7 @@ class Basic
         
         if (!static::$request) {
             if (isset($_GET['host']) && !empty($_GET['host'])) {
-                define("HOST", $_GET["host"]);
+                define("HOST", urldecode($_GET["host"]));
             } elseif (isset($args['host']) && !empty($args['host'])) {
                 define("HOST", $args["host"]); // @codeCoverageIgnore
             } else {  // @codeCoverageIgnore
@@ -72,7 +72,7 @@ class Basic
             }
             
             if (isset($_GET['service']) && !empty($_GET['service'])) {
-                define("SERVICE", $_GET["service"]);
+                define("SERVICE", urldecode($_GET["service"]));
             } elseif (isset($args['service']) && !empty($args['service'])) {
                 define("SERVICE", $args["service"]);  // @codeCoverageIgnore
             } else {   // @codeCoverageIgnore
