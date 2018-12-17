@@ -41,7 +41,9 @@ class GraphPanelInfluxdb extends GraphPanel
                     'tags' => $this->createFilterTags($filterTags),
                     'dsType' => 'influxdb',
                     'resultFormat' => 'time_series',
-                    'datasource' => $datasource
+                    'datasource' => $datasource,
+                    'groupBy' => array(array("params"=>array("\$__interval"), "type"=> "time"),
+                                       array("params"=>array("linear"), "type"=> "fill"))
                     );
     }
     
