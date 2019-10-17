@@ -64,7 +64,10 @@ if (!\histou\Basic::$disablePerfdataLookup){
 		SERVICE
 	);
 
-	$perfDataSize = sizeof($perfData);
+	$perfDataSize = 0;
+	if(is_array($perfData)) {
+		$perfDataSize = sizeof($perfData);
+	}
 	if ($perfDataSize < 4) {
 		if ($perfDataSize == 1) {
 			\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database Error: '.$perfData), 1);
