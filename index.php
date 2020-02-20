@@ -49,11 +49,15 @@ if (!\histou\Basic::$disablePerfdataLookup){
 		$database = new \histou\database\Influxdb(URL);
 	}elseif(DATABASE_TYPE == ELASTICSEARCH){
 		$database = new \histou\database\Elasticsearch(URL);
+	}elseif(DATABASE_TYPE == VICTORIAMETRICS){
+		$database = new \histou\database\Victoriametrics(URL);
 	}else{
 		\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Unsupported database'), 1);
 	}
 
 	$request = $database->fetchPerfData();
+
+
 	if (empty($request)) {
 		\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
 		exit(0);
@@ -63,6 +67,13 @@ if (!\histou\Basic::$disablePerfdataLookup){
 		HOST,
 		SERVICE
 	);
+	
+	// FIXME
+	ob_start();
+	print_r($perfData);
+	$stderr = fopen('php://stderr', 'w');
+	fwrite($stderr, ob_get_contents());
+	ob_end_clean();
 
 	$perfDataSize = 0;
 	if(is_array($perfData)) {
