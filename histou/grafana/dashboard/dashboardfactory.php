@@ -31,6 +31,8 @@ class DashboardFactory
             return new \histou\grafana\dashboard\DashboardInfluxDB($title);
         } elseif (DATABASE_TYPE == ELASTICSEARCH) {
             return new \histou\grafana\dashboard\DashboardElasticsearch($title);
+        } elseif (DATABASE_TYPE == VICTORIAMETRICS) {
+            return new \histou\grafana\dashboard\DashboardVictoriametrics($title);
         } else {
              throw new \InvalidArgumentException("The given Database is unkown:".DATABASE_TYPE);
         }
