@@ -29,9 +29,8 @@ class Victoriametrics extends JSONDatabase
     **/
     public function __construct($url)
     {
-        parent::__construct($url."/api/v1/series?match[]=");
+        parent::__construct($url."/api/v1/query?query=");
     }
-/**  curl -G -X GET -s http://localhost:8428/api/v1/series --data-urlencode match[]='{host="localhost",service="load"}' **/
     /**
     Querys the database for perfdata.
     @returns array.
@@ -52,11 +51,11 @@ class Victoriametrics extends JSONDatabase
     public function filterPerfdata($request, $host, $service)
     {
 	//FIXME
-        ob_start();
-        print_r($request);
-        $stderr = fopen('php://stderr', 'w');
-        fwrite($stderr, ob_get_contents());
-        ob_end_clean();
+    ob_start();
+    print_r($request);
+    $stderr = fopen('php://stderr', 'w');
+    fwrite($stderr, ob_get_contents());
+    ob_end_clean();
 /**
  Array
 (
@@ -80,71 +79,91 @@ class Victoriametrics extends JSONDatabase
 )
 
 
-Array
-(
-    [status] => success
-    [data] => Array
-        (
-            [0] => Array
-                (
-                    [__name__] => metrics_max
-                    [service] => ssh open
-                    [db] => nagflux
-                    [host] => localhost
-                    [command] => check_tcp
-                    [performanceLabel] => time
-                    [unit] => s
-                )
-
-            [1] => Array
-                (
-                    [__name__] => metrics_value
-                    [service] => ssh open
-                    [db] => nagflux
-                    [host] => localhost
-                    [command] => check_tcp
-                    [performanceLabel] => time
-                    [unit] => s
-                )
-
-            [2] => Array
-                (
-                    [__name__] => metrics_min
-                    [service] => ssh open
-                    [db] => nagflux
-                    [host] => localhost
-                    [command] => check_tcp
-                    [performanceLabel] => time
-                    [unit] => s
-                )
-
-        )
-
-)
+    "data": {
+        "result": [
+            {
+                "metric": {
+                    "__name__": "metrics_max",
+                    "command": "check_tcp",
+                    "db": "nagflux",
+                    "host": "localhost",
+                    "performanceLabel": "time",
+                    "service": "ssh open",
+                    "unit": "s"
+                },
+                "value": [
+                    1582301019,
+                    "10"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "metrics_min",
+                    "command": "check_tcp",
+                    "db": "nagflux",
+                    "host": "localhost",
+                    "performanceLabel": "time",
+                    "service": "ssh open",
+                    "unit": "s"
+                },
+                "value": [
+                    1582301019,
+                    "0"
+                ]
+            },
+            {
+                "metric": {
+                    "__name__": "metrics_value",
+                    "command": "check_tcp",
+                    "db": "nagflux",
+                    "host": "localhost",
+                    "performanceLabel": "time",
+                    "service": "ssh open",
+                    "unit": "s"
+                },
+                "value": [
+                    1582301019,
+                    "0.000304"
+                ]
+            }
+        ],
+        "resultType": "vector"
+    },
+    "status": "success"
+}
 
 */
-        if ($request == null || empty($request['data'])) {
-            return "No data found";
-        }
+    if ($request == null || empty($request['data']) || empty($request['data']['result'])) {
+        return "No data found";
+    }
 	$data = array('perfLabel' => array());
-	foreach ($request['data'] as $series) {
-		fwrite($stderr, sprintf("%s\n", $series['__name__']));
-		$data['host'] = $series['host'];
-		$data['service'] = $series['service'];
-		$data['command'] = $series['command'];
-		$label = $series['performanceLabel'];
+	foreach ($request['data']['result'] as $series) {
+		fwrite($stderr, sprintf("%s\n", $series['metric']['__name__']));
+		$data['host'] = $series['metric']['host'];
+		$data['service'] = $series['metric']['service'];
+		$data['command'] = $series['metric']['command'];
+		$label = $series['metric']['performanceLabel'];
 		if(!array_key_exists($label, $data['perfLabel'])) {
 			$data['perfLabel'][$label] = array();
 		}
-		if(!empty($series['unit'])) {
-			$unit = $series['unit'];
+		if(!empty($series['metric']['unit'])) {
+			$unit = $series['metric']['unit'];
 			$data['perfLabel'][$label]['unit'] = $unit;
 		}
-		$field = preg_replace('/^metrics_/','',$series['__name__']);
-		$data['perfLabel'][$label][$field] = 0;
+		$field = preg_replace('/^metrics_/','',$series['metric']['__name__']);
+        $data['perfLabel'][$label][$field] = 0;
+        $data['perfLabel'][$label]['value'] = $series['value'][1];
 	}
 
-        uksort($data['perfLabel'], "strnatcmp");
+    uksort($data['perfLabel'], "strnatcmp");
+
+	//FIXME
+    ob_start();
+    print_r($data);
+    $stderr = fopen('php://stderr', 'w');
+    fwrite($stderr, ob_get_contents());
+    ob_end_clean();
+
 	return $data;
     }
 }
