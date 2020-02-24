@@ -34,7 +34,7 @@ class GraphPanelInfluxdb extends GraphPanel
 
     public function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
     {
-        return array(
+        return new \ArrayObject(array(
                     'measurement' => 'metrics',
                     'alias' => '$col',
                     'select' => array(),
@@ -44,7 +44,7 @@ class GraphPanelInfluxdb extends GraphPanel
                     'datasource' => $datasource,
                     'groupBy' => array(array("params"=>array("\$__interval"), "type"=> "time"),
                                        array("params"=>array("linear"), "type"=> "fill"))
-                    );
+                    ));
     }
     
     /**

@@ -151,8 +151,8 @@ class Victoriametrics extends JSONDatabase
 			$data['perfLabel'][$label]['unit'] = $unit;
 		}
 		$field = preg_replace('/^metrics_/','',$series['metric']['__name__']);
-        $data['perfLabel'][$label][$field] = 0;
-        $data['perfLabel'][$label]['value'] = $series['value'][1];
+        $data['perfLabel'][$label][$field] = $series['value'][1];
+        //$data['perfLabel'][$label]['value'] = $series['value'][1];
 	}
 
     uksort($data['perfLabel'], "strnatcmp");
@@ -161,7 +161,7 @@ class Victoriametrics extends JSONDatabase
     ob_start();
     print_r($data);
     $stderr = fopen('php://stderr', 'w');
-    fwrite($stderr, ob_get_contents());
+    fwrite($stderr, 'XXX ' . ob_get_contents());
     ob_end_clean();
 
 	return $data;

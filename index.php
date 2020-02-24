@@ -69,11 +69,11 @@ if (!\histou\Basic::$disablePerfdataLookup){
 	);
 	
 	// FIXME
-	ob_start();
-	print_r($perfData);
-	$stderr = fopen('php://stderr', 'w');
-	fwrite($stderr, ob_get_contents());
-	ob_end_clean();
+	//ob_start();
+	//print_r($perfData);
+	//$stderr = fopen('php://stderr', 'w');
+	//fwrite($stderr, ob_get_contents());
+	//ob_end_clean();
 
 	$perfDataSize = 0;
 	if(is_array($perfData)) {

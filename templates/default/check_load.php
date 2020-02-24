@@ -13,7 +13,7 @@ $rule = new \histou\template\Rule(
     $host = '*',
     $service = '*',
     $command = '*',
-    $perfLabel = array('load1', 'load5', 'load15')
+    $perfLabel = array('xload1', 'xload5', 'xload15')
 );
 
 $genTemplate = function ($perfData) {
