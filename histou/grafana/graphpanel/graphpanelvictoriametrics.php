@@ -19,6 +19,7 @@ namespace histou\grafana\graphpanel;
       "legendFormat": "asdf"
     }
 */
+
 class Target extends \ArrayObject implements \JsonSerializable {
     public function jsonSerialize() {
         $r = array(
@@ -26,14 +27,6 @@ class Target extends \ArrayObject implements \JsonSerializable {
             'legendFormat' => $this['legendFormat'],
             'expr' => $this->getExpr()
         );
-        //FIXME
-        ob_start();
-        print_r($this->getArrayCopy());
-        echo "\n" . json_encode($r) . "\n\n";
-        $stderr = fopen('php://stderr', 'w');
-        fwrite($stderr, ob_get_contents());
-        ob_end_clean();
-
         return $r;
 
     }
@@ -42,6 +35,7 @@ class Target extends \ArrayObject implements \JsonSerializable {
         $expr =  '{__name__=~"' . $this['measurement'] . "_(" . $this->getSelect() . ')",' . $this->getFilter() . '}';
         return 'label_replace(' . $expr . ', "__tmp_alias", "$1", "__name__", "metrics_(.*)")';
     }
+
     private function getSelect() {
        return join("|", array_map(function($x){
            return $x[0];
@@ -51,17 +45,9 @@ class Target extends \ArrayObject implements \JsonSerializable {
     private function getFilter() {
         $filter = array();
         foreach($this['tags'] as $key => $val) {
-        //FIXME
-        $stderr = fopen('php://stderr', 'w');
-        ob_start();
-        print_r(array($val));
-        fwrite($stderr, ob_get_contents());
-        ob_end_clean();
-
             array_push($filter, $key . '="' . $val['value'] . '"');
         }
         return join(",", $filter);
-        return 'host="localhost",service="ssh open"';
     }
 }
 
@@ -97,8 +83,6 @@ class GraphPanelVictoriametrics extends GraphPanel
                     'dsType' => 'prometheus',
                     'resultFormat' => 'time_series',
                     'datasource' => $datasource,
-//                    'groupBy' => array(array("params"=>array("\$__interval"), "type"=> "time"),
-//                                       array("params"=>array("linear"), "type"=> "fill"))
                     ));
     }
     

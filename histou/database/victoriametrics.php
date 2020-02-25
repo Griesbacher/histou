@@ -50,95 +50,11 @@ class Victoriametrics extends JSONDatabase
     **/
     public function filterPerfdata($request, $host, $service)
     {
-	//FIXME
-    ob_start();
-    print_r($request);
-    $stderr = fopen('php://stderr', 'w');
-    fwrite($stderr, ob_get_contents());
-    ob_end_clean();
-/**
- Array
-(
-    [host] => localhost
-    [service] => ssh open
-    [perfLabel] => Array
-        (
-            [time] => Array
-                (
-                    [crit] => 
-                    [max] => 10
-                    [min] => 0
-                    [unit] => s
-                    [value] => 0.000245
-                    [warn] => 
-                )
-
-        )
-
-    [command] => check_tcp
-)
-
-
-    "data": {
-        "result": [
-            {
-                "metric": {
-                    "__name__": "metrics_max",
-                    "command": "check_tcp",
-                    "db": "nagflux",
-                    "host": "localhost",
-                    "performanceLabel": "time",
-                    "service": "ssh open",
-                    "unit": "s"
-                },
-                "value": [
-                    1582301019,
-                    "10"
-                ]
-            },
-            {
-                "metric": {
-                    "__name__": "metrics_min",
-                    "command": "check_tcp",
-                    "db": "nagflux",
-                    "host": "localhost",
-                    "performanceLabel": "time",
-                    "service": "ssh open",
-                    "unit": "s"
-                },
-                "value": [
-                    1582301019,
-                    "0"
-                ]
-            },
-            {
-                "metric": {
-                    "__name__": "metrics_value",
-                    "command": "check_tcp",
-                    "db": "nagflux",
-                    "host": "localhost",
-                    "performanceLabel": "time",
-                    "service": "ssh open",
-                    "unit": "s"
-                },
-                "value": [
-                    1582301019,
-                    "0.000304"
-                ]
-            }
-        ],
-        "resultType": "vector"
-    },
-    "status": "success"
-}
-
-*/
     if ($request == null || empty($request['data']) || empty($request['data']['result'])) {
         return "No data found";
     }
 	$data = array('perfLabel' => array());
 	foreach ($request['data']['result'] as $series) {
-		fwrite($stderr, sprintf("%s\n", $series['metric']['__name__']));
 		$data['host'] = $series['metric']['host'];
 		$data['service'] = $series['metric']['service'];
 		$data['command'] = $series['metric']['command'];
@@ -152,17 +68,9 @@ class Victoriametrics extends JSONDatabase
 		}
 		$field = preg_replace('/^metrics_/','',$series['metric']['__name__']);
         $data['perfLabel'][$label][$field] = $series['value'][1];
-        //$data['perfLabel'][$label]['value'] = $series['value'][1];
 	}
 
     uksort($data['perfLabel'], "strnatcmp");
-
-	//FIXME
-    ob_start();
-    print_r($data);
-    $stderr = fopen('php://stderr', 'w');
-    fwrite($stderr, 'XXX ' . ob_get_contents());
-    ob_end_clean();
 
 	return $data;
     }
