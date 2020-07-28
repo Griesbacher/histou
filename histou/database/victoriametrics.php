@@ -37,7 +37,10 @@ class Victoriametrics extends JSONDatabase
     **/
     public function fetchPerfData()
     {
-        $result = $this->makeGetRequest( sprintf('{host="%s",service="%s"}', HOST, SERVICE ) );
+
+        $req=sprintf('last_over_time({__name__=~"metrics.*",host="%s",service="%s"}[1d])', HOST, SERVICE);
+        //\histou\Debug::add('request: '. print_r ($req,true)."\n");   
+        $result = $this->makeGetRequest( $req  );
 	return $result;
     }
 
@@ -54,7 +57,9 @@ class Victoriametrics extends JSONDatabase
         return "No data found";
     }
 	$data = array('perfLabel' => array());
+        $i=0;
 	foreach ($request['data']['result'] as $series) {
+                $i+=1;
 		$data['host'] = $series['metric']['host'];
 		$data['service'] = $series['metric']['service'];
 		$data['command'] = $series['metric']['command'];
@@ -66,12 +71,18 @@ class Victoriametrics extends JSONDatabase
 			$unit = $series['metric']['unit'];
 			$data['perfLabel'][$label]['unit'] = $unit;
 		}
-		$field = preg_replace('/^metrics_/','',$series['metric']['__name__']);
+                if(!empty($series['metric']['__name__'])) {
+
+			$field = preg_replace('/^metrics_/','',$series['metric']['__name__']);
+		} else {
+                        $field = sprintf('metrics%i',$i);
+                }
+
         $data['perfLabel'][$label][$field] = $series['value'][1];
 	}
-
+    
     uksort($data['perfLabel'], "strnatcmp");
-
+    \histou\Debug::add('data: '. print_r ($data,true)."\n");
 	return $data;
     }
 }

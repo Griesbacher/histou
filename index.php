@@ -61,7 +61,11 @@ if (!\histou\Basic::$disablePerfdataLookup){
 	if (empty($request)) {
 		\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
 		exit(0);
-	}
+        }
+
+        \histou\Debug::add('request out: '. print_r ($request,true)."\n");
+        //\histou\Basic::returnData(\histou\Debug::getLogAsMarkdown());
+
 	$perfData = $database->filterPerfdata(
 		$request,
 		HOST,
@@ -170,3 +174,5 @@ if (isset($template) && !empty($template)) {
 } else {
     \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# No template found!'), 1);
 }
+
+\histou\Basic::returnData(\histou\Debug::getLogAsMarkdown());
