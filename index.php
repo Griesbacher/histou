@@ -62,6 +62,10 @@ if (!\histou\Basic::$disablePerfdataLookup){
 		\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
 		exit(0);
         }
+        if (empty($request['data'])) {
+             \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Error: '.$request), 1);
+                exit(0);
+        }
 
         \histou\Debug::add('request out: '. print_r ($request,true)."\n");
         //\histou\Basic::returnData(\histou\Debug::getLogAsMarkdown());
@@ -88,7 +92,8 @@ if (!\histou\Basic::$disablePerfdataLookup){
 			\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database Error: '.$perfData), 1);
 			exit(1);
 		} else {
-			\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Host / Service not found in Database'), 1);
+			#\histou\Basic::returnData(\histou\Debug::getLogAsMarkdown(), 1);
+                        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Host / Service not found in Database'.print_r ($request,true)), 1);
 			exit(1);
 		}
 	}

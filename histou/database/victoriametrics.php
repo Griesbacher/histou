@@ -37,7 +37,7 @@ class Victoriametrics extends JSONDatabase
     **/
     public function fetchPerfData()
     {
-
+        # get last value of all series from the last day:
         $req=sprintf('last_over_time({__name__=~"metrics.*",host="%s",service="%s"}[1d])', HOST, SERVICE);
         //\histou\Debug::add('request: '. print_r ($req,true)."\n");   
         $result = $this->makeGetRequest( $req  );
