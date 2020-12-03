@@ -80,8 +80,11 @@ class GraphPanelInfluxdb extends GraphPanel
     **/
     public function genTarget($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $customSelect = null)
     {
+        $keepAlias = false;
         if ($alias == '') {
             $alias = $performanceLabel;
+        } else {
+            $keepAlias = true;
         }
         if ($useRegex) {
             $target = $this->createTarget(array(
@@ -98,7 +101,7 @@ class GraphPanelInfluxdb extends GraphPanel
                                             'performanceLabel' => array('value' => $performanceLabel)
                                             ));
         }
-        return $this->addXToTarget($target, array('value'), $alias, $color, false, $customSelect);
+        return $this->addXToTarget($target, array('value'), $alias, $color, $keepAlias, $customSelect);
     }
 
     public function addWarnToTarget($target, $alias = '', $color = true, $keepAlias = false)

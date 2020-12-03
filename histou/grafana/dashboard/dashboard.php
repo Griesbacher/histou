@@ -44,7 +44,7 @@ abstract class Dashboard
             'notice' => false,
             )),
         'time' => array(
-            'from' => 'now-8h',
+            'from' => 'now-24h',
             'to' => 'now',
         ),
         'templating' => array(),
