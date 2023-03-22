@@ -82,7 +82,7 @@ class Victoriametrics extends JSONDatabase
 	}
     
     uksort($data['perfLabel'], "strnatcmp");
-    \histou\Debug::add('data: '. print_r ($data,true)."\n");
-	return $data;
+    #\histou\Debug::add('data: '. print_r ($data,true)."\n");
+    return $data;
     }
 }

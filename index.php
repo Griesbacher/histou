@@ -179,5 +179,3 @@ if (isset($template) && !empty($template)) {
 } else {
     \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# No template found!'), 1);
 }
-
-\histou\Basic::returnData(\histou\Debug::getLogAsMarkdown());
