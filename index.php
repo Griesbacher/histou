@@ -13,7 +13,7 @@ PHP version 5
 require_once('histou/bootstrap.php');
 
 set_error_handler(
-    function ($errno, $errstr, $errfile, $errline, array $errcontext) {
+    function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
         // error was suppressed with the @-operator
         if (0 === error_reporting()) {
             return false;
