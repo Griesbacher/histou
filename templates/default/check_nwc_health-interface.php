@@ -25,7 +25,7 @@ $genTemplate = function ($perfData) {
         $templateName,
         $perfData['host'],
         $perfData['service'],
-        $regex = '^(.*?)_(\w+?)_\w+$',
+        $regex = '^(.*?)_([a-zA-Z]+?)_[a-zA-Z]+$',
         $multiFormat = true,
         $includeAll = false
     );
@@ -34,7 +34,7 @@ $genTemplate = function ($perfData) {
     $interfaces = array();
     $types = array();
     foreach ($perfData['perfLabel'] as $key => $value) {
-        if (preg_match(';^(.*?)_(\w+?)_\w+$;', $key, $hit)) {
+        if (preg_match(';^(.*?)_([a-zA-Z]+?)_[a-zA-Z]+$;', $key, $hit)) {
             array_push($interfaces, $hit[1]);
             array_push($types, $hit[2]);
         }
