@@ -53,5 +53,6 @@ class TextPanel extends Panel
     public function setContent($content)
     {
         $this->data['content'] = $content;
+        $this->data['options']['content'] = $content;
     }
 }

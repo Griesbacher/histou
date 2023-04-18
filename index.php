@@ -58,30 +58,22 @@ if (!\histou\Basic::$disablePerfdataLookup){
 	$request = $database->fetchPerfData();
 
 
-	if (empty($request)) {
-		\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
-		exit(0);
-        }
-        if (empty($request['data'])) {
-             \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Error: '.$request), 1);
-                exit(0);
-        }
+    if (empty($request)) {
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
+        exit(0);
+    }
+    if(empty($request['data']) && empty($request['series'])) {
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard("# Error: result does not contain data\n```".print_r($request, true)), 1);
+        exit(0);
+    }
 
-        \histou\Debug::add('request out: '. print_r ($request,true)."\n");
-        //\histou\Basic::returnData(\histou\Debug::getLogAsMarkdown());
+    \histou\Debug::add('request out: '. print_r ($request,true)."\n");
 
 	$perfData = $database->filterPerfdata(
 		$request,
 		HOST,
 		SERVICE
 	);
-	
-	// FIXME
-	//ob_start();
-	//print_r($perfData);
-	//$stderr = fopen('php://stderr', 'w');
-	//fwrite($stderr, ob_get_contents());
-	//ob_end_clean();
 
 	$perfDataSize = 0;
 	if(is_array($perfData)) {
@@ -92,8 +84,7 @@ if (!\histou\Basic::$disablePerfdataLookup){
 			\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database Error: '.$perfData), 1);
 			exit(1);
 		} else {
-			#\histou\Basic::returnData(\histou\Debug::getLogAsMarkdown(), 1);
-                        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Host / Service not found in Database'.print_r ($request,true)), 1);
+            \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard("# Host / Service not found in Database\n```".print_r ($request,true)), 1);
 			exit(1);
 		}
 	}
@@ -111,7 +102,7 @@ if (sizeof($templates) == 0) {
 }
 
 if (\histou\Basic::$specificTemplate == ""){
-	// search for the best	
+	// search for the best
 	//save databaseresult to rule
 	\histou\template\Rule::setCheck(
 		$perfData['host'],

@@ -23,6 +23,7 @@ PHP version 5
 abstract class JSONDatabase
 {
     protected $url;
+    public $perfKeys;
 
     /**
     Constructs a new Influxdb client.

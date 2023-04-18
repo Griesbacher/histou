@@ -33,7 +33,7 @@ class Basic
     public static $disablePanelTitle = false;
     public static $specificTemplate = '';
     public static $disablePerfdataLookup = false;
- 
+
     /**
     Parses the GET parameter.
     @return null.
@@ -54,14 +54,14 @@ class Basic
         "request:",
         );
         $args = getopt($shortopts, $longopts);
-        
+
         $input = file_get_contents('php://input');
         if (!empty($input)) { // @codeCoverageIgnore
             static::$request = json_decode($input, true); // @codeCoverageIgnore
         } elseif (isset($args['request']) && !empty($args['request'])) { // @codeCoverageIgnore
             static::$request = json_decode($args['request'], true);// @codeCoverageIgnore
         }// @codeCoverageIgnore
-        
+
         if (!static::$request) {
             if (isset($_GET['host']) && !empty($_GET['host'])) {
                 define("HOST", $_GET["host"]);
@@ -70,7 +70,7 @@ class Basic
             } else {  // @codeCoverageIgnore
                 \histou\Basic::returnData('Hostname is missing!', 1, 'Hostname is missing!');
             }
-            
+
             if (isset($_GET['service']) && !empty($_GET['service'])) {
                 define("SERVICE", $_GET["service"]);
             } elseif (isset($args['service']) && !empty($args['service'])) {
@@ -78,13 +78,13 @@ class Basic
             } else {   // @codeCoverageIgnore
                 define("SERVICE", HOSTCHECK_ALIAS);
             }
-            
+
             if (isset($_GET['command']) && !empty($_GET['command'])) {
                 define("COMMAND", $_GET["command"]);
             } elseif (isset($args['command']) && !empty($args['command'])) {
                 define("COMMAND", $args["command"]);  // @codeCoverageIgnore
             }  // @codeCoverageIgnore
-            
+
             if (isset($_GET['perf_label']) && !empty($_GET['perf_label'])) {
                 global $PERF_LABEL;
                 $PERF_LABEL = $_GET["perf_label"];
@@ -257,7 +257,7 @@ class Basic
             "histou/forecasts/"
         );
     }
-    
+
     public static function testConfig()
     {
         //test php command
