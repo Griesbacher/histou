@@ -13,6 +13,11 @@ return function (callback) {
     }
 
     var url = location.protocol+'//'+window.location.hostname+'/histou/';
+    // add omd site name
+    var site = window.location.href.match(/(https?:\/\/.*?\/.*?)\/grafana\/.*/);
+    if(site && site.length > 1){
+        url = site[1]+'/histou/';
+    }
     var configUrl = url+'index.php?host='+host+'&service='+service+'&height='+height+'&legend='+legend+debug+disablePanelTitle+disablePerfdataLookup+specificTemplate+'&annotations='+annotations;
 
     var flotAddons = url + 'flotAddons.js';
@@ -24,7 +29,8 @@ return function (callback) {
     jQuery('body').on('DOMNodeInserted', 'DIV.drop-popover', function (e) {
         var cssUrl = url+'lightbox/css/light.css'
         if (!cssLoaded) {
-            $('head').append('<link rel="stylesheet" href="'+url+'lightbox/css/light.css" type="text/css" />');
+            var link = $('<link type="text/css" rel="stylesheet" />').attr("href", cssUrl);
+            $('head').append(link);
             $.getScript(url+'lightbox/js/light.js', function(){});
             cssLoaded = true;
         }
@@ -207,8 +213,8 @@ function clearUi()
         .row-control-inner removes the row controll button on the left
         .span12 removes the add new row button on the bottom
     */
-    divs = ['.panel-header','.navbar-static-top','.row-control-inner','.span12']
-    for (index = 0; index < divs.length; index++) {
+    var divs = ['.panel-header','.navbar-static-top','.row-control-inner','.span12']
+    for (var index = 0; index < divs.length; index++) {
         waitForDivAndDeleteIt(divs[index]);
     }
     function waitForDivAndDeleteIt(div)
