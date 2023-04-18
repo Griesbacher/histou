@@ -74,12 +74,12 @@ return function (callback) {
         }
     ).fail(
         function (result) {
-                console.log(result);
-                console.log(configUrl);
+            console.log(result);
+            console.log(configUrl);
             if (result.status == 200) {
-                callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl+'\n# Probably the output is not valid json, because the returncode is 200!'));
+                callback(createErrorDashboard('# HTTP code: '+result.status+'\n- Message: '+result.statusText+'\n- Url: '+configUrl+'\n- Probably the output is not valid json, because the returncode is 200!'));
             } else {
-                callback(createErrorDashboard('# HTTP code: '+result.status+'\n# Message: '+result.statusText+'\n# Url: '+configUrl));
+                callback(createErrorDashboard('# HTTP code: '+result.status+'\n- Message: '+result.statusText+'\n- Url: '+configUrl));
             }
         }
     );
@@ -97,6 +97,9 @@ function createErrorDashboard(message)
                 span: 12,
                 fill: 1,
                 content: message,
+                options: {
+                    content: message,
+                },
             }]
         }],
         services : {},
