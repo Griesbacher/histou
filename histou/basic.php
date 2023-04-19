@@ -6,7 +6,7 @@ PHP version 5
 @package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 class Basic
 {

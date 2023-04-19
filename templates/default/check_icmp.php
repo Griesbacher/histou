@@ -6,7 +6,7 @@ PHP version 5
 @package Histou/templates/default
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 $rule = new \histou\template\Rule(

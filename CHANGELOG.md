@@ -1,3 +1,7 @@
+## v0.5.0 - 19.04.2023
+### Features
+- Add PHP 8 support
+
 ## v0.4.3 - 20.10.2017
 ### Features
 - Sakuli customizations
@@ -13,8 +17,8 @@
 ## v0.4.0 - 30.11.2016
 ### Features
 - URL/Config param to disable paneltitles for bigger graphs. Url flag: disablePanelTitle - works now also on simple templates.
-- URL param to specify a certain template. Take a look at the [README](https://github.com/Griesbacher/histou#url-parameters).
-- URL param to disable Influxdb lookup. Take a look at the [README](https://github.com/Griesbacher/histou#url-parameters).
+- URL param to specify a certain template. Take a look at the [README](https://github.com/ConSol/histou#url-parameters).
+- URL param to disable Influxdb lookup. Take a look at the [README](https://github.com/ConSol/histou#url-parameters).
 
 ### Fixes
 - Errormessage will be printed properly when simpletemplate has malformed json.
