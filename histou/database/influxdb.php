@@ -55,6 +55,9 @@ class Influxdb extends JSONDatabase
         } elseif (empty($result['results'][0])) {
             return $result['results'][1];
         } else {
+            if(empty($result["results"][0]["series"])) {
+                return null;
+            }            
             if(count($result['results'][0]["series"]) > $seriesLimit) {
                 $result['results'][0]["series"][$seriesLimit]["tags"]["performanceLabel"] = "{ERROR: MORE THAN $seriesLimit SERIES FOUND}"; # add brackets so it appears as last item
                 $result['results'][0]["series"][$seriesLimit]["values"][0][1] = ""; # command name
