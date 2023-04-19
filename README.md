@@ -1,7 +1,5 @@
-[![Circle CI](https://circleci.com/gh/Griesbacher/histou/tree/master.svg?style=svg)](https://circleci.com/gh/Griesbacher/histou/tree/master)
-[![Coverage Status](https://coveralls.io/repos/Griesbacher/histou/badge.svg?branch=master&service=github)](https://coveralls.io/github/Griesbacher/histou?branch=master)
 # Histou
-#### Adds templates to Grafana in combination with [Nagflux](https://github.com/Griesbacher/nagflux).
+#### Adds templates to Grafana in combination with [Nagflux](https://github.com/ConSol/nagflux).
 Histou is designed to add templates to Grafana from Nagios Data. Therefor Nagflux sends the informations from Nagios/Icinga(2) to an InfluxDB. On the otherhand, Grafana is used to display this performancedata. Histou adds a custom dashboard to Grafana which will display dynamic dashboards, depending on the given host and service name in the URL. Histou fetches first additional informations from the InfluxDB and select afterwards a template. Templates can be JSON or PHP Files which contains a Grafana dashboard, the have also a rule, which defines when this template is used.
 
 ## Installation
@@ -50,7 +48,7 @@ They are just valid for the current call, you can't change anything permanently.
 |disablePanelTitle|Flag|If set the Paneltitel will be hidden|
 |specificTemplate|String|If a filename is passed this away, only this template will be used, regardless the rules. E.g. ping.simple. Makes more or less just sens with simple templates|
 |disablePerfdataLookup|Flag|If set no data will be fetched from the InfluxDB, so the only data available in the template is the host and servicename. Works only if specificTemplate is set!|
-|customCSSFile|String|You could give the address of an CSS file which will be loaded into the Grafana context. Here an example: ![Custom CSS Example](https://github.com/Griesbacher/histou/blob/master/wheel_animation_example.gif "Custom CSS Example")|
+|customCSSFile|String|You could give the address of an CSS file which will be loaded into the Grafana context. Here an example: ![Custom CSS Example](https://github.com/ConSol/histou/blob/master/wheel_animation_example.gif "Custom CSS Example")|
 |reduce|Flag|If set distracting elements of a graph will be hidden, used for Thruk.|
 
 ## Templates
@@ -76,9 +74,6 @@ Simple templates contain a rule followed by an JSON object. The reason for this 
 
 ### PHP
 In the PHP template you can write PHP code which will be executed when the template gets chosen. You just have to return a JSON string or an object of the build-in PHP dashboard.
-
-## DEMO
-This Dockercontainer contains OMD and everything is preconfigured to use Nagflux/Histou/Grafana/InfluxDB: https://github.com/Griesbacher/docker-omd-grafana
 
 ## Presentation
 Here is a presentation I held about Nagflux and Histou (only in German, sorry): http://www.slideshare.net/PhilipGriesbacher/monitoring-workshop-kiel-2016-performancedaten-visualisierung-mit-grafana-influxdb
