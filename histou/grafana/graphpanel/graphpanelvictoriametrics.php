@@ -32,7 +32,7 @@ class Target extends \ArrayObject implements \JsonSerializable {
     }
 
     private function getExpr() {
-        $expr =  '{__name__=~"' . $this['measurement'] . "_(" . $this->getSelect() . ')",' . $this->getFilter() . '}';
+        $expr =  'last_over_time({__name__=~"' . $this['measurement'] . "_(" . $this->getSelect() . ')",' . $this->getFilter() . '}[15m])';
         return 'label_replace(' . $expr . ', "__tmp_alias", "$1", "__name__", "metrics_(.*)")';
     }
 
