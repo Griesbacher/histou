@@ -157,7 +157,7 @@ abstract class Dashboard
     @param string $datasource  name of the grafana datasource.
     @return return null
     **/
-    abstract public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource, $enabled = SHOW_ANNOTATION, $iconSize = 13);
+    abstract public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource = 'abstract', $enabled = SHOW_ANNOTATION, $iconSize = 13);
 
     /**
     Adds all default Annotations.
