@@ -1,3 +1,7 @@
+## v0.5.1 - 02.10.2023
+### Fixes
+- Optional parameter declared before required parameter
+
 ## v0.5.0 - 11.09.2023
 ### Features
 - Add PHP 8 support
