@@ -135,7 +135,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->data['yaxes'][1]['label'] = $label;
     }
-    
+
     /**
     Setter for leftYAxis min max
     @param float $min min, use Null to skipp.
@@ -324,7 +324,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
             )
         );
     }
-    
+
     public function setLegend(
         $show = SHOW_LEGEND,
         $values = false,
@@ -350,7 +350,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
                                 "hideEmpty" => $hideEmpty
                             );
     }
-    
+
     /**
     Adds the target to the dashboard.
     **/
@@ -364,7 +364,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     /**
     This creates a target with an value.
     **/
-    abstract public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false);
+    abstract public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $perfData = null);
 
     /**
     Adds the warning lines to an query.

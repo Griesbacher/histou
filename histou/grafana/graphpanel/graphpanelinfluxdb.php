@@ -46,7 +46,7 @@ class GraphPanelInfluxdb extends GraphPanel
                                        array("params"=>array("linear"), "type"=> "fill"))
                     ));
     }
-    
+
     /**
     Creates filter tags array based on host, service...
     **/
@@ -70,15 +70,15 @@ class GraphPanelInfluxdb extends GraphPanel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false)
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $perfData = null)
     {
-        return $this->genTarget($host, $service, $command, $performanceLabel, $color, $alias, $useRegex);
+        return $this->genTarget($host, $service, $command, $performanceLabel, $color, $alias, $useRegex, null, $perfData);
     }
 
     /**
     This creates a target with an value.
     **/
-    public function genTarget($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $customSelect = null)
+    public function genTarget($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $customSelect = null, $perfData = null)
     {
         if ($alias == '') {
             $alias = $performanceLabel;
@@ -196,7 +196,7 @@ class GraphPanelInfluxdb extends GraphPanel
         );
         return $target;
     }
-    
+
     /**
     This creates a target for an forecast.
     @return Returns a target if a forcast config exists, null otherwise.

@@ -45,7 +45,7 @@ class SinglestatPanelInfluxdb extends SinglestatPanel
                     'groupBy' => array(),
                     );
     }
-    
+
     /**
     Creates filter tags array based on host, service...
     **/
@@ -74,7 +74,7 @@ class SinglestatPanelInfluxdb extends SinglestatPanel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $useRegex = false)
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $useRegex = false, $perfData = null)
     {
         if ($useRegex) {
             $target = $this->createTarget(array(

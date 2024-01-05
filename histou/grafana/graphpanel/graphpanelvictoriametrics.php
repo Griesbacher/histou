@@ -85,7 +85,7 @@ class GraphPanelVictoriametrics extends GraphPanel
                     'datasource' => $datasource,
                     ));
     }
-    
+
     /**
     Creates filter tags array based on host, service...
     **/
@@ -110,7 +110,7 @@ class GraphPanelVictoriametrics extends GraphPanel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false)
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $perfData = null)
     {
         return $this->genTarget($host, $service, $command, $performanceLabel, $color, $alias, $useRegex);
     }
@@ -238,7 +238,7 @@ class GraphPanelVictoriametrics extends GraphPanel
         );
         return $target;
     }
-    
+
     /**
     This creates a target for an forecast.
     @return Returns a target if a forcast config exists, null otherwise.

@@ -70,7 +70,7 @@ class GraphPanelElasticsearch extends GraphPanel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false)
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $perfData = null)
     {
         if ($alias == '') {
             $alias = $performanceLabel;
