@@ -29,7 +29,7 @@ class SinglestatPanelInfluxdb extends SinglestatPanel
     **/
     public function __construct($title, $id = -1)
     {
-        parent::__construct($title, 'graph', $id);
+        parent::__construct($title, $id);
     }
 
     public function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)

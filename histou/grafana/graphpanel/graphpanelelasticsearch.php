@@ -29,7 +29,7 @@ class GraphPanelElasticsearch extends GraphPanel
     **/
     public function __construct($title, $legendShow = SHOW_LEGEND, $id = -1)
     {
-        parent::__construct($title, 'graph', $id);
+        parent::__construct($title, 'timeseries', $id);
     }
 
     private function createTarget(array $filterTags = array())
@@ -144,11 +144,32 @@ class GraphPanelElasticsearch extends GraphPanel
         $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true);
         $this->addToSeriesOverrides(
             array(
-                'lines' => true,
-                'alias' => $alias,
-                'linewidth' => 3,
-                'legend' => false,
-                'fill' => 3,
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.drawStyle',
+                        'value' => 'line'
+                    ),
+                    array(
+                        'id'    => 'custom.lineWidth',
+                        'value' => 3
+                    ),
+                    array(
+                        'id'    => 'custom.fillOpacity',
+                        'value' => 30
+                    ),
+                    array(
+                        'id'    => 'custom.hideFrom',
+                        'value' => array(
+                            "legend"  => true,
+                            "tooltip" => true,
+                            "viz"     => false
+                        )
+                    )
+                )
             )
         );
         return $target;

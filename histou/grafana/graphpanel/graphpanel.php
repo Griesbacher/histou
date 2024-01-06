@@ -29,7 +29,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function __construct($title, $legendShow = SHOW_LEGEND, $id = -1)
     {
-        parent::__construct($title, 'graph', $id);
+        parent::__construct($title, 'timeseries', $id);
         $this->data['tooltip'] = array(
                                 'show' =>  false,
                                 'values' =>  false,
@@ -55,8 +55,31 @@ abstract class GraphPanel extends \histou\grafana\Panel
         $this->data['fill'] = 0;
         $this->data['linewidth'] = 2;
         $this->data['targets'] = array();
-        $this->data['seriesOverrides'] = array();
         $this->data['datasource'] = "-- Mixed --";
+        $this->data['fieldConfig'] = array(
+            "overrides" => array(
+                array(
+                    "matcher" => array(
+                        "id" => "byValue",
+                        "options" => array(
+                            "op"      => "gte",
+                            "reducer" => "allIsNull",
+                            "value"   => 0
+                        )
+                    ),
+                    "properties" => array(
+                        array(
+                            "id" => "custom.hideFrom",
+                            "value" => array(
+                                "legend"  => true,
+                                "tooltip" => true,
+                                "viz"     => false
+                            )
+                        )
+                    )
+                )
+            )
+        );
         $this->data['grid'] =  array(
                                     "threshold1"=> null,
                                     "threshold1Color"=> "rgba(216, 200, 27, 0.27)",
@@ -77,14 +100,37 @@ abstract class GraphPanel extends \histou\grafana\Panel
         $this->data['tooltip'] = $tooltip;
     }
     /**
-    Adds an array to the seriesOverrides field and checks for leading slashes.
+    Adds an array to the overrides field and checks for leading slashes.
+    overrides look like this:
+    {
+        "matcher": {
+            "id": "byName",
+            "options": "total-value"
+        },
+        "properties": [
+            {
+                "id": "color",
+                "value": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                }
+            }
+        ]
+    }
     **/
     public function addToSeriesOverrides(array $data)
     {
-        if (\histou\helper\str::isRegex($data['alias'])) {
-            $data['alias'] = '/'.str_replace('/', '\/', $data['alias']).'/';
+        if ($data['matcher']['id'] == 'byName' && \histou\helper\str::isRegex($data['matcher']['options'])) {
+            $data['matcher']['options'] = '/'.str_replace('/', '\/', $data['matcher']['options']).'/';
+            $data['matcher']['id'] = 'byRegexp';
         }
-        array_push($this->data['seriesOverrides'], $data);
+        if(!isset($this->data['fieldConfig'])) {
+            $this->data['fieldConfig'] = array();
+        }
+        if(!isset($this->data['fieldConfig']['overrides'])) {
+            $this->data['fieldConfig']['overrides'] = array();
+        }
+        array_push($this->data['fieldConfig']['overrides'], $data);
     }
 
     /**
@@ -95,10 +141,23 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function addAliasColor($alias, $color)
     {
-        if (!isset($this->data['aliasColors'])) {
-            $this->data['aliasColors'] = array();
-        }
-        $this->data['aliasColors'][$alias] = $color;
+        $this->addToSeriesOverrides(
+            array(
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'color',
+                        'value' => array(
+                            'fixedColor' => $color,
+                            'mode'       => 'fixed'
+                        )
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -111,8 +170,19 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->addToSeriesOverrides(
             array(
-                'alias' => $regex,
-                'color' => $color,
+                'matcher' => array(
+                    'id'      => 'byRegex',
+                    'options' => '/'+$regex+'/'
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'color',
+                        'value' => array(
+                            'fixedColor' => $color,
+                            'mode'       => 'fixed'
+                        )
+                    )
+                )
             )
         );
     }
@@ -274,8 +344,16 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'fill' => $intensity,
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.fillOpacity',
+                        'value' => $intensity*10
+                    )
+                )
             )
         );
     }
@@ -289,8 +367,16 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'transform' => 'negative-Y'
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.transform',
+                        'value' => 'negative-Y'
+                    )
+                )
             )
         );
     }
@@ -302,10 +388,26 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function setYAxis($alias, $number = 1)
     {
+        switch($number) {
+            case "1":
+                $number = "left";
+                break;
+            case "2":
+                $number = "right";
+                break;
+        }
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'yaxis' => $number
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.axisPlacement',
+                        'value' => $number
+                    )
+                )
             )
         );
     }
@@ -319,8 +421,19 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'stack' => true
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.stacking',
+                        'value' => array(
+                            "group" => "A",
+                            "mode"  => "normal"
+                        )
+                    )
+                )
             )
         );
     }

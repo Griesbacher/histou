@@ -29,7 +29,7 @@ $genTemplate = function ($perfData) {
         $multiFormat = true,
         $includeAll = false
     );
-    $tempalteVariableString = $dashboard->genTemplateVariable($templateName);
+    $templateVariableString = $dashboard->genTemplateVariable($templateName);
 
     $interfaces = array();
     $types = array();
@@ -61,7 +61,7 @@ $genTemplate = function ($perfData) {
     $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
     $numberPanels = 0;
     foreach ($types as $type) {
-        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['service']." $tempalteVariableString ". $type);
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['service']." $templateVariableString ". $type);
         $panel->setSpan(6);
 
         $customSelect = null;
@@ -76,9 +76,9 @@ $genTemplate = function ($perfData) {
         }
         foreach (array('in', 'out') as $direction) {
             if (DATABASE_TYPE == ELASTICSEARCH) { //https://github.com/grafana/grafana/issues/4075
-                $perfLabel = $tempalteVariableString."\_".$type.'_'.$direction;
+                $perfLabel = $templateVariableString."\_".$type.'_'.$direction;
             } else {
-                $perfLabel = $tempalteVariableString."_".$type.'_'.$direction;
+                $perfLabel = $templateVariableString."_".$type.'_'.$direction;
             }
             $target = $panel->genTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, null, null, null, $customSelect, $perfData);
             $panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));

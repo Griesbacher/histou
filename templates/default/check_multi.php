@@ -29,7 +29,7 @@ $genTemplate = function ($perfData) {
         false,
         false
     );
-    $tempalteVariableStringPerfLabelPlugin = $dashboard->genTemplateVariable($templateNamePlugin);
+    $templateVariableStringPerfLabelPlugin = $dashboard->genTemplateVariable($templateNamePlugin);
     $templateNamePerfLabel = 'PerfLabel';
     $dashboard->addTemplate(
         INFLUXDB_DB,
@@ -38,14 +38,14 @@ $genTemplate = function ($perfData) {
             'SHOW TAG VALUES WITH KEY = "performanceLabel" WHERE "host" = \'%s\' AND "service" = \'%s\' AND performanceLabel =~ /%s.*/',
             $perfData['host'],
             $perfData['service'],
-            $tempalteVariableStringPerfLabelPlugin
+            $templateVariableStringPerfLabelPlugin
         ),
         '',
         true,
         true,
         2
     );
-    $tempalteVariableStringPerfLabel = $dashboard->genTemplateVariable($templateNamePerfLabel);
+    $templateVariableStringPerfLabel = $dashboard->genTemplateVariable($templateNamePerfLabel);
     $database = "";
 
     foreach ($perfData['perfLabel'] as $key => $value) {
@@ -100,21 +100,21 @@ $genTemplate = function ($perfData) {
     $overallState->addRangeToTextElement(2.5, 3.5, 'Unkn');
     $statesRow->addPanel($overallState);
     $dashboard->addRow($statesRow);
-    
 
 
-    $row = new \histou\grafana\Row($tempalteVariableStringPerfLabel);
-    $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($tempalteVariableStringPerfLabel);
-    $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $tempalteVariableStringPerfLabel);
-    $target = $panel->addWarnToTarget($target, $tempalteVariableStringPerfLabel);
-    $target = $panel->addCritToTarget($target, $tempalteVariableStringPerfLabel);
+
+    $row = new \histou\grafana\Row($templateVariableStringPerfLabel);
+    $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($templateVariableStringPerfLabel);
+    $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $templateVariableStringPerfLabel);
+    $target = $panel->addWarnToTarget($target, $templateVariableStringPerfLabel);
+    $target = $panel->addCritToTarget($target, $templateVariableStringPerfLabel);
     $panel->addTarget($target);
 
-    $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $tempalteVariableStringPerfLabel);
+    $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $templateVariableStringPerfLabel);
     $panel->addTarget($downtime);
     $row->addPanel($panel);
     $row->setCustomProperty("repeat", $templateNamePerfLabel);
     $dashboard->addRow($row);
-    
+
     return $dashboard;
 };

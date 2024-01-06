@@ -229,11 +229,32 @@ class GraphPanelVictoriametrics extends GraphPanel
         $target = $this->addXToTarget($target, array('value'), $alias, '#EEE', true, $customSelect);
         $this->addToSeriesOverrides(
             array(
-                'lines' => true,
-                'alias' => $alias,
-                'linewidth' => 3,
-                'legend' => false,
-                'fill' => 3,
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.drawStyle',
+                        'value' => 'line'
+                    ),
+                    array(
+                        'id'    => 'custom.lineWidth',
+                        'value' => 3
+                    ),
+                    array(
+                        'id'    => 'custom.fillOpacity',
+                        'value' => 30
+                    )
+                    array(
+                        'id'    => 'custom.hideFrom',
+                        'value' => array(
+                            "legend"  => true,
+                            "tooltip" => true,
+                            "viz"     => false
+                        )
+                    )
+                )
             )
         );
         return $target;
@@ -280,11 +301,28 @@ class GraphPanelVictoriametrics extends GraphPanel
         $target = $this->addXToTarget($target, array('value'), $alias, $color, true);
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'legend' => false,
-                'lines' => false,
-                'points' => true,
-                'pointradius' => 1,
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.drawStyle',
+                        'value' => 'points'
+                    ),
+                    array(
+                        'id'    => 'custom.pointSize',
+                        'value' => '1'
+                    ),
+                    array(
+                        'id'    => 'custom.hideFrom',
+                        'value' => array(
+                            "legend"  => true,
+                            "tooltip" => true,
+                            "viz"     => false
+                        )
+                    )
+                )
             )
         );
         return $target;
