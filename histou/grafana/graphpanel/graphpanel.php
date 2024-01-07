@@ -121,7 +121,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function addToSeriesOverrides(array $data)
     {
         if ($data['matcher']['id'] == 'byName' && \histou\helper\str::isRegex($data['matcher']['options'])) {
-            $data['matcher']['options'] = '/'.str_replace('/', '\/', $data['matcher']['options']).'/';
+            $data['matcher']['options'] =  \histou\helper\str::makeRegex($data['matcher']['options']);
             $data['matcher']['id'] = 'byRegexp';
         }
         if(!isset($this->data['fieldConfig'])) {
@@ -166,25 +166,34 @@ abstract class GraphPanel extends \histou\grafana\Panel
     @param string $color hexcolor.
     @return null.
     **/
-    public function addRegexColor($regex, $color)
+    public function addRegexColor($regex, $color, $fill = 0)
     {
-        $this->addToSeriesOverrides(
-            array(
-                'matcher' => array(
-                    'id'      => 'byRegex',
-                    'options' => '/'+$regex+'/'
-                ),
-                'properties' => array(
-                    array(
-                        'id'    => 'color',
-                        'value' => array(
-                            'fixedColor' => $color,
-                            'mode'       => 'fixed'
-                        )
+        $override = array(
+            'matcher' => array(
+                'id'      => 'byRegexp',
+                'options' => $regex
+            ),
+            'properties' => array(
+                array(
+                    'id'    => 'color',
+                    'value' => array(
+                        'fixedColor' => $color,
+                        'mode'       => 'fixed'
                     )
                 )
             )
         );
+
+        if($fill > 0) {
+            array_push($override['properties'],
+                    array(
+                        'id'    => 'custom.fillOpacity',
+                        'value' => $fill*10
+                    )
+            );
+        }
+
+        $this->addToSeriesOverrides($override);
     }
     /**
     Setter for leftYAxisLabel
@@ -193,17 +202,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function setLeftYAxisLabel($label)
     {
-        $this->data['yaxes'][0]['label'] = $label;
-    }
-
-    /**
-    Setter for rightYAxisLabel
-    @param string $label label.
-    @return null.
-    **/
-    public function setRightYAxisLabel($label)
-    {
-        $this->data['yaxes'][1]['label'] = $label;
+        $this->data['fieldConfig']['defaults']['custom']['axisLabel'] = $label;
     }
 
     /**
@@ -215,25 +214,10 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function setLeftYAxisMinMax($min, $max = null)
     {
         if ($min !== null) {
-            $this->data['yaxes'][0]['min'] = $min;
+            $this->data['fieldConfig']['defaults']['min'] = $min;
         }
         if ($max !== null) {
-            $this->data['yaxes'][0]['max'] = $max;
-        }
-    }
-    /**
-    Setter for rightYAxis min max
-    @param float $min min, use Null to skipp.
-    @param float $max max, use Null to skipp.
-    @return null.
-    **/
-    public function setRightAxisMinMax($min, $max = null)
-    {
-        if ($min !== null) {
-            $this->data['yaxes'][1]['min'] = $min;
-        }
-        if ($max !== null) {
-            $this->data['yaxes'][1]['max'] = $max;
+            $this->data['fieldConfig']['defaults']['max'] = $max;
         }
     }
 
@@ -245,29 +229,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function setLeftUnit($unit)
     {
         $gUnit = $this->convertUnit($unit);
-        if (array_key_exists('yaxes', $this->data) && sizeof($this->data['yaxes']) > 0) {
-            $this->data['yaxes'][0]['format'] = $gUnit;
-            $this->data['yaxes'][0]['show'] = true;
-        }
+        $this->data['fieldConfig']['defaults']['unit'] = $gUnit;
         if ($gUnit == 'short') {
             $this->setLeftYAxisLabel($unit);
-        }
-    }
-
-    /**
-    Tries to convert the given unit in a "grafana unit" if not possible the rightYAxisLabel will be set.
-    @param string $unit unit.
-    @return null.
-    **/
-    public function setRightUnit($unit)
-    {
-        $gUnit = $this->convertUnit($unit);
-        if (array_key_exists('yaxes', $this->data) && sizeof($this->data['yaxes']) > 0) {
-            $this->data['yaxes'][1]['format'] = $gUnit;
-            $this->data['yaxes'][1]['show'] = true;
-        }
-        if ($gUnit == 'short') {
-            $this->setRightYAxisLabel($unit);
         }
     }
 

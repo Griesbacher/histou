@@ -89,8 +89,8 @@ $genTemplate = function ($perfData) {
             $panel->addTarget($target);
         }
         $panel->negateY("/.*?_out-.*/");
-        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_in-value$/', '#085DFF');
-        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_out-value$/', '#4707ff');
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_in-value$/', '#085DFF', 3);
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_out-value$/', '#4707ff', 3);
         $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_(in|out)-warn-?(min|max)?$/', '#FFFC15');
         $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_(in|out)-crit-?(min|max)?$/', '#FF3727');
         if (isset($perfData['perfLabel'][$perfLabel]['value']['unit'])) {
