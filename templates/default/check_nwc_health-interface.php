@@ -69,7 +69,7 @@ $genTemplate = function ($perfData) {
             if($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit'] == "c") {
                 if (DATABASE_TYPE == INFLUXDB) {
                     $customSelect = "\histou\grafana\graphpanel\GraphPanelInfluxdb::createCounterSelect";
-                    $perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit'] = "b";
+                    $perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit'] = "Bps";
                 }
             }
             $panel->setLeftUnit($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit']);
