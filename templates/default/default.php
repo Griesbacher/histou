@@ -59,7 +59,7 @@ $genTemplate = function ($perfData) {
         $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $key);
         if (isset($values['unit'])) {
             if ($values['unit'] == "c") {
-                //create a new Target if the type is counter, with difference in select
+                //create a new Target if the type is counter, with non_negative_derivative in select
                 $target = $panel->genTarget($perfData['host'], $perfData['service'], $perfData['command'], $key, '#085DFF', '', false, "\histou\grafana\graphpanel\GraphPanelInfluxdb::createCounterSelect");
             } else {
                 $panel->setLeftUnit($values['unit']);
@@ -70,13 +70,13 @@ $genTemplate = function ($perfData) {
         $panel->addTarget($target);
 
         if (isset($values['unit']) && $values['unit'] == "c") {
-            //create a new Target if the type is counter, with difference in select
+            //create a new Target if the type is counter, with non_negative_derivative in select
             $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key, '', false, "\histou\grafana\graphpanel\GraphPanelInfluxdb::createCounterSelect");
         } else {
             $downtime = $panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
         }
         $panel->addTarget($downtime);
-        
+
         // Used to display forecast data
         $forecast = $panel->genForecastTarget($perfData['host'], $perfData['service'], $perfData['command'], $key);
         if ($forecast) {

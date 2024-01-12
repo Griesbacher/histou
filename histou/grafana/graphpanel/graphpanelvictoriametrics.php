@@ -182,7 +182,7 @@ class GraphPanelVictoriametrics extends GraphPanel
         return array(
                     array('type' => 'field', 'params' => array($name)),
                     array('type' => 'mean', 'params' => array()),
-                    array('type' => 'difference', 'params' => array()),
+                    array('type' => 'non_negative_derivative', 'params' => array("1s")),
                     array('type' => 'alias', 'params' => array($alias))
                     );
     }

@@ -98,10 +98,6 @@ class GraphPanelInfluxdb extends GraphPanel
                                             'performanceLabel' => array('value' => $performanceLabel)
                                             ));
         }
-        # counter select with difference() aggregator requires time(1s) otherwise the rate value is wrong
-        if($customSelect != null && strstr($customSelect, "createCounterSelect") !== false) {
-            $target["groupBy"][0]["params"] = array("1s");
-        }
         return $this->addXToTarget($target, array('value'), $alias, $color, false, $customSelect);
     }
 
@@ -145,7 +141,7 @@ class GraphPanelInfluxdb extends GraphPanel
         return array(
                     array('type' => 'field', 'params' => array($name)),
                     array('type' => 'mean', 'params' => array()),
-                    array('type' => 'difference', 'params' => array()),
+                    array('type' => 'non_negative_derivative', 'params' => array("1s")),
                     array('type' => 'alias', 'params' => array($alias))
                     );
     }
