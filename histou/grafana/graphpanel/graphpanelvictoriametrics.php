@@ -245,7 +245,7 @@ class GraphPanelVictoriametrics extends GraphPanel
                     array(
                         'id'    => 'custom.fillOpacity',
                         'value' => 30
-                    )
+                    ),
                     array(
                         'id'    => 'custom.hideFrom',
                         'value' => array(
