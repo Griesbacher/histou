@@ -78,7 +78,7 @@ class GraphPanelInfluxdb extends GraphPanel
     /**
     This creates a target with an value.
     **/
-    public function genTarget($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $customSelect = null, $perfData = null)
+    public function genTarget($host, $service, $command, $performanceLabel, $color = 'blue', $alias = '', $useRegex = false, $customSelect = null, $perfData = null)
     {
         if ($alias == '') {
             $alias = $performanceLabel;
@@ -98,26 +98,26 @@ class GraphPanelInfluxdb extends GraphPanel
                                             'performanceLabel' => array('value' => $performanceLabel)
                                             ));
         }
-        return $this->addXToTarget($target, array('value'), $alias, $color, false, $customSelect);
+        return $this->addXToTarget($target, array('value'), $alias, $color, false, $customSelect, 1);
     }
 
     public function addWarnToTarget($target, $alias = '', $color = true, $keepAlias = false)
     {
         if ($color) {
-            return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, '#FFFC15', $keepAlias);
+            return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, 'light-yellow', $keepAlias, null, 2);
         }
-        return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, '', $keepAlias);
+        return $this->addXToTarget($target, array('warn', 'warn-min', 'warn-max'), $alias, '', $keepAlias, null, 2);
     }
 
     public function addCritToTarget($target, $alias = '', $color = true, $keepAlias = false)
     {
         if ($color) {
-            return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '#FF3727', $keepAlias);
+            return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, 'light-red', $keepAlias, null, 2);
         }
-        return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '', $keepAlias);
+        return $this->addXToTarget($target, array('crit', 'crit-min', 'crit-max'), $alias, '', $keepAlias, null, 2);
     }
 
-    public function addXToTarget($target, array $types, $alias, $color, $keepAlias = false, $createSelect = null)
+    public function addXToTarget($target, array $types, $alias, $color, $keepAlias = false, $createSelect = null, $lineWidth = 1)
     {
         if ($createSelect == null) {
             $createSelect = "\histou\grafana\graphpanel\GraphPanelInfluxdb::createSelect";
@@ -130,7 +130,7 @@ class GraphPanelInfluxdb extends GraphPanel
             }
             array_push($target['select'], call_user_func_array($createSelect, array($type, \histou\helper\str::escapeBackslash($newalias))));
             if ($color != '') {
-                $this->addAliasColor($newalias, $color);
+                $this->addAliasColor($newalias, $color, $lineWidth);
             }
         }
         return $target;

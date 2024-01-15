@@ -9,8 +9,7 @@ class DashboardInfluxDBTest extends \MyPHPUnitFrameworkTestCase
         define("INFLUXDB_DB", 'nagflux');
         define("DATABASE_TYPE", 'influxdb');
         define('INFLUXDB', 'influxdb');
-        define('ELASTICSEARCH', 'elasticsearch');
-        
+
         $d = \histou\grafana\dashboard\DashboardFactory::generateDashboard('d1');
         $this->assertSame('d1', $d->toArray()['title']);
 
@@ -30,17 +29,16 @@ class DashboardInfluxDBTest extends \MyPHPUnitFrameworkTestCase
 
         $this->assertSame('[[foo]]', $d->genTemplateVariable('foo'));
     }
-    
+
     public function testToArrayInfluxdb()
     {
         define("INFLUXDB_DB", 'nagflux');
         define("DATABASE_TYPE", 'influxdb');
         define('INFLUXDB', 'influxdb');
-        define('ELASTICSEARCH', 'elasticsearch');
         define('HEIGHT', '100');
         define('SHOW_LEGEND', true);
         define('FORECAST_DATASOURCE_NAME', "nagflux_forecast");
-        
+
         $d = \histou\grafana\dashboard\DashboardFactory::generateDashboard('d');
         $row = new \histou\grafana\Row("r");
         $gpanel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel("p");

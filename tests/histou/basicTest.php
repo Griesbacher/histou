@@ -61,9 +61,9 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
         $err = ob_get_contents();
         ob_end_clean();
         $this->assertSame($err, $this->wrongPhpCommand);
-        
+
     }
-    
+
     public function testParseIniInflux()
     {
         \histou\Basic::parsIni('histou.ini.example');
@@ -73,21 +73,6 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
 
         $this->assertSame(\histou\Basic::parsIni('foo'), "Configuration not found");
         $this->assertSame(0, \histou\Basic::testConfig());
-    }
-    
-    public function testParseIniElastic()
-    {
-        $file_contents = file_get_contents('histou.ini.example');
-        $file_contents = str_replace('databaseType = "influxdb"', 'databaseType = "elasticsearch"', $file_contents);
-        file_put_contents('histou.ini.example.tmp', $file_contents);
-        \histou\Basic::parsIni('histou.ini.example.tmp');
-        unlink('histou.ini.example.tmp');
-        
-        $this->assertSame(DATABASE_TYPE, "elasticsearch");
-        $this->assertSame(ELASTICSEARCH_INDEX, "nagflux");
-        $this->assertSame(HOSTCHECK_ALIAS, "hostcheck");
-        $this->assertSame(\histou\Basic::$phpCommand, "php");
-        
     }
 
     public function testSetConstant()
@@ -124,7 +109,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
         \histou\Basic::returnData($dashboard);
         $out1 = ob_get_contents();
         ob_end_clean();
-        
+
         $this->assertSame($this->emptyDashboard, $out1);
         $_GET["callback"] = 1;
         ob_start();
@@ -151,7 +136,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
     [timezone] => browser
     [editable] => 1
     [hideControls] => 1
-    [sharedCrosshair] => 
+    [sharedCrosshair] =>
     [nav] => Array
         (
             [0] => Array
@@ -186,8 +171,8 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
                         )
 
                     [now] => 1
-                    [collapse] => 
-                    [notice] => 
+                    [collapse] =>
+                    [notice] =>
                 )
 
         )
@@ -221,20 +206,20 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
         (
             [0] => Array
                 (
-                    [title] => 
+                    [title] =>
                     [editable] => 1
                     [height] => 400px
                     [panels] => Array
                         (
                             [0] => Array
                                 (
-                                    [title] => 
+                                    [title] =>
                                     [type] => text
                                     [span] => 12
                                     [editable] => 1
                                     [id] => 1
                                     [mode] => text
-                                    [content] => 
+                                    [content] =>
                                 )
 
                         )
@@ -257,7 +242,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
     [timezone] => browser
     [editable] => 1
     [hideControls] => 1
-    [sharedCrosshair] => 
+    [sharedCrosshair] =>
     [nav] => Array
         (
             [0] => Array
@@ -292,8 +277,8 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
                         )
 
                     [now] => 1
-                    [collapse] => 
-                    [notice] => 
+                    [collapse] =>
+                    [notice] =>
                 )
 
         )
@@ -334,7 +319,7 @@ class BasicTest extends \MyPHPUnitFrameworkTestCase
                         (
                             [0] => Array
                                 (
-                                    [title] => 
+                                    [title] =>
                                     [type] => text
                                     [span] => 12
                                     [editable] => 1

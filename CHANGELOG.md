@@ -1,3 +1,8 @@
+## next:
+### change
+- remove elasticsearch support
+
+
 ## v0.5.1 - 02.10.2023
 ### Fixes
 - Optional parameter declared before required parameter

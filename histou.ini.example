@@ -4,7 +4,7 @@ phpCommand = "php"
 ;leave tmpFolder empty to use default php folder
 tmpFolder = ""
 specialChar = "&"
-; set the backend: influxdb, elasticsearch
+; set the backend: influxdb, victoriametrics
 databaseType = "influxdb"
 forecastDatasourceName = "nagflux_forecast"
 ; disable the Panel Titel globally
@@ -19,6 +19,7 @@ forecastTemplateFolder = "forecasts/"
 url = "http://127.0.0.1:8086/query?db=nagflux"
 hostcheckAlias = "hostcheck"
 
-[elasticsearch]
-url = "http://127.0.0.1:8086/nagflux"
+[victoriametrics]
+url = "https://user:password@127.0.0.1:8428"
 hostcheckAlias = "hostcheck"
+

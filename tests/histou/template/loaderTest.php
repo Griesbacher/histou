@@ -24,7 +24,6 @@ class LoaderTest extends \MyPHPUnitFrameworkTestCase
         }
         define('DATABASE_TYPE', 'influxdb');
         define('INFLUXDB', 'influxdb');
-        define('ELASTICSEARCH', 'elasticsearch');
     }
 
     /*
@@ -128,9 +127,9 @@ Rule:
         $default2 = \histou\template\template::findDefaultTemplate($templates, "foo.php");
         $this->assertSame(null, $default2);
     }
-    
-    
-    
+
+
+
     public function testForecastLoad()
     {
         $files = array(

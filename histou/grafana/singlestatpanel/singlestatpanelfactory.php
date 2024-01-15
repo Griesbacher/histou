@@ -29,8 +29,6 @@ class SinglestatPanelFactory
     {
         if (DATABASE_TYPE == INFLUXDB) {
             return new \histou\grafana\singlestatpanel\SinglestatPanelInfluxdb($title, $id);
-        } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-            throw new \InvalidArgumentException(DATABASE_TYPE. "is currently not supported");
         } else {
             throw new \InvalidArgumentException("The given Database is unkown:".DATABASE_TYPE);
         }

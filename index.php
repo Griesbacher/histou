@@ -47,8 +47,6 @@ if (!\histou\Basic::$disablePerfdataLookup){
 	$database = null;
 	if (DATABASE_TYPE == INFLUXDB) {
 		$database = new \histou\database\Influxdb(URL);
-	}elseif(DATABASE_TYPE == ELASTICSEARCH){
-		$database = new \histou\database\Elasticsearch(URL);
 	}elseif(DATABASE_TYPE == VICTORIAMETRICS){
 		$database = new \histou\database\Victoriametrics(URL);
 	}else{

@@ -222,18 +222,12 @@ class Basic
             "http://127.0.0.1:8086/query?db=nagflux"
         );
         define('INFLUXDB', 'influxdb');
-        define('ELASTICSEARCH', 'elasticsearch');
         define('VICTORIAMETRICS', 'victoriametrics');
 
         if (DATABASE_TYPE == INFLUXDB && preg_match(";db=(\\w*);", URL, $matches)) {
             define('INFLUXDB_DB', $matches[1]);
         } elseif (DATABASE_TYPE == VICTORIAMETRICS) {
             define('VICTORIAMETRICS_DS', 'victoriametrics');
-        } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-            $path = parse_url(URL, PHP_URL_PATH);
-            if ($path) {
-                define('ELASTICSEARCH_INDEX', ltrim($path, '/'));
-            }
         }
 
         Basic::setConstant(

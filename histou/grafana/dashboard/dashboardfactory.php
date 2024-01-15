@@ -29,8 +29,6 @@ class DashboardFactory
     {
         if (DATABASE_TYPE == INFLUXDB) {
             return new \histou\grafana\dashboard\DashboardInfluxDB($title);
-        } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-            return new \histou\grafana\dashboard\DashboardElasticsearch($title);
         } elseif (DATABASE_TYPE == VICTORIAMETRICS) {
             return new \histou\grafana\dashboard\DashboardVictoriametrics($title);
         } else {

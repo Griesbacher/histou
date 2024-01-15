@@ -30,33 +30,16 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function __construct($title, $legendShow = SHOW_LEGEND, $id = -1)
     {
         parent::__construct($title, 'timeseries', $id);
-        $this->data['tooltip'] = array(
-                                'show' =>  false,
-                                'values' =>  false,
-                                'min' =>  false,
-                                'max' =>  false,
-                                'current' =>  false,
-                                'total' =>  false,
-                                'avg' =>  false,
-                                'shared' =>  true
-                            );
-        $this->data['legend'] = array(
-                                "show" => $legendShow,
-                                "values" => false,
-                                "min" => false,
-                                "max" => false,
-                                "current" => false,
-                                "total" => false,
-                                "avg" => false,
-                                "alignAsTable" => false,
-                                "rightSide" => false,
-                                "hideEmpty" => true
-                            );
-        $this->data['fill'] = 0;
-        $this->data['linewidth'] = 2;
         $this->data['targets'] = array();
         $this->data['datasource'] = "-- Mixed --";
         $this->data['fieldConfig'] = array(
+            "defaults" => array(
+                "custom" => array(
+                    "lineInterpolation" => "linear",
+                    "insertNulls" => false,
+                    "spanNulls" => true,
+                )
+            ),
             "overrides" => array(
                 array(
                     "matcher" => array(
@@ -80,25 +63,13 @@ abstract class GraphPanel extends \histou\grafana\Panel
                 )
             )
         );
-        $this->data['grid'] =  array(
-                                    "threshold1"=> null,
-                                    "threshold1Color"=> "rgba(216, 200, 27, 0.27)",
-                                    "threshold2"=> null,
-                                    "threshold2Color"=> "rgba(234, 112, 112, 0.22)"
-                                    );
-        $this->data['yaxes'] = array(array('format' => 'short'), array('format' => 'short'));
-        $this->data['nullPointMode'] = "connected";
+        $this->data['options'] = array(
+            "tooltip" => array(
+                "mode" => "multi"
+            )
+        );
     }
 
-    /**
-    Setter for setTooltip
-    @param int $tooltip setTooltip.
-    @return null.
-    **/
-    public function setTooltip(array $tooltip)
-    {
-        $this->data['tooltip'] = $tooltip;
-    }
     /**
     Adds an array to the overrides field and checks for leading slashes.
     overrides look like this:
@@ -139,7 +110,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     @param string $color hexcolor.
     @return null.
     **/
-    public function addAliasColor($alias, $color)
+    public function addAliasColor($alias, $color, $lineWidth = 1)
     {
         $this->addToSeriesOverrides(
             array(
@@ -154,6 +125,10 @@ abstract class GraphPanel extends \histou\grafana\Panel
                             'fixedColor' => $color,
                             'mode'       => 'fixed'
                         )
+                    ),
+                    array(
+                        'id'    => 'custom.lineWidth',
+                        'value' => $lineWidth
                     )
                 )
             )
