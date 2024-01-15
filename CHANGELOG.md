@@ -1,7 +1,7 @@
 ## next:
-### change
+### Change
 - remove elasticsearch support
-
+- convert to time_series panel
 
 ## v0.5.1 - 02.10.2023
 ### Fixes
