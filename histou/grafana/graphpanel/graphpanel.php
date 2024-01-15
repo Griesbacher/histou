@@ -68,6 +68,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
                 "mode" => "multi"
             )
         );
+        if(!$legendShow) {
+            $this->data['options']['legend'] = array('showLegend' => false);
+        }
     }
 
     /**
