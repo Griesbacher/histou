@@ -21,6 +21,7 @@ namespace histou\grafana\graphpanel;
 */
 
 class Target extends \ArrayObject implements \JsonSerializable {
+    #[\ReturnTypeWillChange]
     public function jsonSerialize() {
         $r = array(
             'datasource' => $this['datasource'],
