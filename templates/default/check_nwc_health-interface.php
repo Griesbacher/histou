@@ -6,7 +6,7 @@ PHP version 5
 @package Histou/templates/default
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 $rule = new \histou\template\Rule(
@@ -29,7 +29,7 @@ $genTemplate = function ($perfData) {
         $multiFormat = true,
         $includeAll = false
     );
-    $tempalteVariableString = $dashboard->genTemplateVariable($templateName);
+    $templateVariableString = $dashboard->genTemplateVariable($templateName);
 
     $interfaces = array();
     $types = array();
@@ -61,19 +61,22 @@ $genTemplate = function ($perfData) {
     $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
     $numberPanels = 0;
     foreach ($types as $type) {
-        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['service']." $tempalteVariableString ". $type);
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['service']." $templateVariableString ". $type);
         $panel->setSpan(6);
 
+        $customSelect = null;
         if (isset($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit'])) {
+            if($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit'] == "c") {
+                if (DATABASE_TYPE == INFLUXDB) {
+                    $customSelect = "\histou\grafana\graphpanel\GraphPanelInfluxdb::createCounterSelect";
+                    $perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit'] = "Bps";
+                }
+            }
             $panel->setLeftUnit($perfData['perfLabel'][$interfaces[0].'_'.$type.'_in']['unit']);
         }
         foreach (array('in', 'out') as $direction) {
-            if (DATABASE_TYPE == ELASTICSEARCH) { //https://github.com/grafana/grafana/issues/4075
-                $perfLabel = $tempalteVariableString."\_".$type.'_'.$direction;
-            } else {
-                $perfLabel = $tempalteVariableString."_".$type.'_'.$direction;
-            }
-            $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
+            $perfLabel = $templateVariableString."_".$type.'_'.$direction;
+            $target = $panel->genTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel, null, null, null, $customSelect, $perfData);
             $panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
             if ($type != 'traffic') {
                 $target = $panel->addWarnToTarget($target, $perfLabel, false);
@@ -82,8 +85,8 @@ $genTemplate = function ($perfData) {
             $panel->addTarget($target);
         }
         $panel->negateY("/.*?_out-.*/");
-        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_in-value$/', '#085DFF');
-        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_out-value$/', '#4707ff');
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_in-value$/', '#085DFF', 3);
+        $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_out-value$/', '#4707ff', 3);
         $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_(in|out)-warn-?(min|max)?$/', '#FFFC15');
         $panel->addRegexColor('/^.*?_(usage|traffic|errors|discards)_(in|out)-crit-?(min|max)?$/', '#FF3727');
         if (isset($perfData['perfLabel'][$perfLabel]['value']['unit'])) {

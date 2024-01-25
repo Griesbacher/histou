@@ -6,7 +6,7 @@ PHP version 5
 @package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 class Basic
 {
@@ -33,7 +33,7 @@ class Basic
     public static $disablePanelTitle = false;
     public static $specificTemplate = '';
     public static $disablePerfdataLookup = false;
- 
+
     /**
     Parses the GET parameter.
     @return null.
@@ -54,14 +54,14 @@ class Basic
         "request:",
         );
         $args = getopt($shortopts, $longopts);
-        
+
         $input = file_get_contents('php://input');
         if (!empty($input)) { // @codeCoverageIgnore
             static::$request = json_decode($input, true); // @codeCoverageIgnore
         } elseif (isset($args['request']) && !empty($args['request'])) { // @codeCoverageIgnore
             static::$request = json_decode($args['request'], true);// @codeCoverageIgnore
         }// @codeCoverageIgnore
-        
+
         if (!static::$request) {
             if (isset($_GET['host']) && !empty($_GET['host'])) {
                 define("HOST", $_GET["host"]);
@@ -70,7 +70,7 @@ class Basic
             } else {  // @codeCoverageIgnore
                 \histou\Basic::returnData('Hostname is missing!', 1, 'Hostname is missing!');
             }
-            
+
             if (isset($_GET['service']) && !empty($_GET['service'])) {
                 define("SERVICE", $_GET["service"]);
             } elseif (isset($args['service']) && !empty($args['service'])) {
@@ -78,13 +78,13 @@ class Basic
             } else {   // @codeCoverageIgnore
                 define("SERVICE", HOSTCHECK_ALIAS);
             }
-            
+
             if (isset($_GET['command']) && !empty($_GET['command'])) {
                 define("COMMAND", $_GET["command"]);
             } elseif (isset($args['command']) && !empty($args['command'])) {
                 define("COMMAND", $args["command"]);  // @codeCoverageIgnore
             }  // @codeCoverageIgnore
-            
+
             if (isset($_GET['perf_label']) && !empty($_GET['perf_label'])) {
                 global $PERF_LABEL;
                 $PERF_LABEL = $_GET["perf_label"];
@@ -222,15 +222,14 @@ class Basic
             "http://127.0.0.1:8086/query?db=nagflux"
         );
         define('INFLUXDB', 'influxdb');
-        define('ELASTICSEARCH', 'elasticsearch');
+        define('VICTORIAMETRICS', 'victoriametrics');
+
         if (DATABASE_TYPE == INFLUXDB && preg_match(";db=(\\w*);", URL, $matches)) {
             define('INFLUXDB_DB', $matches[1]);
-        } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-            $path = parse_url(URL, PHP_URL_PATH);
-            if ($path) {
-                define('ELASTICSEARCH_INDEX', ltrim($path, '/'));
-            }
+        } elseif (DATABASE_TYPE == VICTORIAMETRICS) {
+            define('VICTORIAMETRICS_DS', 'victoriametrics');
         }
+
         Basic::setConstant(
             "HOSTCHECK_ALIAS",
             Basic::getConfigKey($config, DATABASE_TYPE, 'hostcheckAlias'),
@@ -252,7 +251,7 @@ class Basic
             "histou/forecasts/"
         );
     }
-    
+
     public static function testConfig()
     {
         //test php command

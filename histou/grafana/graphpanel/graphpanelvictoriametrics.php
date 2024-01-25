@@ -10,6 +10,48 @@ PHP version 5
 **/
 namespace histou\grafana\graphpanel;
 
+/* label_replace({__name__=~"metrics_(value|crit)"}, "__tmp_alias", "$1", "__name__", "metrics_(.*)") */
+/*
+   {
+      "datasource": "victoria",
+      "refId": "C",
+      "expr": "{fooo=\"bar\"}",
+      "legendFormat": "asdf"
+    }
+*/
+
+class Target extends \ArrayObject implements \JsonSerializable {
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize() {
+        $r = array(
+            'datasource' => $this['datasource'],
+            'legendFormat' => $this['legendFormat'],
+            'expr' => $this->getExpr()
+        );
+        return $r;
+
+    }
+
+    private function getExpr() {
+        $expr =  'last_over_time({__name__=~"' . $this['measurement'] . "_(" . $this->getSelect() . ')",' . $this->getFilter() . '}[15m])';
+        return 'label_replace(' . $expr . ', "__tmp_alias", "$1", "__name__", "metrics_(.*)")';
+    }
+
+    private function getSelect() {
+       return join("|", array_map(function($x){
+           return $x[0];
+       }, $this['select']));
+    }
+
+    private function getFilter() {
+        $filter = array();
+        foreach($this['tags'] as $key => $val) {
+            array_push($filter, $key . '="' . $val['value'] . '"');
+        }
+        return join(",", $filter);
+    }
+}
+
 /**
 Base Panel.
 PHP version 5
@@ -19,7 +61,7 @@ PHP version 5
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
 @link https://github.com/ConSol/histou
 **/
-class GraphPanelInfluxdb extends GraphPanel
+class GraphPanelVictoriametrics extends GraphPanel
 {
     /**
     Constructor.
@@ -32,18 +74,16 @@ class GraphPanelInfluxdb extends GraphPanel
         parent::__construct($title, $legendShow, $id);
     }
 
-    public function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
+    public function createTarget(array $filterTags = array(), $datasource = VICTORIAMETRICS_DS)
     {
-        return new \ArrayObject(array(
+        return new Target(array(
                     'measurement' => 'metrics',
-                    'alias' => '$col',
+                    'legendFormat' => '{{performanceLabel}}-{{__tmp_alias}}',
                     'select' => array(),
                     'tags' => $this->createFilterTags($filterTags),
-                    'dsType' => 'influxdb',
+                    'dsType' => 'prometheus',
                     'resultFormat' => 'time_series',
                     'datasource' => $datasource,
-                    'groupBy' => array(array("params"=>array("\$__interval"), "type"=> "time"),
-                                       array("params"=>array("linear"), "type"=> "fill"))
                     ));
     }
 
@@ -52,6 +92,7 @@ class GraphPanelInfluxdb extends GraphPanel
     **/
     private function createFilterTags(array $filterTags = array())
     {
+        return $filterTags;
         $tags = array();
         $i = 0;
         foreach ($filterTags as $key => $value) {
@@ -72,13 +113,13 @@ class GraphPanelInfluxdb extends GraphPanel
     **/
     public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $perfData = null)
     {
-        return $this->genTarget($host, $service, $command, $performanceLabel, $color, $alias, $useRegex, null, $perfData);
+        return $this->genTarget($host, $service, $command, $performanceLabel, $color, $alias, $useRegex);
     }
 
     /**
     This creates a target with an value.
     **/
-    public function genTarget($host, $service, $command, $performanceLabel, $color = 'blue', $alias = '', $useRegex = false, $customSelect = null, $perfData = null)
+    public function genTarget($host, $service, $command, $performanceLabel, $color = 'blue', $alias = '', $useRegex = false, $customSelect = null)
     {
         if ($alias == '') {
             $alias = $performanceLabel;
@@ -119,16 +160,17 @@ class GraphPanelInfluxdb extends GraphPanel
 
     public function addXToTarget($target, array $types, $alias, $color, $keepAlias = false, $createSelect = null, $lineWidth = 1)
     {
-        if ($createSelect == null) {
-            $createSelect = "\histou\grafana\graphpanel\GraphPanelInfluxdb::createSelect";
-        }
+        //if ($createSelect == null) {
+            //$createSelect = "\histou\grafana\graphpanel\GraphPanelInfluxdb::createSelect";
+        //}
         foreach ($types as $type) {
             if ($keepAlias) {
                 $newalias = $alias;
             } else {
                 $newalias = $alias.'-'.$type;
             }
-            array_push($target['select'], call_user_func_array($createSelect, array($type, \histou\helper\str::escapeBackslash($newalias))));
+            array_push($target['select'], array($type, $newalias));
+            //array_push($target['select'], "[$type x $newalias]");
             if ($color != '') {
                 $this->addAliasColor($newalias, $color, $lineWidth);
             }
@@ -148,6 +190,7 @@ class GraphPanelInfluxdb extends GraphPanel
 
     public static function createSelect($name, $alias)
     {
+        return array($name, $alias);
         return array(
                     array('type' => 'field', 'params' => array($name)),
                     array('type' => 'mean', 'params' => array()),

@@ -6,7 +6,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\grafana\singlestatpanel;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 class SinglestatPanelFactory
 {
@@ -29,8 +29,6 @@ class SinglestatPanelFactory
     {
         if (DATABASE_TYPE == INFLUXDB) {
             return new \histou\grafana\singlestatpanel\SinglestatPanelInfluxdb($title, $id);
-        } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-            throw new \InvalidArgumentException(DATABASE_TYPE. "is currently not supported");
         } else {
             throw new \InvalidArgumentException("The given Database is unkown:".DATABASE_TYPE);
         }

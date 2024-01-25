@@ -6,7 +6,7 @@ PHP version 5
 @package Histou\database
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\database;
 
@@ -17,12 +17,13 @@ PHP version 5
 @package Histou\database
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 abstract class JSONDatabase
 {
     protected $url;
+    public $perfKeys;
 
     /**
     Constructs a new Influxdb client.

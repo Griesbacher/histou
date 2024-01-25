@@ -6,7 +6,7 @@ PHP version 5
 @package Histou/templates/default
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 $rule = new \histou\template\Rule(
@@ -29,7 +29,7 @@ $genTemplate = function ($perfData) {
         $multiFormat = true,
         $includeAll = false
     );
-    $tempalteVariableString = $dashboard->genTemplateVariable($templateName);
+    $templateVariableString = $dashboard->genTemplateVariable($templateName);
     $database = "";
 
     foreach ($perfData['perfLabel'] as $key => $value) {
@@ -46,7 +46,7 @@ $genTemplate = function ($perfData) {
     $row = new \histou\grafana\Row($perfData['service'].' '.$perfData['command']);
 
     foreach ($types as $type => $labels) {
-        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['service']." $tempalteVariableString ". $type);
+        $panel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel($perfData['service']." $templateVariableString ". $type);
         $panel->setSpan(6);
         if ($type == 'fix' && isset($perfData['perfLabel'][$database]['unit'])) {
             $panel->setLeftUnit($perfData['perfLabel'][$database]['unit']);
@@ -56,11 +56,7 @@ $genTemplate = function ($perfData) {
 
         $currentColorIndex = 0;
         foreach ($labels as $label) {
-            if (DATABASE_TYPE == ELASTICSEARCH) { //https://github.com/grafana/grafana/issues/4075
-                $perfLabel = "db_".$tempalteVariableString."\_".$label;
-            } else {
-                $perfLabel = "db_".$tempalteVariableString."_".$label;
-            }
+            $perfLabel = "db_".$templateVariableString."_".$label;
             $target = $panel->genTargetSimple($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel);
             $panel->addTarget($panel->genDowntimeTarget($perfData['host'], $perfData['service'], $perfData['command'], $perfLabel));
             $target = $panel->addWarnToTarget($target, $perfLabel, false);

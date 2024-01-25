@@ -6,7 +6,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\grafana\singlestatpanel;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 class SinglestatPanelInfluxdb extends SinglestatPanel
 {
@@ -29,7 +29,7 @@ class SinglestatPanelInfluxdb extends SinglestatPanel
     **/
     public function __construct($title, $id = -1)
     {
-        parent::__construct($title, 'graph', $id);
+        parent::__construct($title, $id);
     }
 
     public function createTarget(array $filterTags = array(), $datasource = INFLUXDB_DB)
@@ -45,7 +45,7 @@ class SinglestatPanelInfluxdb extends SinglestatPanel
                     'groupBy' => array(),
                     );
     }
-    
+
     /**
     Creates filter tags array based on host, service...
     **/
@@ -74,7 +74,7 @@ class SinglestatPanelInfluxdb extends SinglestatPanel
     /**
     This creates a target with an value.
     **/
-    public function genTargetSimple($host, $service, $command, $performanceLabel, $useRegex = false)
+    public function genTargetSimple($host, $service, $command, $performanceLabel, $useRegex = false, $perfData = null)
     {
         if ($useRegex) {
             $target = $this->createTarget(array(

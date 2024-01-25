@@ -6,7 +6,7 @@ PHP version 5
 @package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\helper;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 class Str
@@ -52,7 +52,20 @@ class Str
     **/
     public static function isRegex($stringToTest)
     {
-        return substr($stringToTest, 0, 1) == '/' && substr($stringToTest, -1) != '/';
+        return self::startsWith($stringToTest, '/') && self::endsWith($stringToTest, '/');
+    }
+    /**
+    Returns string placed in slashes
+    **/
+    public static function makeRegex($string)
+    {
+        if(self::startsWith($string, '/') && self::endsWith($string, '/')) {
+            $string = substr($string, 1);
+            $string = substr($string, 0, -1);
+        }
+        $string = str_replace('/', '\/', $string);
+        $string = '/'.$string.'/';
+        return($string);
     }
     /**
     Adds slashes and start, end to regex.

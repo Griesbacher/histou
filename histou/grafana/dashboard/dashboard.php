@@ -6,7 +6,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\grafana\dashboard;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 abstract class Dashboard
 {
@@ -157,7 +157,7 @@ abstract class Dashboard
     @param string $datasource  name of the grafana datasource.
     @return return null
     **/
-    abstract public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource, $enabled = SHOW_ANNOTATION, $iconSize = 13);
+    abstract public function addAnnotation($name, $query, $title, $text, $tags, $iconColor = '#751975', $lineColor = '#751975', $datasource = 'abstract', $enabled = SHOW_ANNOTATION, $iconSize = 13);
 
     /**
     Adds all default Annotations.

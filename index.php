@@ -7,13 +7,13 @@ PHP version 5
 @package Default
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 require_once('histou/bootstrap.php');
 
 set_error_handler(
-    function ($errno, $errstr, $errfile, $errline, array $errcontext) {
+    function ($errno, $errstr, $errfile, $errline, $errcontext = null) {
         // error was suppressed with the @-operator
         if (0 === error_reporting()) {
             return false;
@@ -23,7 +23,7 @@ set_error_handler(
 );
 
 //Set path to config file and parse it
-\histou\Basic::parsIni('histou.ini');
+\histou\Basic::parsIni($_SERVER['OMD_ROOT'].'/etc/histou/histou.ini');
 
 //Parse commandline and get parameter
 \histou\Basic::parsArgs();
@@ -47,17 +47,26 @@ if (!\histou\Basic::$disablePerfdataLookup){
 	$database = null;
 	if (DATABASE_TYPE == INFLUXDB) {
 		$database = new \histou\database\Influxdb(URL);
-	}elseif(DATABASE_TYPE == ELASTICSEARCH){
-		$database = new \histou\database\Elasticsearch(URL);
+	}elseif(DATABASE_TYPE == VICTORIAMETRICS){
+		$database = new \histou\database\Victoriametrics(URL);
 	}else{
 		\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Unsupported database'), 1);
 	}
 
 	$request = $database->fetchPerfData();
-	if (empty($request)) {
-		\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
-		exit(0);
-	}
+
+
+    if (empty($request)) {
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database not reachable or empty result'), 1);
+        exit(0);
+    }
+    if(empty($request['data']) && empty($request['series'])) {
+        \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard("# Error: result does not contain data\n```".print_r($request, true)), 1);
+        exit(0);
+    }
+
+    \histou\Debug::add('request out: '. print_r ($request,true)."\n");
+
 	$perfData = $database->filterPerfdata(
 		$request,
 		HOST,
@@ -73,7 +82,7 @@ if (!\histou\Basic::$disablePerfdataLookup){
 			\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Database Error: '.$perfData), 1);
 			exit(1);
 		} else {
-			\histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard('# Host / Service not found in Database'), 1);
+            \histou\Basic::returnData(\histou\Debug::errorMarkdownDashboard("# Host / Service not found in Database\n```".print_r ($request,true)), 1);
 			exit(1);
 		}
 	}
@@ -91,7 +100,7 @@ if (sizeof($templates) == 0) {
 }
 
 if (\histou\Basic::$specificTemplate == ""){
-	// search for the best	
+	// search for the best
 	//save databaseresult to rule
 	\histou\template\Rule::setCheck(
 		$perfData['host'],

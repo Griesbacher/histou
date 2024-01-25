@@ -27,7 +27,7 @@ perfLabel = pl, rta
           "error": false,
           "span": 12,
           "editable": true,
-          "type": "graph",
+          "type": "timeseries",
           "isNew": true,
           "id": 1,
           "datasource": "nagflux",
@@ -203,7 +203,6 @@ perfLabel = pl, rta
             }
           ],
           "aliasColors": {},
-          "seriesOverrides": [],
           "links": []
         }
       ],

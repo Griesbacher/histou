@@ -6,7 +6,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\grafana;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 class TextPanel extends Panel
 {
@@ -53,5 +53,6 @@ class TextPanel extends Panel
     public function setContent($content)
     {
         $this->data['content'] = $content;
+        $this->data['options']['content'] = $content;
     }
 }

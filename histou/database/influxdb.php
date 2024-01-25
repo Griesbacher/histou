@@ -6,7 +6,7 @@ PHP version 5
 @package Histou\database
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\database;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package Histou\database
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 class Influxdb extends JSONDatabase
@@ -38,13 +38,14 @@ class Influxdb extends JSONDatabase
     **/
     public function fetchPerfData()
     {
+        $seriesLimit = 100;
         $result = $this->makeGetRequest(
             sprintf(
-                "select * from metrics where host='%s' and service='%s' GROUP BY performanceLabel ORDER BY time DESC LIMIT 1",
+                "select * from metrics where host='%s' and service='%s' GROUP BY performanceLabel ORDER BY time DESC LIMIT 1 SLIMIT ".($seriesLimit + 1),
                 HOST,
                 SERVICE
             ).';'.sprintf(
-                "select * from metrics where host='%s' and service='%s' GROUP BY performanceLabel LIMIT 1",
+                "select * from metrics where host='%s' and service='%s' GROUP BY performanceLabel LIMIT 1 SLIMIT ".($seriesLimit + 1),
                 HOST,
                 SERVICE
             )
@@ -54,6 +55,13 @@ class Influxdb extends JSONDatabase
         } elseif (empty($result['results'][0])) {
             return $result['results'][1];
         } else {
+            if(empty($result["results"][0]["series"])) {
+                return null;
+            }            
+            if(count($result['results'][0]["series"]) > $seriesLimit) {
+                $result['results'][0]["series"][$seriesLimit]["tags"]["performanceLabel"] = "{ERROR: MORE THAN $seriesLimit SERIES FOUND}"; # add brackets so it appears as last item
+                $result['results'][0]["series"][$seriesLimit]["values"][0][1] = ""; # command name
+            }
             return $result['results'][0];
         }
     }

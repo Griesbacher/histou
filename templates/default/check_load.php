@@ -6,14 +6,14 @@ PHP version 5
 @package Histou/templates/default
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 
 $rule = new \histou\template\Rule(
     $host = '*',
     $service = '*',
     $command = '*',
-    $perfLabel = array('load1', 'load5', 'load15')
+    $perfLabel = array('xload1', 'xload5', 'xload15')
 );
 
 $genTemplate = function ($perfData) {

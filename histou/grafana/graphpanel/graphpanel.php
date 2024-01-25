@@ -6,7 +6,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\grafana\graphpanel;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 abstract class GraphPanel extends \histou\grafana\Panel
 {
@@ -29,62 +29,82 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function __construct($title, $legendShow = SHOW_LEGEND, $id = -1)
     {
-        parent::__construct($title, 'graph', $id);
-        $this->data['tooltip'] = array(
-                                'show' =>  false,
-                                'values' =>  false,
-                                'min' =>  false,
-                                'max' =>  false,
-                                'current' =>  false,
-                                'total' =>  false,
-                                'avg' =>  false,
-                                'shared' =>  true
-                            );
-        $this->data['legend'] = array(
-                                "show" => $legendShow,
-                                "values" => false,
-                                "min" => false,
-                                "max" => false,
-                                "current" => false,
-                                "total" => false,
-                                "avg" => false,
-                                "alignAsTable" => false,
-                                "rightSide" => false,
-                                "hideEmpty" => true
-                            );
-        $this->data['fill'] = 0;
-        $this->data['linewidth'] = 2;
+        parent::__construct($title, 'timeseries', $id);
         $this->data['targets'] = array();
-        $this->data['seriesOverrides'] = array();
         $this->data['datasource'] = "-- Mixed --";
-        $this->data['grid'] =  array(
-                                    "threshold1"=> null,
-                                    "threshold1Color"=> "rgba(216, 200, 27, 0.27)",
-                                    "threshold2"=> null,
-                                    "threshold2Color"=> "rgba(234, 112, 112, 0.22)"
-                                    );
-        $this->data['yaxes'] = array(array('format' => 'short'), array('format' => 'short'));
-        $this->data['nullPointMode'] = "connected";
+        $this->data['fieldConfig'] = array(
+            "defaults" => array(
+                "custom" => array(
+                    "lineInterpolation" => "linear",
+                    "insertNulls" => false,
+                    "spanNulls" => true,
+                )
+            ),
+            "overrides" => array(
+                array(
+                    "matcher" => array(
+                        "id" => "byValue",
+                        "options" => array(
+                            "op"      => "gte",
+                            "reducer" => "allIsNull",
+                            "value"   => 0
+                        )
+                    ),
+                    "properties" => array(
+                        array(
+                            "id" => "custom.hideFrom",
+                            "value" => array(
+                                "legend"  => true,
+                                "tooltip" => true,
+                                "viz"     => false
+                            )
+                        )
+                    )
+                )
+            )
+        );
+        $this->data['options'] = array(
+            "tooltip" => array(
+                "mode" => "multi"
+            )
+        );
+        if(!$legendShow) {
+            $this->data['options']['legend'] = array('showLegend' => false);
+        }
     }
 
     /**
-    Setter for setTooltip
-    @param int $tooltip setTooltip.
-    @return null.
-    **/
-    public function setTooltip(array $tooltip)
+    Adds an array to the overrides field and checks for leading slashes.
+    overrides look like this:
     {
-        $this->data['tooltip'] = $tooltip;
+        "matcher": {
+            "id": "byName",
+            "options": "total-value"
+        },
+        "properties": [
+            {
+                "id": "color",
+                "value": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                }
+            }
+        ]
     }
-    /**
-    Adds an array to the seriesOverrides field and checks for leading slashes.
     **/
     public function addToSeriesOverrides(array $data)
     {
-        if (\histou\helper\str::isRegex($data['alias'])) {
-            $data['alias'] = '/'.str_replace('/', '\/', $data['alias']).'/';
+        if ($data['matcher']['id'] == 'byName' && \histou\helper\str::isRegex($data['matcher']['options'])) {
+            $data['matcher']['options'] =  \histou\helper\str::makeRegex($data['matcher']['options']);
+            $data['matcher']['id'] = 'byRegexp';
         }
-        array_push($this->data['seriesOverrides'], $data);
+        if(!isset($this->data['fieldConfig'])) {
+            $this->data['fieldConfig'] = array();
+        }
+        if(!isset($this->data['fieldConfig']['overrides'])) {
+            $this->data['fieldConfig']['overrides'] = array();
+        }
+        array_push($this->data['fieldConfig']['overrides'], $data);
     }
 
     /**
@@ -93,12 +113,29 @@ abstract class GraphPanel extends \histou\grafana\Panel
     @param string $color hexcolor.
     @return null.
     **/
-    public function addAliasColor($alias, $color)
+    public function addAliasColor($alias, $color, $lineWidth = 1)
     {
-        if (!isset($this->data['aliasColors'])) {
-            $this->data['aliasColors'] = array();
-        }
-        $this->data['aliasColors'][$alias] = $color;
+        $this->addToSeriesOverrides(
+            array(
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'color',
+                        'value' => array(
+                            'fixedColor' => $color,
+                            'mode'       => 'fixed'
+                        )
+                    ),
+                    array(
+                        'id'    => 'custom.lineWidth',
+                        'value' => $lineWidth
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -107,14 +144,34 @@ abstract class GraphPanel extends \histou\grafana\Panel
     @param string $color hexcolor.
     @return null.
     **/
-    public function addRegexColor($regex, $color)
+    public function addRegexColor($regex, $color, $fill = 0)
     {
-        $this->addToSeriesOverrides(
-            array(
-                'alias' => $regex,
-                'color' => $color,
+        $override = array(
+            'matcher' => array(
+                'id'      => 'byRegexp',
+                'options' => $regex
+            ),
+            'properties' => array(
+                array(
+                    'id'    => 'color',
+                    'value' => array(
+                        'fixedColor' => $color,
+                        'mode'       => 'fixed'
+                    )
+                )
             )
         );
+
+        if($fill > 0) {
+            array_push($override['properties'],
+                    array(
+                        'id'    => 'custom.fillOpacity',
+                        'value' => $fill*10
+                    )
+            );
+        }
+
+        $this->addToSeriesOverrides($override);
     }
     /**
     Setter for leftYAxisLabel
@@ -123,19 +180,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function setLeftYAxisLabel($label)
     {
-        $this->data['yaxes'][0]['label'] = $label;
+        $this->data['fieldConfig']['defaults']['custom']['axisLabel'] = $label;
     }
 
-    /**
-    Setter for rightYAxisLabel
-    @param string $label label.
-    @return null.
-    **/
-    public function setRightYAxisLabel($label)
-    {
-        $this->data['yaxes'][1]['label'] = $label;
-    }
-    
     /**
     Setter for leftYAxis min max
     @param float $min min, use Null to skipp.
@@ -145,25 +192,10 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function setLeftYAxisMinMax($min, $max = null)
     {
         if ($min !== null) {
-            $this->data['yaxes'][0]['min'] = $min;
+            $this->data['fieldConfig']['defaults']['min'] = $min;
         }
         if ($max !== null) {
-            $this->data['yaxes'][0]['max'] = $max;
-        }
-    }
-    /**
-    Setter for rightYAxis min max
-    @param float $min min, use Null to skipp.
-    @param float $max max, use Null to skipp.
-    @return null.
-    **/
-    public function setRightAxisMinMax($min, $max = null)
-    {
-        if ($min !== null) {
-            $this->data['yaxes'][1]['min'] = $min;
-        }
-        if ($max !== null) {
-            $this->data['yaxes'][1]['max'] = $max;
+            $this->data['fieldConfig']['defaults']['max'] = $max;
         }
     }
 
@@ -175,29 +207,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
     public function setLeftUnit($unit)
     {
         $gUnit = $this->convertUnit($unit);
-        if (array_key_exists('yaxes', $this->data) && sizeof($this->data['yaxes']) > 0) {
-            $this->data['yaxes'][0]['format'] = $gUnit;
-            $this->data['yaxes'][0]['show'] = true;
-        }
+        $this->data['fieldConfig']['defaults']['unit'] = $gUnit;
         if ($gUnit == 'short') {
             $this->setLeftYAxisLabel($unit);
-        }
-    }
-
-    /**
-    Tries to convert the given unit in a "grafana unit" if not possible the rightYAxisLabel will be set.
-    @param string $unit unit.
-    @return null.
-    **/
-    public function setRightUnit($unit)
-    {
-        $gUnit = $this->convertUnit($unit);
-        if (array_key_exists('yaxes', $this->data) && sizeof($this->data['yaxes']) > 0) {
-            $this->data['yaxes'][1]['format'] = $gUnit;
-            $this->data['yaxes'][1]['show'] = true;
-        }
-        if ($gUnit == 'short') {
-            $this->setRightYAxisLabel($unit);
         }
     }
 
@@ -242,7 +254,9 @@ abstract class GraphPanel extends \histou\grafana\Panel
             case 'Bps':
             case 'BPS':
             case 'BpS':
-                return 'Bps';
+                return 'Bps'; # bytes/sec(SI)
+            case 'binBps':
+                return 'binBps'; # bytes/sec(IEC)
             case 'bps':
             case 'binbps':
                 return $unit;
@@ -277,8 +291,16 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'fill' => $intensity,
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.fillOpacity',
+                        'value' => $intensity*10
+                    )
+                )
             )
         );
     }
@@ -292,8 +314,16 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'transform' => 'negative-Y'
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.transform',
+                        'value' => 'negative-Y'
+                    )
+                )
             )
         );
     }
@@ -305,10 +335,26 @@ abstract class GraphPanel extends \histou\grafana\Panel
     **/
     public function setYAxis($alias, $number = 1)
     {
+        switch($number) {
+            case "1":
+                $number = "left";
+                break;
+            case "2":
+                $number = "right";
+                break;
+        }
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'yaxis' => $number
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.axisPlacement',
+                        'value' => $number
+                    )
+                )
             )
         );
     }
@@ -322,12 +368,23 @@ abstract class GraphPanel extends \histou\grafana\Panel
     {
         $this->addToSeriesOverrides(
             array(
-                'alias' => $alias,
-                'stack' => true
+                'matcher' => array(
+                    'id'      => 'byName',
+                    'options' => $alias
+                ),
+                'properties' => array(
+                    array(
+                        'id'    => 'custom.stacking',
+                        'value' => array(
+                            "group" => "A",
+                            "mode"  => "normal"
+                        )
+                    )
+                )
             )
         );
     }
-    
+
     public function setLegend(
         $show = SHOW_LEGEND,
         $values = false,
@@ -353,7 +410,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
                                 "hideEmpty" => $hideEmpty
                             );
     }
-    
+
     /**
     Adds the target to the dashboard.
     **/
@@ -367,7 +424,7 @@ abstract class GraphPanel extends \histou\grafana\Panel
     /**
     This creates a target with an value.
     **/
-    abstract public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false);
+    abstract public function genTargetSimple($host, $service, $command, $performanceLabel, $color = '#085DFF', $alias = '', $useRegex = false, $perfData = null);
 
     /**
     Adds the warning lines to an query.

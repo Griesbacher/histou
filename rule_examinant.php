@@ -6,7 +6,7 @@ PHP version 5
 @package Default
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 require_once('histou/bootstrap.php');
 
@@ -21,7 +21,7 @@ set_error_handler(
 );
 
 //Set path to config file
-\histou\Basic::parsIni('histou.ini');
+\histou\Basic::parsIni($_SERVER['OMD_ROOT'].'/etc/histou/histou.ini');
 
 //Parse commandline and get parameter
 \histou\Basic::parsArgs();

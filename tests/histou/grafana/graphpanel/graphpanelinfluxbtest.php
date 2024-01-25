@@ -17,9 +17,6 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $gpanel = \histou\grafana\graphpanel\GraphPanelFactory::generatePanel('gpanel');
         $this->assertSame(2, $gpanel->toArray()['linewidth']);
 
-        $gpanel->setTooltip(array(true));
-        $this->assertSame(array(true), $gpanel->toArray()['tooltip']);
-
         $this->assertSame(0, sizeof($gpanel->toArray()['seriesOverrides']));
         $gpanel->addRegexColor('/.*/', '#FFF');
         $this->assertSame(1, sizeof($gpanel->toArray()['seriesOverrides']));
@@ -77,15 +74,15 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $gpanel->setLeftYAxisMinMax(1, 2);
         $this->assertSame(1, $gpanel->toArray()['yaxes'][0]['min']);
         $this->assertSame(2, $gpanel->toArray()['yaxes'][0]['max']);
-        
+
         $gpanel->setRightAxisMinMax(0);
         $this->assertSame(0, $gpanel->toArray()['yaxes'][1]['min']);
         $this->assertSame(false, array_key_exists('max', $gpanel->toArray()['yaxes'][1]));
         $gpanel->setRightAxisMinMax(1, 2);
         $this->assertSame(1, $gpanel->toArray()['yaxes'][1]['min']);
         $this->assertSame(2, $gpanel->toArray()['yaxes'][1]['max']);
-        
-        
+
+
         //Linewidth
         $gpanel->setLinewidth(10);
         $this->assertSame(10, $gpanel->toArray()['linewidth']);
@@ -602,7 +599,7 @@ class GraphpanelInfluxdbTest extends \MyPHPUnitFrameworkTestCase
         $this->assertSame('=~', $downtime['tags'][0]['operator']);
         $this->assertSame('/^host$/', $downtime['tags'][0]['value']);
     }
-    
+
     public function testGenForecastTarget()
     {
         $this->init();

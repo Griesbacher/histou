@@ -6,7 +6,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 namespace histou\grafana\dashboard;
 
@@ -17,7 +17,7 @@ PHP version 5
 @package Histou
 @author Philip Griesbacher <griesbacher@consol.de>
 @license http://opensource.org/licenses/gpl-license.php GNU Public License
-@link https://github.com/Griesbacher/histou
+@link https://github.com/ConSol/histou
 **/
 class DashboardFactory
 {
@@ -29,8 +29,8 @@ class DashboardFactory
     {
         if (DATABASE_TYPE == INFLUXDB) {
             return new \histou\grafana\dashboard\DashboardInfluxDB($title);
-        } elseif (DATABASE_TYPE == ELASTICSEARCH) {
-            return new \histou\grafana\dashboard\DashboardElasticsearch($title);
+        } elseif (DATABASE_TYPE == VICTORIAMETRICS) {
+            return new \histou\grafana\dashboard\DashboardVictoriametrics($title);
         } else {
              throw new \InvalidArgumentException("The given Database is unkown:".DATABASE_TYPE);
         }
