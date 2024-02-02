@@ -23,7 +23,13 @@ set_error_handler(
 );
 
 //Set path to config file and parse it
-\histou\Basic::parsIni($_SERVER['OMD_ROOT'].'/etc/histou/histou.ini');
+if(isset($_SERVER['OMD_ROOT'])){
+	$ini_path = $_SERVER['OMD_ROOT'].'/etc/histou/histou.ini';
+}
+else{
+	$ini_path = 'histou.ini';
+}
+\histou\Basic::parsIni($ini_path);
 
 //Parse commandline and get parameter
 \histou\Basic::parsArgs();
